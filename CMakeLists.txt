@@ -17,7 +17,7 @@ if(MATH)
 endif()
 
 # Find SDL2 library
-find_package(SDL2 2.32.6 REQUIRED)
+find_package(SDL2 2.26.5 REQUIRED)
 
 add_subdirectory("libs")
 add_subdirectory("src")
