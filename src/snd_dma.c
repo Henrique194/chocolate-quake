@@ -281,7 +281,7 @@ static sfx_t* S_FindName(const char* name) {
         Sys_Error("S_FindName: out of sfx_t");
 
     sfx = &known_sfx[i];
-    strcpy_s(sfx->name, sizeof(sfx->name), name);
+    Q_strncpy(sfx->name, name, sizeof(sfx->name));
 
     num_sfx++;
 
