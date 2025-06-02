@@ -38,6 +38,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <setjmp.h>
+#include <errno.h>
 
 // Slart: For intptr_t, unlikely to be supported on all compilers
 #include <stddef.h>
