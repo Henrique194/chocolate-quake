@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report to help us improve!
+about: Report a bug to help us improve!
 title: ''
 labels: bug
 assignees: Henrique194
