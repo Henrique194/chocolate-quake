@@ -4,6 +4,7 @@ project(vorbis)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Required modules
+include(CTest)
 include(GNUInstallDirs)
 include(CheckIncludeFiles)
 include(CheckLibraryExists)
@@ -15,10 +16,10 @@ if(APPLE)
 endif()
 
 if(BUILD_FRAMEWORK)
-    set(BUILD_SHARED_LIBS TRUE)
+	set(BUILD_SHARED_LIBS TRUE)
 endif()
 
-option(INSTALL_CMAKE_PACKAGE_MODULE "Install CMake package configiguration module" ON)
+option(INSTALL_CMAKE_PACKAGE_MODULE "Install CMake package configuration module" ON)
 
 # Extract project version from configure.ac
 file(READ configure.ac CONFIGURE_AC_CONTENTS)
@@ -60,11 +61,20 @@ message(STATUS "Configuring ${PROJECT_NAME} ${PROJECT_VERSION}")
 # Find math library
 
 check_library_exists(m floor "" HAVE_LIBM)
+if(HAVE_LIBM)
+    set(VORBIS_LIBS "-lm")
+endif()
 
 # Find ogg dependency
-#find_package(Ogg REQUIRED)
+if(NOT TARGET Ogg::ogg)
+    find_package(Ogg REQUIRED)
+endif()
 
 add_subdirectory(lib)
+
+if(BUILD_TESTING)
+    add_subdirectory(test)
+endif()
 
 configure_pkg_config_file(vorbis.pc.in)
 configure_pkg_config_file(vorbisenc.pc.in)
