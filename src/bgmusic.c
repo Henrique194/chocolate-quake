@@ -25,18 +25,11 @@
 
 #define MUSIC_DIRNAME "music"
 
-typedef enum _bgm_player {
-    BGM_NONE = -1,
-    BGM_MIDIDRV = 1,
-    BGM_STREAMER
-} bgm_player_t;
 
 typedef struct music_handler_s {
-    unsigned int type;   /* 1U << n (see snd_codec.h)	*/
-    bgm_player_t player; /* Enumerated bgm player type	*/
-    int is_available;    /* -1 means not present		*/
-    const char* ext;     /* Expected file extension	*/
-    const char* dir;     /* Where to look for music file */
+    unsigned int type;   // 1U << n (see snd_codec.h)
+    int is_available;    // -1 means not present
+    const char* ext;     // Expected file extension
     struct music_handler_s* next;
 } music_handler_t;
 
@@ -45,22 +38,21 @@ static snd_stream_t* bgmstream = NULL;
 static qboolean no_extmusic = false;
 
 static music_handler_t wanted_handlers[] = {
-    {CODECTYPE_VORBIS, BGM_STREAMER, -1, "ogg", MUSIC_DIRNAME, NULL},
-    {CODECTYPE_OPUS, BGM_STREAMER, -1, "opus", MUSIC_DIRNAME, NULL},
-    {CODECTYPE_MP3, BGM_STREAMER, -1, "mp3", MUSIC_DIRNAME, NULL},
-    {CODECTYPE_FLAC, BGM_STREAMER, -1, "flac", MUSIC_DIRNAME, NULL},
-    {CODECTYPE_WAV, BGM_STREAMER, -1, "wav", MUSIC_DIRNAME, NULL},
-    {CODECTYPE_MOD, BGM_STREAMER, -1, "it", MUSIC_DIRNAME, NULL},
-    {CODECTYPE_MOD, BGM_STREAMER, -1, "s3m", MUSIC_DIRNAME, NULL},
-    {CODECTYPE_MOD, BGM_STREAMER, -1, "xm", MUSIC_DIRNAME, NULL},
-    {CODECTYPE_MOD, BGM_STREAMER, -1, "mod", MUSIC_DIRNAME, NULL},
-    {CODECTYPE_UMX, BGM_STREAMER, -1, "umx", MUSIC_DIRNAME, NULL},
-    {CODECTYPE_NONE, BGM_NONE, -1, NULL, NULL, NULL}};
+    {CODECTYPE_VORBIS, -1, "ogg", NULL},
+    {CODECTYPE_OPUS, -1, "opus", NULL},
+    {CODECTYPE_MP3, -1, "mp3", NULL},
+    {CODECTYPE_FLAC, -1, "flac", NULL},
+    {CODECTYPE_WAV, -1, "wav", NULL},
+    {CODECTYPE_MOD, -1, "it", NULL},
+    {CODECTYPE_MOD, -1, "s3m", NULL},
+    {CODECTYPE_MOD, -1, "xm", NULL},
+    {CODECTYPE_MOD, -1, "mod", NULL},
+    {CODECTYPE_UMX, -1, "umx", NULL},
+    {CODECTYPE_NONE, -1, NULL, NULL}
+};
 
 #define ANY_CODECTYPE 0xFFFFFFFF
-#define CDRIP_TYPES                                                            \
-    (CODECTYPE_VORBIS | CODECTYPE_MP3 | CODECTYPE_FLAC | CODECTYPE_WAV |       \
-     CODECTYPE_OPUS)
+#define CDRIP_TYPES   (CODECTYPE_VORBIS)
 #define CDRIPTYPE(x) (((x) & CDRIP_TYPES) != 0)
 
 
@@ -281,19 +273,6 @@ int BGMusic_Init() {
         return -1;
     }
 
-    // WRITE CODE TO CHANGE MUSIC DIR
-    //    if ((i = COM_CheckParm("-cddev")) != 0 && i < com_argc - 1) {
-    //        strncpy(cd_dev, com_argv[i + 1], sizeof(cd_dev));
-    //        cd_dev[sizeof(cd_dev) - 1] = 0;
-    //    }
-
-    // WRITE CODE TO OPEN MUSIC FILES
-    //    if ((cdfile = open(cd_dev, O_RDONLY)) == -1) {
-    //        Con_Printf("BGMusic_Init: open of \"%s\" failed (%i)\n", cd_dev, errno);
-    //        cdfile = -1;
-    //        return -1;
-    //    }
-
     for (byte i = 0; i < 100; i++) {
         remap[i] = i;
     }
@@ -303,32 +282,21 @@ int BGMusic_Init() {
     Cmd_AddCommand("cd", CD_f);
     Con_Printf("CD Audio Initialized\n");
 
-
     music_handler_t* handlers = NULL;
     playLooping = true;
 
-    for (int i = 0; wanted_handlers[i].type != CODECTYPE_NONE; i++) {
-        switch (wanted_handlers[i].player) {
-            case BGM_MIDIDRV:
-                /* not supported in quake */
-                break;
-            case BGM_STREAMER:
-                wanted_handlers[i].is_available =
-                    S_CodecIsAvailable(wanted_handlers[i].type);
-                break;
-            case BGM_NONE:
-            default:
-                break;
+    music_handler_t* handler = wanted_handlers;
+    for (; handler->type != CODECTYPE_NONE; handler++) {
+        handler->is_available = S_CodecIsAvailable(handler->type);
+        if (handler->is_available == -1) {
+            continue;
         }
-
-        if (wanted_handlers[i].is_available != -1) {
-            if (handlers) {
-                handlers->next = &wanted_handlers[i];
-                handlers = handlers->next;
-            } else {
-                music_handlers = &wanted_handlers[i];
-                handlers = music_handlers;
-            }
+        if (handlers) {
+            handlers->next = handler;
+            handlers = handlers->next;
+        } else {
+            music_handlers = handler;
+            handlers = music_handlers;
         }
     }
 
@@ -349,25 +317,25 @@ void BGMusic_Shutdown() {
 static qboolean did_rewind = false;
 static byte raw_audio_buffer[16384];
 
-static int BGMusic_EndOfFile() {
+static qboolean BGMusic_EndOfFile() {
     if (!playLooping) {
-        return 0;
+        return false;
     }
     // Try to loop music.
     if (did_rewind) {
         Con_Printf("Stream keeps returning EOF.\n");
-        return -1;
+        return false;
     }
-    int bytes_read = S_CodecRewindStream(bgmstream);
-    if (bytes_read != 0) {
-        Con_Printf("Stream seek error (%i), stopping.\n", bytes_read);
-        return -1;
+    int rewind_res = S_CodecRewindStream(bgmstream);
+    if (rewind_res != 0) {
+        Con_Printf("Stream seek error (%i), stopping.\n", rewind_res);
+        return false;
     }
     did_rewind = true;
-    return bytes_read;
+    return true;
 }
 
-static int BGMusic_ReadStream(int file_samples, int file_size) {
+static qboolean BGMusic_ReadStream(int file_samples, int file_size) {
     const snd_info_t* info = &bgmstream->info;
 
     int bytes_read = S_CodecReadStream(bgmstream, file_size, raw_audio_buffer);
@@ -380,14 +348,14 @@ static int BGMusic_ReadStream(int file_samples, int file_size) {
         S_RawSamples(file_samples, info->rate, info->width, info->channels,
                      raw_audio_buffer, bgmvolume.value);
         did_rewind = false;
-        return bytes_read;
+        return true;
     }
     if (bytes_read == 0) {
         return BGMusic_EndOfFile();
     }
     // Some read error.
     Con_Printf("Stream read error (%i), stopping.\n", bytes_read);
-    return -1;
+    return false;
 }
 
 static void BGMusic_GetStreamInfo(int* file_samples, int* file_size) {
@@ -430,8 +398,8 @@ static void BGMusic_UpdateStream() {
         if (!file_samples || !file_size) {
             return;
         }
-        int bytes_read = BGMusic_ReadStream(file_samples, file_size);
-        if (bytes_read <= 0) {
+        qboolean keep_playing = BGMusic_ReadStream(file_samples, file_size);
+        if (!keep_playing) {
             BGMusic_Stop();
             return;
         }
