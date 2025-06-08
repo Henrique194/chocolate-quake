@@ -147,6 +147,35 @@ void* Z_Malloc(int size) {
     return buf;
 }
 
+void* Z_Realloc(void* ptr, int size) {
+    if (!ptr) {
+        return Z_Malloc(size);
+    }
+    const memblock_t* block = (memblock_t*) ((byte*) ptr - sizeof(memblock_t));
+    if (block->id != ZONEID) {
+        Sys_Error("Z_Realloc: realloced a pointer without ZONEID");
+    }
+    if (block->tag == 0) {
+        Sys_Error("Z_Realloc: realloced a freed pointer");
+    }
+    int old_size = block->size;
+    old_size -= sizeof(memblock_t); // account for size of block header
+    old_size -= 4;                  // space for memory trash tester
+    const void* old_ptr = ptr;
+    Z_Free(ptr);
+    ptr = Z_TagMalloc(size, 1);
+    if (!ptr) {
+        Sys_Error("Z_Realloc: failed on allocation of %i bytes", size);
+    }
+    if (ptr != old_ptr) {
+        memmove(ptr, old_ptr, SDL_min(old_size, size));
+    }
+    if (old_size < size) {
+        memset((char*) ptr + old_size, 0, size - old_size);
+    }
+    return ptr;
+}
+
 void* Z_TagMalloc(int size, int tag) {
     int extra;
     memblock_t *start, *rover, *new, *base;
