@@ -207,7 +207,7 @@ static void VID_InitWindow(void) {
     int h = 0;
     Uint32 flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI |
                    SDL_WINDOW_FULLSCREEN_DESKTOP;
-    window = SDL_CreateWindow(NULL, x, y, w, h, flags);
+    window = SDL_CreateWindow("Chocolate Quake", x, y, w, h, flags);
     if (window == NULL) {
         const char* error = SDL_GetError();
         Sys_Error("Error creating window for video startup: %s", error);
