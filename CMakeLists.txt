@@ -19,5 +19,7 @@ endif()
 # Find SDL2 library
 find_package(SDL2 2.26.5 REQUIRED)
 
+configure_file(config.h.in config.h)
+
 add_subdirectory("libs")
 add_subdirectory("src")
