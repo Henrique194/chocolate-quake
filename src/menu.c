@@ -1444,8 +1444,12 @@ void M_Help_Key(int key) {
 int m_quit_prevstate;
 qboolean wasInMenus;
 
+qboolean M_IsInQuitScreen(void) {
+    return m_state == m_quit;
+}
+
 void M_Menu_Quit_f(void) {
-    if (m_state == m_quit)
+    if (M_IsInQuitScreen())
         return;
     wasInMenus = (key_dest == key_menu);
     key_dest = key_menu;

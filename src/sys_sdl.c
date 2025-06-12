@@ -242,6 +242,16 @@ static void Sys_KeyboardEvent(const SDL_Event* event) {
     Key_Event(key, down);
 }
 
+static void Sys_QuitEvent(void) {
+    if (M_IsInQuitScreen()) {
+        // Confirm quit.
+        Key_Event('Y', true);
+        return;
+    }
+    // Bring up the quit confirmation screen.
+    Cmd_ExecuteString("quit", src_client);
+}
+
 void Sys_SendKeyEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -254,6 +264,9 @@ void Sys_SendKeyEvents() {
             case SDL_MOUSEBUTTONUP:
             case SDL_MOUSEWHEEL:
                 IN_MouseEvent(&event);
+                break;
+            case SDL_QUIT:
+                Sys_QuitEvent();
                 break;
             default:
                 break;
