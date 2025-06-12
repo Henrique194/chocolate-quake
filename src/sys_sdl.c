@@ -19,8 +19,11 @@
  */
 
 
-#include <assert.h>
 #include "quakedef.h"
+#include <assert.h>
+#ifdef HAVE_SIGNAL_H
+#include <signal.h>
+#endif
 
 
 qboolean isDedicated;
@@ -285,25 +288,73 @@ void Sys_LowFPPrecision(void) {
 
 //=============================================================================
 
+
+/*
+================================================================================
+
+SIGNAL HANDLING
+
+================================================================================
+*/
+
+#ifdef HAVE_SIGNAL_H
+static void Sys_SigHandler(int sig) {
+    CL_Disconnect();
+    Host_ShutdownServer(false);
+    Sys_Quit();
+}
+
+#ifdef HAVE_SIGACTION
+static void Sys_SigHook(int sig) {
+    struct sigaction action;
+    sigaction(sig, NULL, &action);
+    action.sa_handler = Sys_SigHandler;
+    sigaction(sig, &action, NULL);
+}
+#else
+static void Sys_SigHook(int sig) {
+    signal(sig, Sys_SigHandler);
+}
+#endif
+
+static void Sys_SigInit(void) {
+    // Disable SDL default signal handlers
+    SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
+    Sys_SigHook(SIGINT);
+    Sys_SigHook(SIGTERM);
+}
+#endif /* HAVE_SIGNAL_H */
+
+//=============================================================================
+
+
 #define DEFAULT_MEMORY (256 * 1024 * 1024)
 
-int main(int argc, char* argv[]) {
+static quakeparms_t* Sys_InitParms(int argc, char** argv) {
     static quakeparms_t parms;
-
+    
     parms.memsize = DEFAULT_MEMORY;
     parms.membase = malloc(parms.memsize);
     parms.basedir = ".";
-
+    
     COM_InitArgv(argc, argv);
-
     parms.argc = com_argc;
     parms.argv = com_argv;
+    
+    return &parms;
+}
 
+int main(int argc, char* argv[]) {
+#ifdef HAVE_SIGNAL_H
+    Sys_SigInit();
+#endif
+    
     printf("Host_Init\n");
-    Host_Init(&parms);
+    quakeparms_t* parms = Sys_InitParms(argc, argv);
+    Host_Init(parms);
 
     double oldtime = Sys_FloatTime();
-    while (1) {
+    while (true) {
         double newtime = Sys_FloatTime();
         double dt = newtime - oldtime;
         Host_Frame((float) dt);
