@@ -31,6 +31,7 @@
 
 #define GAMENAME "id1"
 
+#include "config.h"
 #include <SDL.h>
 #include <math.h>
 #include <string.h>
