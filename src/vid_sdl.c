@@ -168,7 +168,7 @@ static void VID_Init32BitSurface(void) {
 //
 static void VID_Init8BitSurface(void) {
     Uint32 flags = 0;
-    int w = 320;
+    int w = SCREEN_WIDTH;
     int h = SCREEN_HEIGHT;
     int depth = 8;
     Uint32 r_mask = 0;
@@ -303,18 +303,25 @@ static void VID_Present(void) {
 // contents of the RGBA buffer.
 //
 static void VID_UpdateTexture(vrect_t* rects) {
-    SDL_LockTexture(texture, NULL, &argb_buffer->pixels, &argb_buffer->pitch);
     while (rects) {
-        SDL_Rect sdl_rect = {
+        SDL_Rect src_rect = {
             .x = rects->x,
             .y = rects->y,
             .w = rects->width,
             .h = rects->height,
         };
-        SDL_LowerBlit(screen_buffer, &sdl_rect, argb_buffer, &sdl_rect);
+        SDL_Rect dst_rect = {
+            .x = 0,
+            .y = 0,
+            .w = rects->width,
+            .h = rects->height,
+        };
+        SDL_LockTexture(texture, &src_rect, &argb_buffer->pixels,
+                        &argb_buffer->pitch);
+        SDL_LowerBlit(screen_buffer, &src_rect, argb_buffer, &dst_rect);
+        SDL_UnlockTexture(texture);
         rects = rects->pnext;
     }
-    SDL_UnlockTexture(texture);
 }
 
 void VID_Update(vrect_t* rects) {
