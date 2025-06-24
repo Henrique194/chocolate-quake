@@ -52,7 +52,6 @@ void Show(void) {
     vr.x = vr.y = 0;
     vr.width = vid.width;
     vr.height = vid.height;
-    vr.pnext = NULL;
     VID_Update(&vr);
 }
 
@@ -86,7 +85,6 @@ void R_TimeRefresh_f(void) {
         vr.y = r_refdef.vrect.y;
         vr.width = r_refdef.vrect.width;
         vr.height = r_refdef.vrect.height;
-        vr.pnext = NULL;
         VID_Update(&vr);
     }
     stop = Sys_FloatTime();
@@ -114,20 +112,20 @@ void R_LineGraph(int x, int y, int h) {
     x += r_refdef.vrect.x;
     y += r_refdef.vrect.y;
 
-    dest = vid.buffer + vid.rowbytes * y + x;
+    dest = vid.buffer + vid.width * y + x;
 
     s = r_graphheight.value;
 
     if (h > s)
         h = s;
 
-    for (i = 0; i < h; i++, dest -= vid.rowbytes * 2) {
+    for (i = 0; i < h; i++, dest -= vid.width * 2) {
         dest[0] = 0xff;
-        *(dest - vid.rowbytes) = 0x30;
+        *(dest - vid.width) = 0x30;
     }
-    for (; i < s; i++, dest -= vid.rowbytes * 2) {
+    for (; i < s; i++, dest -= vid.width * 2) {
         dest[0] = 0x30;
-        *(dest - vid.rowbytes) = 0x30;
+        *(dest - vid.width) = 0x30;
     }
 }
 
@@ -404,8 +402,8 @@ r_refdef.viewangles[2]=    0;
 
     if ((r_dowarp != r_dowarpold) || r_viewchanged || lcd_x.value) {
         if (r_dowarp) {
-            if ((vid.width <= vid.maxwarpwidth) &&
-                (vid.height <= vid.maxwarpheight)) {
+            if ((vid.width <= WARP_WIDTH) &&
+                (vid.height <= WARP_HEIGHT)) {
                 vrect.x = 0;
                 vrect.y = 0;
                 vrect.width = vid.width;
@@ -416,14 +414,14 @@ r_refdef.viewangles[2]=    0;
                 w = vid.width;
                 h = vid.height;
 
-                if (w > vid.maxwarpwidth) {
-                    h *= (float) vid.maxwarpwidth / w;
-                    w = vid.maxwarpwidth;
+                if (w > WARP_WIDTH) {
+                    h *= (float) WARP_WIDTH / w;
+                    w = WARP_WIDTH;
                 }
 
-                if (h > vid.maxwarpheight) {
-                    h = vid.maxwarpheight;
-                    w *= (float) vid.maxwarpheight / h;
+                if (h > WARP_HEIGHT) {
+                    h = WARP_HEIGHT;
+                    w *= (float) WARP_HEIGHT / h;
                 }
 
                 vrect.x = 0;

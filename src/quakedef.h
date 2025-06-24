@@ -45,8 +45,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-//#define VID_LockBuffer()
-//#define VID_UnlockBuffer()
 void VID_LockBuffer(void);
 void VID_UnlockBuffer(void);
 

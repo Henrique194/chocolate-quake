@@ -817,12 +817,12 @@ void CL_ParseServerMessage(void) {
 
             case svc_setpause: {
                 cl.paused = MSG_ReadByte();
-
                 if (cl.paused) {
                     BGMusic_Pause();
                 } else {
                     BGMusic_Resume();
                 }
+                VID_HandlePause(cl.paused);
             } break;
 
             case svc_signonnum:

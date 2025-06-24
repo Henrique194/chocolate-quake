@@ -17,35 +17,49 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-// input.h -- external (non-keyboard) input devices
 
+#ifndef __VID_MODES__
+#define __VID_MODES__
 
-#ifndef __INPUT__
-#define __INPUT__
+#define NUM_WINDOWED_MODES   3
+#define NUM_FULLSCREEN_MODES 12
+#define NUM_MODES            (NUM_WINDOWED_MODES + NUM_FULLSCREEN_MODES)
 
-void IN_Init(void);
+#define DEFAULT_TEST_TIME 5
 
-void IN_Shutdown(void);
+typedef enum {
+    VID_MODE_WINDOWED,
+    VID_MODE_FULLSCREEN,
+} vid_mode_type_t;
 
-//
-// oportunity for devices to stick commands on the script buffer
-//
-void IN_Commands(void);
+typedef struct {
+    const int width;
+    const int height;
+    const vid_mode_type_t type;
+    const char* description;
+    const char* full_description;
+} vid_mode_t;
 
-void IN_MouseEvent(const SDL_Event* event);
+void VID_InitModes(void);
 
-void IN_Move(usercmd_t* cmd);
-// add additional movement on top of the keyboard move cmd
+const vid_mode_t* VID_GetMode(int mode);
 
-void IN_DeactivateMouse(void);
+const vid_mode_t* VID_GetCurrentMode(void);
 
-void IN_ActivateMouse(void);
+const vid_mode_t* VID_GetDefaultMode(void);
 
-void IN_ShowMouse(void);
+qboolean VID_IsFullscreenMode(void);
 
-void IN_HideMouse(void);
+qboolean VID_IsWindowedMode(void);
 
-void IN_ClearStates(void);
-// restores all button and position states to defaults
+qboolean VID_IsInTestMode(void);
+
+void VID_SetMode(int mode_num);
+
+void VID_SetCurrentModeAsDefault(void);
+
+void VID_TestMode(int mode_num);
+
+void VID_UpdateModes(void);
 
 #endif

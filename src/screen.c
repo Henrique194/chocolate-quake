@@ -603,7 +603,7 @@ void SCR_ScreenShot_f(void) {
     D_EnableBackBufferAccess(); // enable direct drawing of console to back
                                 //  buffer
 
-    WritePCXfile(pcxname, vid.buffer, vid.width, vid.height, vid.rowbytes,
+    WritePCXfile(pcxname, vid.buffer, vid.width, vid.height, vid.width,
                  host_basepal);
 
     D_DisableBackBufferAccess(); // for adapters that can't stay mapped in
@@ -885,7 +885,6 @@ void SCR_UpdateScreen(void) {
         vrect.y = 0;
         vrect.width = vid.width;
         vrect.height = vid.height;
-        vrect.pnext = 0;
 
         VID_Update(&vrect);
     } else if (scr_copytop) {
@@ -893,7 +892,6 @@ void SCR_UpdateScreen(void) {
         vrect.y = 0;
         vrect.width = vid.width;
         vrect.height = vid.height - sb_lines;
-        vrect.pnext = 0;
 
         VID_Update(&vrect);
     } else {
@@ -901,7 +899,6 @@ void SCR_UpdateScreen(void) {
         vrect.y = scr_vrect.y;
         vrect.width = scr_vrect.width;
         vrect.height = scr_vrect.height;
-        vrect.pnext = 0;
 
         VID_Update(&vrect);
     }

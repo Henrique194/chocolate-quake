@@ -126,7 +126,7 @@ void D_SetupFrame(void) {
     if (r_dowarp)
         screenwidth = WARP_WIDTH;
     else
-        screenwidth = vid.rowbytes;
+        screenwidth = vid.width;
 
     d_roverwrapped = false;
     d_initial_rover = sc_rover;
