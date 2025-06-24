@@ -1,3 +1,5 @@
+add_subdirectory("video")
+
 set(SOURCE_FILES
     adivtab.h
     anorms.h
@@ -104,8 +106,6 @@ set(SOURCE_FILES
     sv_user.c
     sys.h
     sys_sdl.c
-    vid.h
-    vid_sdl.c
     view.c
     view.h
     wad.c
@@ -138,7 +138,7 @@ target_include_directories(${PACKAGE_TARNAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
 )
-set(LIBS ${SDL2_LIBRARIES} vorbisfile)
+set(LIBS ${SDL2_LIBRARIES} vorbisfile video)
 target_link_libraries("${PACKAGE_TARNAME}" ${LIBS})
 
 if(MSVC)

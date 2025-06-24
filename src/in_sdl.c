@@ -22,6 +22,7 @@
 
 #include "quakedef.h"
 
+static qboolean mouse_active = true;
 
 void IN_Init(void) {
     // Relative mode for continuous mouse motion.
@@ -113,10 +114,32 @@ void IN_MouseMove(usercmd_t* cmd) {
     }
 }
 
+void IN_DeactivateMouse(void) {
+    mouse_active = false;
+}
+
+void IN_ActivateMouse(void) {
+    mouse_active = true;
+}
+
+void IN_ShowMouse(void) {
+    SDL_SetRelativeMouseMode(SDL_FALSE);
+    SDL_ShowCursor(SDL_TRUE);
+}
+
+void IN_HideMouse(void) {
+    SDL_SetRelativeMouseMode(SDL_TRUE);
+    SDL_ShowCursor(SDL_FALSE);
+    // consume all pending mouse events, so the camera doesn't go flying
+    SDL_GetRelativeMouseState(NULL, NULL);
+}
+
 void IN_JoyMove(usercmd_t* cmd) {
 }
 
 void IN_Move(usercmd_t* cmd) {
-    IN_MouseMove(cmd);
+    if (mouse_active) {
+        IN_MouseMove(cmd);
+    }
     IN_JoyMove(cmd);
 }

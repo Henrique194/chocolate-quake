@@ -332,15 +332,15 @@ static void Sys_SigInit(void) {
 
 static quakeparms_t* Sys_InitParms(int argc, char** argv) {
     static quakeparms_t parms;
-    
+
     parms.memsize = DEFAULT_MEMORY;
     parms.membase = malloc(parms.memsize);
     parms.basedir = ".";
-    
+
     COM_InitArgv(argc, argv);
     parms.argc = com_argc;
     parms.argv = com_argv;
-    
+
     return &parms;
 }
 
@@ -348,7 +348,7 @@ int main(int argc, char* argv[]) {
 #ifdef HAVE_SIGNAL_H
     Sys_SigInit();
 #endif
-    
+
     printf("Host_Init\n");
     quakeparms_t* parms = Sys_InitParms(argc, argv);
     Host_Init(parms);

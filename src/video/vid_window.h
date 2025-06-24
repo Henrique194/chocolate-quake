@@ -17,35 +17,24 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-// input.h -- external (non-keyboard) input devices
 
+#ifndef __VID_WINDOW__
+#define __VID_WINDOW__
 
-#ifndef __INPUT__
-#define __INPUT__
+void VID_InitWindow(void);
 
-void IN_Init(void);
+void VID_ShutdownWindow(void);
 
-void IN_Shutdown(void);
+qboolean VID_WindowedMouse(void);
 
-//
-// oportunity for devices to stick commands on the script buffer
-//
-void IN_Commands(void);
+void VID_ToggleMouseGrab(void);
 
-void IN_MouseEvent(const SDL_Event* event);
+void VID_ResizeScreen(void);
 
-void IN_Move(usercmd_t* cmd);
-// add additional movement on top of the keyboard move cmd
+void VID_UpdateWindow(vrect_t* rect);
 
-void IN_DeactivateMouse(void);
+void VID_HandlePause(qboolean pause);
 
-void IN_ActivateMouse(void);
-
-void IN_ShowMouse(void);
-
-void IN_HideMouse(void);
-
-void IN_ClearStates(void);
-// restores all button and position states to defaults
+void VID_MinimizeWindow(void);
 
 #endif

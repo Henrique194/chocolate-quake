@@ -17,35 +17,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-// input.h -- external (non-keyboard) input devices
 
+#ifndef __VID_BUFFERS__
+#define __VID_BUFFERS__
 
-#ifndef __INPUT__
-#define __INPUT__
+void VID_SetPalette(const byte* palette);
 
-void IN_Init(void);
+void VID_ShiftPalette(const byte* palette);
 
-void IN_Shutdown(void);
+void VID_ReallocBuffers(void);
 
-//
-// oportunity for devices to stick commands on the script buffer
-//
-void IN_Commands(void);
+void VID_FreeBuffers(void);
 
-void IN_MouseEvent(const SDL_Event* event);
+void VID_LockBuffer(void);
 
-void IN_Move(usercmd_t* cmd);
-// add additional movement on top of the keyboard move cmd
+void VID_UnlockBuffer(void);
 
-void IN_DeactivateMouse(void);
-
-void IN_ActivateMouse(void);
-
-void IN_ShowMouse(void);
-
-void IN_HideMouse(void);
-
-void IN_ClearStates(void);
-// restores all button and position states to defaults
+void VID_UpdateTexture(SDL_Texture* texture, vrect_t* rect);
 
 #endif

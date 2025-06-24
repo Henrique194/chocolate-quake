@@ -54,7 +54,7 @@ void D_FillRect(vrect_t* rect, int color) {
     if (rwidth < 1 || rheight < 1)
         return;
 
-    dest = ((byte*) vid.buffer + ry * vid.rowbytes + rx);
+    dest = ((byte*) vid.buffer + ry * vid.width + rx);
 
     if (((rwidth & 0x03) == 0) && (((intptr_t) dest & 0x03) == 0)) {
         // faster aligned dword clear
@@ -67,14 +67,14 @@ void D_FillRect(vrect_t* rect, int color) {
         for (ry = 0; ry < rheight; ry++) {
             for (rx = 0; rx < rwidth; rx++)
                 ldest[rx] = color;
-            ldest = (unsigned*) ((byte*) ldest + vid.rowbytes);
+            ldest = (unsigned*) ((byte*) ldest + vid.width);
         }
     } else {
         // slower byte-by-byte clear for unaligned cases
         for (ry = 0; ry < rheight; ry++) {
             for (rx = 0; rx < rwidth; rx++)
                 dest[rx] = color;
-            dest += vid.rowbytes;
+            dest += vid.width;
         }
     }
 }

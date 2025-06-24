@@ -22,9 +22,6 @@
 #include "quakedef.h"
 
 
-void (*vid_menudrawfn)(void);
-void (*vid_menukeyfn)(int key);
-
 enum {
     m_none,
     m_main,
@@ -984,7 +981,7 @@ again:
 //=============================================================================
 /* OPTIONS MENU */
 
-#define OPTIONS_ITEMS 13
+#define OPTIONS_ITEMS 14
 
 #define SLIDER_RANGE 10
 
@@ -994,6 +991,9 @@ void M_Menu_Options_f(void) {
     key_dest = key_menu;
     m_state = m_options;
     m_entersound = true;
+    if (options_cursor == 13 && VID_IsFullscreenMode()) {
+        options_cursor = 0;
+    }
 }
 
 
@@ -1062,6 +1062,10 @@ void M_AdjustSliders(int dir) {
 
         case 11: // lookstrafe
             Cvar_SetValue("lookstrafe", !lookstrafe.value);
+            break;
+
+        case 13: // mouse grab
+            VID_ToggleMouseGrab();
             break;
     }
 }
@@ -1138,14 +1142,15 @@ void M_Options_Draw(void) {
     M_Print(16, 120, "            Lookstrafe");
     M_DrawCheckbox(220, 120, lookstrafe.value);
 
-    // MISSING IMPLEMENTATION:
-    // vid_menudrawfn is never set
-    if (vid_menudrawfn)
-        M_Print(16, 128, "         Video Options");
+    M_Print(16, 128, "         Video Options");
+
+    if (VID_IsWindowedMode()) {
+        M_Print(16, 136, "             Use Mouse");
+        M_DrawCheckbox(220, 136, VID_WindowedMouse());
+    }
 
     // cursor
-    M_DrawCharacter(200, 32 + options_cursor * 8,
-                    12 + ((int) (realtime * 4) & 1));
+    M_DrawCharacter(200, 32 + options_cursor * 8, 12 + ((int) (realtime * 4) & 1));
 }
 
 
@@ -1200,11 +1205,12 @@ void M_Options_Key(int k) {
             break;
     }
 
-    if (options_cursor == 12 && vid_menudrawfn == NULL) {
-        if (k == K_UPARROW)
-            options_cursor = 11;
-        else
+    if (options_cursor == 13 && VID_IsFullscreenMode()) {
+        if (k == K_UPARROW) {
+            options_cursor = 12;
+        } else {
             options_cursor = 0;
+        }
     }
 }
 
@@ -1386,14 +1392,12 @@ void M_Menu_Video_f(void) {
 
 
 void M_Video_Draw(void) {
-    (*vid_menudrawfn)();
+    VID_MenuDraw();
 }
 
 
 void M_Video_Key(int key) {
-    // MISSING IMPLEMENTATION:
-    // vid_menukeyfn is never set
-    (*vid_menukeyfn)(key);
+    VID_MenuKey(key);
 }
 
 //=============================================================================
