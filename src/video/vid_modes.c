@@ -45,8 +45,8 @@ static vid_mode_t modes[NUM_MODES] = {
     WINDOWED_MODE(800, 600),
     FULLSCREEN_MODE(320, 200),
     FULLSCREEN_MODE(320, 240),
+    FULLSCREEN_MODE(640, 400),
     FULLSCREEN_MODE(640, 480),
-    FULLSCREEN_MODE(640, 600),
     FULLSCREEN_MODE(800, 600),
     FULLSCREEN_MODE(1024, 768),
     FULLSCREEN_MODE(1152, 864),
@@ -284,6 +284,7 @@ static void VID_Minimize_f(void) {
 }
 
 //==============================================================================
+
 
 static void VID_SetStartupMode(void) {
     default_mode = (int) _vid_default_mode_win.value;
