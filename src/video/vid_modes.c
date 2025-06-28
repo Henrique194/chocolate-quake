@@ -40,7 +40,7 @@
 #define FULLSCREEN_MODE(w, h) VID_MODE(w, h, VID_MODE_FULLSCREEN, fullscreen)
 
 static vid_mode_t modes[NUM_MODES] = {
-    WINDOWED_MODE(320, 200),
+    WINDOWED_MODE(320, 240),
     WINDOWED_MODE(640, 480),
     WINDOWED_MODE(800, 600),
     FULLSCREEN_MODE(320, 200),
