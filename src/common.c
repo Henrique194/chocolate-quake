@@ -1134,7 +1134,6 @@ typedef struct {
 
 static char com_cachedir[MAX_OSPATH];
 char com_gamedir[MAX_OSPATH];
-qboolean file_from_pak;
 
 typedef struct searchpath_s {
     char filename[MAX_OSPATH];
@@ -1237,6 +1236,101 @@ void COM_CopyFile(char* netpath, char* cachepath) {
     Sys_FileClose(out);
 }
 
+//
+// check a file in the directory tree
+//
+static qboolean COM_SearchDir(const searchpath_t* search, const char* filename,
+                              int* handle, FILE** file) {
+    char netpath[MAX_OSPATH];
+    char cachepath[MAX_OSPATH];
+    int i;
+
+    sprintf(netpath, "%s/%s", search->filename, filename);
+    int findtime = Sys_FileTime(netpath);
+    if (findtime == -1) {
+        return false;
+    }
+
+    // see if the file needs to be updated in the cache
+    if (com_cachedir[0]) {
+        sprintf(cachepath, "%s%s", com_cachedir, netpath);
+        int cachetime = Sys_FileTime(cachepath);
+        if (cachetime < findtime) {
+            COM_CopyFile(netpath, cachepath);
+        }
+        strcpy(netpath, cachepath);
+    } else {
+        strcpy(cachepath, netpath);
+    }
+
+    Sys_Printf("FindFile: %s\n", netpath);
+    com_filesize = Sys_FileOpenRead(netpath, &i);
+    if (handle) {
+        *handle = i;
+    } else {
+        Sys_FileClose(i);
+        *file = fopen(netpath, "rb");
+    }
+    return true;
+}
+
+//
+// look through all the pak file elements
+//
+static qboolean COM_SearchPak(const pack_t* pak, const char* filename,
+                              int* handle, FILE** file) {
+    for (int i = 0; i < pak->numfiles; i++) {
+        if (strcmp(pak->files[i].name, filename) != 0) {
+            continue;
+        }
+        // found it!
+        Sys_Printf("PackFile: %s : %s\n", pak->filename, filename);
+        if (handle) {
+            *handle = pak->handle;
+            Sys_FileSeek(pak->handle, pak->files[i].filepos);
+        } else {
+            // open a new file on the pakfile
+            *file = fopen(pak->filename, "rb");
+            if (*file) {
+                fseek(*file, pak->files[i].filepos, SEEK_SET);
+            }
+        }
+        com_filesize = pak->files[i].filelen;
+        return true;
+    }
+    return false;
+}
+
+static qboolean COM_SearchPath(const searchpath_t* search, const char* filename,
+                               int* handle, FILE** file) {
+    if (search->pack) {
+        return COM_SearchPak(search->pack, filename, handle, file);
+    }
+    if (!static_registered && (strchr(filename, '/') || strchr(filename, '\\'))) {
+        // if not a registered version, don't ever go beyond base
+        return false;
+    }
+    return COM_SearchDir(search, filename, handle, file);
+}
+
+//
+// search through the path, one element at a time
+//
+static qboolean COM_SearchPaths(const char* filename, int* handle,
+                                FILE** file) {
+    const searchpath_t* search = com_searchpaths;
+    if (proghack && !strcmp(filename, "progs.dat")) {
+        // gross hack to use quake 1 progs with quake 2 maps
+        search = search->next;
+    }
+    for (; search; search = search->next) {
+        if (COM_SearchPath(search, filename, handle, file)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 /*
 ===========
 COM_FindFile
@@ -1245,102 +1339,50 @@ Finds the file in the search path.
 Sets com_filesize and one of handle or file
 ===========
 */
-int COM_FindFile(char* filename, int* handle, FILE** file) {
-    searchpath_t* search;
-    char netpath[MAX_OSPATH];
-    char cachepath[MAX_OSPATH];
-    pack_t* pak;
-    int i;
-    int findtime, cachetime;
-
-    if (file && handle)
+static int COM_FindFile(char* filename, int* handle, FILE** file) {
+    if (file && handle) {
         Sys_Error("COM_FindFile: both handle and file set");
-    if (!file && !handle)
-        Sys_Error("COM_FindFile: neither handle or file set");
-
-    file_from_pak = false;
-    //
-    // search through the path, one element at a time
-    //
-    search = com_searchpaths;
-    if (proghack) { // gross hack to use quake 1 progs with quake 2 maps
-        if (!strcmp(filename, "progs.dat"))
-            search = search->next;
     }
-
-    for (; search; search = search->next) {
-        // is the element a pak file?
-        if (search->pack) {
-            // look through all the pak file elements
-            file_from_pak = true;
-            pak = search->pack;
-            for (i = 0; i < pak->numfiles; i++)
-                if (!strcmp(pak->files[i].name, filename)) { // found it!
-                    Sys_Printf("PackFile: %s : %s\n", pak->filename, filename);
-                    if (handle) {
-                        *handle = pak->handle;
-                        Sys_FileSeek(pak->handle, pak->files[i].filepos);
-                    } else { // open a new file on the pakfile
-                        *file = fopen(pak->filename, "rb");
-                        if (*file)
-                            fseek(*file, pak->files[i].filepos, SEEK_SET);
-                    }
-                    com_filesize = pak->files[i].filelen;
-                    return com_filesize;
-                }
+    if (!file && !handle) {
+        Sys_Error("COM_FindFile: neither handle or file set");
+    }
+    if (!COM_SearchPaths(filename, handle, file)) {
+        Sys_Printf("FindFile: can't find %s\n", filename);
+        if (handle) {
+            *handle = -1;
         } else {
-            // check a file in the directory tree
-            if (!static_registered) { // if not a registered version, don't ever go beyond base
-                if (strchr(filename, '/') || strchr(filename, '\\'))
-                    continue;
-            }
+            *file = NULL;
+        }
+        com_filesize = -1;
+        return -1;
+    }
+    return com_filesize;
+}
 
-            sprintf(netpath, "%s/%s", search->filename, filename);
-
-            findtime = Sys_FileTime(netpath);
-            if (findtime == -1)
-                continue;
-
-            // see if the file needs to be updated in the cache
-            if (!com_cachedir[0])
-                strcpy(cachepath, netpath);
-            else {
-                sprintf(cachepath, "%s%s", com_cachedir, netpath);
-
-                cachetime = Sys_FileTime(cachepath);
-
-                if (cachetime < findtime)
-                    COM_CopyFile(netpath, cachepath);
-                strcpy(netpath, cachepath);
-            }
-
-            Sys_Printf("FindFile: %s\n", netpath);
-            com_filesize = Sys_FileOpenRead(netpath, &i);
-            if (handle)
-                *handle = i;
-            else {
-                Sys_FileClose(i);
-                *file = fopen(netpath, "rb");
-            }
+int COM_FindMusicTrack(const char* track_file, FILE** file) {
+    const searchpath_t* search = com_searchpaths;
+    for (; search; search = search->next) {
+        if (search->pack) {
+            continue;
+        }
+        if (COM_SearchDir(search, track_file, NULL, file)) {
             return com_filesize;
         }
     }
-
-    Sys_Printf("FindFile: can't find %s\n", filename);
-
-    if (handle)
-        *handle = -1;
-    else
-        *file = NULL;
+    Sys_Printf("FindMusicTrack: can't find %s\n", track_file);
+    *file = NULL;
     com_filesize = -1;
     return -1;
 }
 
-
-qboolean COM_FileExists(const char* filename) {
+qboolean COM_MusicTrackExists(const char* track_file) {
     FILE* file = NULL;
-    COM_FindFile(filename, NULL, &file);
-    return (file == NULL) ? false : true;
+    COM_FindMusicTrack(track_file, &file);
+    if (file) {
+        fclose(file);
+        return true;
+    }
+    return false;
 }
 
 /*

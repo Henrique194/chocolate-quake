@@ -169,9 +169,9 @@ extern int com_filesize;
 struct cache_user_s;
 
 extern char com_gamedir[MAX_OSPATH];
-extern qboolean file_from_pak;
 
-qboolean COM_FileExists(const char* filename);
+int COM_FindMusicTrack(const char* track_file, FILE** file);
+qboolean COM_MusicTrackExists(const char* track_file);
 void COM_WriteFile(char* filename, void* data, int len);
 int COM_OpenFile(char* filename, int* hndl);
 int COM_FOpenFile(char* filename, FILE** file);
@@ -185,7 +185,6 @@ void COM_LoadCacheFile(char* path, struct cache_user_s* cu);
 
 typedef struct _fshandle_t {
     FILE* file;
-    qboolean pak; /* is the file read from a pak */
     long start;   /* file or data start position */
     long length;  /* file or data size */
     long pos;     /* current position relative to start */

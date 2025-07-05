@@ -196,7 +196,7 @@ void BGMusic_Play(byte track, qboolean looping) {
             continue;
         }
         BGMusic_GetTrackPath(tmp, track, handler->ext);
-        if (COM_FileExists(tmp)) {
+        if (COM_MusicTrackExists(tmp)) {
             type = handler->type;
             ext = handler->ext;
             break;

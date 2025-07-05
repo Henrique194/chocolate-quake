@@ -129,12 +129,10 @@ snd_stream_t* S_CodecUtilOpen(const char* filename, snd_codec_t* codec,
                               qboolean loop) {
     snd_stream_t* stream;
     FILE* handle;
-    qboolean pak;
     long length;
 
     /* Try to open the file */
-    length = (long) COM_FOpenFile(filename, &handle);
-    pak = file_from_pak;
+    length = (long) COM_FindMusicTrack(filename, &handle);
     if (length == -1) {
         Con_DPrintf("Couldn't open %s\n", filename);
         return NULL;
@@ -148,7 +146,6 @@ snd_stream_t* S_CodecUtilOpen(const char* filename, snd_codec_t* codec,
     stream->fh.start = ftell(handle);
     stream->fh.pos = 0;
     stream->fh.length = length;
-    stream->fh.pak = stream->pak = pak;
     Q_strncpy(stream->name, filename, MAX_QPATH);
 
     return stream;
