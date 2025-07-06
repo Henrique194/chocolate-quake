@@ -408,8 +408,8 @@ void Draw_ConsoleBackground(int lines) {
     conback = Draw_CachePic("gfx/conback.lmp");
 
     // hack the version number directly into the pic
-    dest = conback->data + 320 - 43 + 320 * 186;
-    sprintf(ver, "%4.2f", VERSION);
+    sprintf(ver, "(WinQuake) %4.2f", (float) VERSION);
+    dest = conback->data + 320 * 186 + 320 - 11 - 8 * strlen(ver);
 
     for (x = 0; x < strlen(ver); x++)
         Draw_CharToConback(ver[x], dest + (x << 3));
