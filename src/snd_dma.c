@@ -135,12 +135,12 @@ void S_Startup(void) {
         return;
     }
     sound_started = SNDDMA_Init(&sn);
-    if (sound_started) {
-        Con_Printf("Audio: %d bit, %s, %d Hz\n", shm->samplebits,
-                   (shm->channels == 2) ? "stereo" : "mono", shm->speed);
-    } else {
+    if (!sound_started) {
         Con_Printf("Failed initializing sound\n");
+        return;
     }
+    Con_Printf("Audio: %d bit, %s, %d Hz\n", shm->samplebits,
+               (shm->channels == 2) ? "stereo" : "mono", shm->speed);
     GetSoundtime();
     paintedtime = soundtime;
 }
