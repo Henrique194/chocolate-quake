@@ -138,7 +138,7 @@ target_include_directories(${PACKAGE_TARNAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
 )
-set(LIBS ${SDL2_LIBRARIES} vorbisfile video)
+set(LIBS ${SDL2_LIBRARIES} Vorbis::vorbisfile video)
 target_link_libraries("${PACKAGE_TARNAME}" ${LIBS})
 
 if(MSVC)
