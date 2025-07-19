@@ -1,0 +1,45 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 21,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "ninja-multi-vcpkg",
+            "displayName": "Ninja Multi-Config",
+            "description": "Base preset using Ninja Multi-Config with vcpkg toolchain",
+            "binaryDir": "${sourceDir}/builds/${presetName}",
+            "generator": "Ninja Multi-Config",
+            "toolchainFile": "${sourceDir}/external/vcpkg/scripts/buildsystems/vcpkg.cmake",
+            "hidden": true
+        },
+        {
+            "name": "debug",
+            "inherits": "ninja-multi-vcpkg",
+            "displayName": "Ninja Multi-Config (Debug)",
+            "binaryDir": "${sourceDir}/cmake-build-debug"
+        },
+        {
+            "name": "release",
+            "inherits": "ninja-multi-vcpkg",
+            "displayName": "Ninja Multi-Config (Release)",
+            "binaryDir": "${sourceDir}/cmake-build-release"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug",
+            "configurePreset": "debug",
+            "displayName": "Build (Debug)",
+            "configuration": "Debug"
+        },
+        {
+            "name": "release",
+            "configurePreset": "release",
+            "displayName": "Build (Release)",
+            "configuration": "Release"
+        }
+    ]
+}

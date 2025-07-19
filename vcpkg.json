@@ -1,0 +1,19 @@
+{
+  "name": "chocolate-quake",
+  "version-string": "latest",
+  "dependencies": [
+    {
+      "name": "sdl2",
+      "version>=": "2.26.5"
+    },
+    {
+      "name": "libogg",
+      "version>=": "1.3.6"
+    },
+    {
+      "name": "libvorbis",
+      "version>=": "1.3.7#4"
+    }
+  ],
+  "builtin-baseline": "b91c3336aee7f32412508f7dd351ae2cabdb8819"
+}
