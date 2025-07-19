@@ -1,0 +1,79 @@
+name: Continuous Integration
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+  workflow_dispatch:
+
+jobs:
+  job:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: Windows x64
+            os: windows-latest
+            triplet: x64-windows
+
+          - name: Windows x86
+            os: windows-latest
+            triplet: x86-windows
+
+          - name: macOS arm64
+            os: macos-15
+            triplet: arm64-osx
+
+          - name: macOS x64
+            os: macos-13
+            triplet: x64-osx
+
+          - name: Ubuntu x64
+            os: ubuntu-24.04
+            triplet: x64-linux
+
+          - name: Ubuntu x86
+            os: ubuntu-24.04
+            triplet: x86-linux
+    env:
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.config.triplet }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Install required system packages (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libltdl-dev
+
+      - uses: lukka/get-cmake@latest
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgDirectory: '${{ github.workspace }}/external/vcpkg'
+
+      - name: Build
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: 'release'
+          buildPreset: 'release'
+
+      - name: Upload build artifact
+        if: runner.os == 'Windows' || runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.config.name }}
+          path: cmake-build-release/src/Release/
