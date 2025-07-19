@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7.2)
+cmake_minimum_required(VERSION 3.21.0)
 project("Chocolate Quake" VERSION 1.0.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 99)
 
