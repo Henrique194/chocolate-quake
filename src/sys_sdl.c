@@ -191,60 +191,6 @@ SYSTEM EVENT POLLING
 ================================================================================
 */
 
-static byte scantokey[128] = {
-    0,           0,           0,           0,       'a',
-    'b',         'c',         'd',         'e',     'f',
-    'g',         'h',         'i',         'j',     'k',
-    'l',         'm',         'n',         'o',     'p',
-    'q',         'r',         's',         't',     'u',
-    'v',         'w',         'x',         'y',     'z',
-    '1',         '2',         '3',         '4',     '5',
-    '6',         '7',         '8',         '9',     '0',
-    K_ENTER,     K_ESCAPE,    K_BACKSPACE, K_TAB,   K_SPACE,
-    '-',         '=',         '[',         ']',     '\\',
-    0,           ';',         '\'',        '`',     ',',
-    '.',         '/',         0,           K_F1,    K_F2,
-    K_F3,        K_F4,        K_F5,        K_F6,    K_F7,
-    K_F8,        K_F9,        K_F10,       K_F11,   K_F12,
-    0,           0,           K_PAUSE,     K_INS,   K_HOME,
-    K_PGUP,      K_DEL,       K_END,       K_PGDN,  K_RIGHTARROW,
-    K_LEFTARROW, K_DOWNARROW, K_UPARROW,   0,       '/',
-    '*',         '-',         '+',         K_ENTER, 0,
-    K_DOWNARROW, K_PGDN,      K_LEFTARROW, '5',     K_RIGHTARROW,
-    0,           K_UPARROW,   0,           0,       K_DEL,
-    0,           0,           0,           0,       0,
-    0,           0,           0,           0,       0,
-    0,           0,           0,           0,       0,
-    0,           0,           0,           0,       0,
-    0,           0,           0,           0,       0,
-    0,           0,           0,
-};
-
-static int Sys_TranslateKey(SDL_Scancode scancode) {
-    switch (scancode) {
-        case SDL_SCANCODE_LCTRL:
-        case SDL_SCANCODE_RCTRL:
-            return K_CTRL;
-        case SDL_SCANCODE_LSHIFT:
-        case SDL_SCANCODE_RSHIFT:
-            return K_SHIFT;
-        case SDL_SCANCODE_LALT:
-        case SDL_SCANCODE_RALT:
-            return K_ALT;
-        default:
-            if (scancode < SDL_arraysize(scantokey)) {
-                return scantokey[scancode];
-            }
-            return 0;
-    }
-}
-
-static void Sys_KeyboardEvent(const SDL_Event* event) {
-    int down = (event->key.state == SDL_PRESSED);
-    int key = Sys_TranslateKey(event->key.keysym.scancode);
-    Key_Event(key, down);
-}
-
 static void Sys_QuitEvent(void) {
     if (M_IsInQuitScreen()) {
         // Confirm quit.
@@ -261,12 +207,18 @@ void Sys_SendKeyEvents() {
         switch (event.type) {
             case SDL_KEYDOWN:
             case SDL_KEYUP:
-                Sys_KeyboardEvent(&event);
+                IN_KeyboardEvent(&event);
                 break;
             case SDL_MOUSEBUTTONDOWN:
             case SDL_MOUSEBUTTONUP:
             case SDL_MOUSEWHEEL:
                 IN_MouseEvent(&event);
+                break;
+            case SDL_CONTROLLERDEVICEADDED:
+            case SDL_CONTROLLERBUTTONDOWN:
+            case SDL_CONTROLLERBUTTONUP:
+            case SDL_CONTROLLERAXISMOTION:
+                IN_GamepadEvent(&event);
                 break;
             case SDL_QUIT:
                 Sys_QuitEvent();
