@@ -172,16 +172,15 @@ void BGMusic_Play(byte track, qboolean looping) {
     }
 
     track = remap[track];
-    if (track < 1) {
-        Con_DPrintf("CDAudio: Bad track number %u.\n", track);
-        return;
-    }
-
     if (playing) {
         if (playTrack == track) {
             return;
         }
         BGMusic_Stop();
+    }
+    if (track < 1) {
+        Con_DPrintf("CDAudio: Bad track number %u.\n", track);
+        return;
     }
 
     unsigned int type;
