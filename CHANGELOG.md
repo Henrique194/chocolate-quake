@@ -1,3 +1,21 @@
+## v1.1.0
+
+### General Updates
+
+- **Gamepad Support**: Added support for modern game controllers.
+- **Continuous Integration**: Set up GitHub Actions for automated builds.
+- **Improved Dependency Management**: Integrated vcpkg to simplify dependency
+  handling and improve cross-platform builds.
+
+### Bug Fixes
+
+- **Fixed Crash in Abyss of Pandemonium**: Fixed a crash that occurred when
+  playing on Easy mode by restoring original limit on sound effects.
+- **Texture Cleanup on Shutdown**: Fixed a double-free issue with textures when
+  closing the window.
+
+---
+
 ## v1.0.0
 
 ### General Updates
