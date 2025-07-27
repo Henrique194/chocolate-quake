@@ -215,6 +215,7 @@ void Sys_SendKeyEvents() {
                 IN_MouseEvent(&event);
                 break;
             case SDL_CONTROLLERDEVICEADDED:
+            case SDL_CONTROLLERDEVICEREMOVED:
             case SDL_CONTROLLERBUTTONDOWN:
             case SDL_CONTROLLERBUTTONUP:
             case SDL_CONTROLLERAXISMOTION:
