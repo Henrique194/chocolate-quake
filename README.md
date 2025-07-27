@@ -5,7 +5,7 @@ original experience of version 1.09 and earlier DOS releases. Inspired by the
 philosophy of Chocolate Doom, this project aims for accuracy and authenticity
 over modern enhancements.
 
-Chocolate Quake’s aims are:
+Chocolate Quake's aims are:
 
 * Reproduces the behavior of Quake v1.09 (WinQuake) and earlier DOS versions
   with high accuracy, including original bugs and quirks.
@@ -40,6 +40,14 @@ matching the original CD audio.
 
 # Credits
 
-* Portions of the sound subsystem are based on code
-  from [QuakeSpasm Spiked](https://github.com/Shpoike/Quakespasm), an
-  enhanced Quake source port by Ozkan, Eric, Sander and Stevenauus.
+Chocolate Quake builds upon the work of the Quake community and open-source
+contributors. Special thanks to:
+
+* [QuakeSpasm Spiked](https://github.com/Shpoike/Quakespasm) - Portions of the
+  sound and input subsystems are adapted from QuakeSpasm Spiked. Thanks to the
+  authors for their solid groundwork.
+* [@arrowgent](https://github.com/arrowgent) - For thorough Linux testing and
+  valuable bug reports.
+
+Additional thanks to the broader Quake modding and source port community for
+maintaining an ecosystem that made this project possible.
