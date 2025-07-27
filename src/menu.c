@@ -303,6 +303,7 @@ void M_Main_Draw(void) {
 void M_Main_Key(int key) {
     switch (key) {
         case K_ESCAPE:
+        case K_BBUTTON:
             key_dest = key_game;
             m_state = m_none;
             cls.demonum = m_save_demonum;
@@ -324,6 +325,7 @@ void M_Main_Key(int key) {
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             m_entersound = true;
 
             switch (m_main_cursor) {
@@ -383,6 +385,7 @@ void M_SinglePlayer_Draw(void) {
 void M_SinglePlayer_Key(int key) {
     switch (key) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_Main_f();
             break;
 
@@ -399,6 +402,7 @@ void M_SinglePlayer_Key(int key) {
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             m_entersound = true;
 
             switch (m_singleplayer_cursor) {
@@ -515,10 +519,12 @@ void M_Save_Draw(void) {
 void M_Load_Key(int k) {
     switch (k) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_SinglePlayer_f();
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             S_LocalSound("misc/menu2.wav");
             if (!loadable[load_cursor])
                 return;
@@ -555,10 +561,12 @@ void M_Load_Key(int k) {
 void M_Save_Key(int k) {
     switch (k) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_SinglePlayer_f();
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             m_state = m_none;
             key_dest = key_game;
             Cbuf_AddText(va("save s%i\n", load_cursor));
@@ -620,6 +628,7 @@ void M_MultiPlayer_Draw(void) {
 void M_MultiPlayer_Key(int key) {
     switch (key) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_Main_f();
             break;
 
@@ -636,6 +645,7 @@ void M_MultiPlayer_Key(int key) {
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             m_entersound = true;
             switch (m_multiplayer_cursor) {
                 case 0:
@@ -728,6 +738,7 @@ void M_Setup_Key(int k) {
 
     switch (k) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_MultiPlayer_f();
             break;
 
@@ -766,6 +777,7 @@ void M_Setup_Key(int k) {
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             if (setup_cursor == 0 || setup_cursor == 1)
                 return;
 
@@ -927,6 +939,7 @@ void M_Net_Key(int k) {
 again:
     switch (k) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_MultiPlayer_f();
             break;
 
@@ -943,6 +956,7 @@ again:
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             m_entersound = true;
 
             switch (m_net_cursor) {
@@ -1157,10 +1171,12 @@ void M_Options_Draw(void) {
 void M_Options_Key(int k) {
     switch (k) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_Main_f();
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             m_entersound = true;
             switch (options_cursor) {
                 case 0:
@@ -1346,6 +1362,7 @@ void M_Keys_Key(int k) {
 
     switch (k) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_Options_f();
             break;
 
@@ -1366,6 +1383,7 @@ void M_Keys_Key(int k) {
             break;
 
         case K_ENTER: // go into bind mode
+        case K_ABUTTON:
             M_FindKeysForCommand(bindnames[keys_cursor][0], keys);
             S_LocalSound("misc/menu2.wav");
             if (keys[1] != -1)
@@ -1423,6 +1441,7 @@ void M_Help_Draw(void) {
 void M_Help_Key(int key) {
     switch (key) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_Main_f();
             break;
 
@@ -1466,6 +1485,7 @@ void M_Menu_Quit_f(void) {
 void M_Quit_Key(int key) {
     switch (key) {
         case K_ESCAPE:
+        case K_BBUTTON:
         case 'n':
         case 'N':
             if (wasInMenus) {
@@ -1479,6 +1499,7 @@ void M_Quit_Key(int key) {
 
         case 'Y':
         case 'y':
+        case K_ABUTTON:
             key_dest = key_console;
             Host_Quit_f();
             break;
@@ -1648,6 +1669,7 @@ void M_SerialConfig_Key(int key) {
 
     switch (key) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_Net_f();
             break;
 
@@ -1723,6 +1745,7 @@ void M_SerialConfig_Key(int key) {
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             if (serialConfig_cursor < 3)
                 goto forward;
 
@@ -1870,6 +1893,7 @@ void M_ModemConfig_Key(int key) {
 
     switch (key) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_SerialConfig_f();
             break;
 
@@ -1899,6 +1923,7 @@ void M_ModemConfig_Key(int key) {
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             if (modemConfig_cursor == 0) {
                 if (modemConfig_dialing == 'P')
                     modemConfig_dialing = 'T';
@@ -2059,6 +2084,7 @@ void M_LanConfig_Key(int key) {
 
     switch (key) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_Net_f();
             break;
 
@@ -2077,6 +2103,7 @@ void M_LanConfig_Key(int key) {
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             if (lanConfig_cursor == 0)
                 break;
 
@@ -2539,6 +2566,7 @@ void M_NetStart_Change(int dir) {
 void M_GameOptions_Key(int key) {
     switch (key) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_Net_f();
             break;
 
@@ -2571,6 +2599,7 @@ void M_GameOptions_Key(int key) {
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             S_LocalSound("misc/menu2.wav");
             if (gameoptions_cursor == 0) {
                 if (sv.active)
@@ -2720,6 +2749,7 @@ void M_ServerList_Draw(void) {
 void M_ServerList_Key(int k) {
     switch (k) {
         case K_ESCAPE:
+        case K_BBUTTON:
             M_Menu_LanConfig_f();
             break;
 
@@ -2744,6 +2774,7 @@ void M_ServerList_Key(int k) {
             break;
 
         case K_ENTER:
+        case K_ABUTTON:
             S_LocalSound("misc/menu2.wav");
             m_return_state = m_state;
             m_return_onerror = true;

@@ -93,11 +93,17 @@ keyname_t keynames[] = {
     {"MOUSE2", K_MOUSE2},
     {"MOUSE3", K_MOUSE3},
 
-    {"JOY1", K_JOY1},
-    {"JOY2", K_JOY2},
-    {"JOY3", K_JOY3},
-    {"JOY4", K_JOY4},
+    {"ABUTTON", K_ABUTTON},
+    {"BBUTTON", K_BBUTTON},
+    {"XBUTTON", K_XBUTTON},
+    {"YBUTTON", K_YBUTTON},
 
+    {"LTHUMB", K_LTHUMB},
+    {"RTHUMB", K_RTHUMB},
+    {"LSHOULDER", K_LSHOULDER},
+    {"RSHOULDER", K_RSHOULDER},
+    {"LTRIGGER", K_LTRIGGER},
+    {"RTRIGGER", K_RTRIGGER},
     {"AUX1", K_AUX1},
     {"AUX2", K_AUX2},
     {"AUX3", K_AUX3},
@@ -124,12 +130,6 @@ keyname_t keynames[] = {
     {"AUX24", K_AUX24},
     {"AUX25", K_AUX25},
     {"AUX26", K_AUX26},
-    {"AUX27", K_AUX27},
-    {"AUX28", K_AUX28},
-    {"AUX29", K_AUX29},
-    {"AUX30", K_AUX30},
-    {"AUX31", K_AUX31},
-    {"AUX32", K_AUX32},
 
     {"PAUSE", K_PAUSE},
 
@@ -687,10 +687,9 @@ Key_ClearStates
 ===================
 */
 void Key_ClearStates(void) {
-    int i;
-
-    for (i = 0; i < 256; i++) {
+    for (int i = 0; i < 256; i++) {
         keydown[i] = false;
         key_repeats[i] = 0;
     }
+    key_lastpress = -1;
 }

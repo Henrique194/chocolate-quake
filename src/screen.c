@@ -702,6 +702,8 @@ keypress.
 ==================
 */
 int SCR_ModalMessage(char* text) {
+    extern qboolean keydown[256];
+
     if (cls.state == ca_dedicated)
         return true;
 
@@ -714,17 +716,20 @@ int SCR_ModalMessage(char* text) {
     scr_drawdialog = false;
 
     S_ClearBuffer(); // so dma doesn't loop current sound
+    Key_ClearStates();
 
     do {
         key_count = -1; // wait for a key down and up
         Sys_SendKeyEvents();
-    } while (key_lastpress != 'y' && key_lastpress != 'n' &&
-             key_lastpress != K_ESCAPE);
+    } while (key_lastpress != 'y' && key_lastpress != 'n'
+             && key_lastpress != K_ESCAPE
+             && (key_lastpress != K_ABUTTON || !keydown[K_ABUTTON])
+             && (key_lastpress != K_BBUTTON || !keydown[K_BBUTTON]));
 
     scr_fullupdate = 0;
     SCR_UpdateScreen();
 
-    return key_lastpress == 'y';
+    return key_lastpress == 'y' || key_lastpress == K_ABUTTON;
 }
 
 

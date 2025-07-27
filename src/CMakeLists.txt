@@ -1,3 +1,4 @@
+add_subdirectory("input")
 add_subdirectory("video")
 
 set(SOURCE_FILES
@@ -41,8 +42,6 @@ set(SOURCE_FILES
     draw.h
     host.c
     host_cmd.c
-    in_sdl.c
-    input.h
     keys.c
     keys.h
     mathlib.c
@@ -138,7 +137,7 @@ target_include_directories(${PACKAGE_TARNAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
 )
-set(LIBS ${SDL2_LIBRARIES} Vorbis::vorbisfile video)
+set(LIBS ${SDL2_LIBRARIES} Vorbis::vorbisfile input video)
 target_link_libraries("${PACKAGE_TARNAME}" ${LIBS})
 
 if(MSVC)
