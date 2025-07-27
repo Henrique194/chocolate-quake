@@ -88,17 +88,17 @@ void VID_InitWindow(void) {
 }
 
 void VID_ShutdownWindow(void) {
-    if (window) {
-        SDL_DestroyWindow(window);
-        window = NULL;
+    if (texture) {
+        SDL_DestroyTexture(texture);
+        texture = NULL;
     }
     if (renderer) {
         SDL_DestroyRenderer(renderer);
         renderer = NULL;
     }
-    if (texture) {
-        SDL_DestroyTexture(texture);
-        texture = NULL;
+    if (window) {
+        SDL_DestroyWindow(window);
+        window = NULL;
     }
 }
 
