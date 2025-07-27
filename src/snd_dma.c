@@ -60,7 +60,7 @@ int s_rawend;
 portable_samplepair_t s_rawsamples[MAX_RAW_SAMPLES];
 
 
-#define MAX_SFX MAX_SOUNDS
+#define MAX_SFX 512
 static sfx_t* known_sfx = NULL; // hunk allocated [MAX_SFX]
 static int num_sfx;
 
