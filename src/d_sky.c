@@ -71,6 +71,8 @@ void D_DrawSkyScans8(espan_t* pspan) {
 
     sstep = 0; // keep compiler happy
     tstep = 0; // ditto
+    snext = 0;
+    tnext = 0;
 
     do {
         pdest = (unsigned char*) ((byte*) d_viewbuffer +
