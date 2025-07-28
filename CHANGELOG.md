@@ -3,6 +3,7 @@
 ### General Updates
 
 - **Gamepad Support**: Added support for modern game controllers.
+- **5-button Mouse Support**: Added support for extended mouse buttons.
 - **Continuous Integration**: Set up GitHub Actions for automated builds.
 - **Improved Dependency Management**: Integrated vcpkg to simplify dependency
   handling and improve cross-platform builds.

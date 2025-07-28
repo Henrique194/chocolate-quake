@@ -70,23 +70,25 @@ MOUSE EVENT
 
 static int IN_TranslateMouseButton(const Uint8 button) {
     switch (button) {
-        case 1:
+        case SDL_BUTTON_LEFT:
             return K_MOUSE1;
-        case 2:
-            return K_MOUSE3;
-        case 3:
+        case SDL_BUTTON_RIGHT:
             return K_MOUSE2;
+        case SDL_BUTTON_MIDDLE:
+            return K_MOUSE3;
+        case SDL_BUTTON_X1:
+            return K_MOUSE4;
+        case SDL_BUTTON_X2:
+            return K_MOUSE5;
         default:
-            return -1;
+            return 0;
     }
 }
 
 static void IN_ButtonEvent(const SDL_MouseButtonEvent* button) {
     const qboolean down = (button->state == SDL_PRESSED);
     const int key = IN_TranslateMouseButton(button->button);
-    if (key != -1) {
-        Key_Event(key, down);
-    }
+    Key_Event(key, down);
 }
 
 static void IN_WheelEvent(const SDL_MouseWheelEvent* wheel) {

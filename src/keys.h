@@ -68,56 +68,58 @@
 #define K_MOUSE1 200
 #define K_MOUSE2 201
 #define K_MOUSE3 202
+#define K_MOUSE4 203
+#define K_MOUSE5 204
 
 //
 // gamepad buttons
 //
-#define K_ABUTTON   203
-#define K_BBUTTON   204
-#define K_XBUTTON   205
-#define K_YBUTTON   206
-#define K_LTHUMB    207
-#define K_RTHUMB    208
-#define K_LSHOULDER 209
-#define K_RSHOULDER 210
-#define K_LTRIGGER  211
-#define K_RTRIGGER  212
+#define K_ABUTTON   205
+#define K_BBUTTON   206
+#define K_XBUTTON   207
+#define K_YBUTTON   208
+#define K_LTHUMB    209
+#define K_RTHUMB    210
+#define K_LSHOULDER 211
+#define K_RSHOULDER 212
+#define K_LTRIGGER  213
+#define K_RTRIGGER  214
 
 //
 // aux keys are for multi-buttoned joysticks to generate so they can use
 // the normal binding process
 //
-#define K_AUX1  213
-#define K_AUX2  214
-#define K_AUX3  215
-#define K_AUX4  216
-#define K_AUX5  217
-#define K_AUX6  218
-#define K_AUX7  219
-#define K_AUX8  220
-#define K_AUX9  221
-#define K_AUX10 222
-#define K_AUX11 223
-#define K_AUX12 224
-#define K_AUX13 225
-#define K_AUX14 226
-#define K_AUX15 227
-#define K_AUX16 228
-#define K_AUX17 229
-#define K_AUX18 230
-#define K_AUX19 231
-#define K_AUX20 232
-#define K_AUX21 233
-#define K_AUX22 234
-#define K_AUX23 235
-#define K_AUX24 236
-#define K_AUX25 237
-#define K_AUX26 238
+#define K_AUX1  215
+#define K_AUX2  216
+#define K_AUX3  217
+#define K_AUX4  218
+#define K_AUX5  219
+#define K_AUX6  220
+#define K_AUX7  221
+#define K_AUX8  222
+#define K_AUX9  223
+#define K_AUX10 224
+#define K_AUX11 225
+#define K_AUX12 226
+#define K_AUX13 227
+#define K_AUX14 228
+#define K_AUX15 229
+#define K_AUX16 230
+#define K_AUX17 231
+#define K_AUX18 232
+#define K_AUX19 233
+#define K_AUX20 234
+#define K_AUX21 235
+#define K_AUX22 236
+#define K_AUX23 237
+#define K_AUX24 238
+#define K_AUX25 239
+#define K_AUX26 240
 
 // JACK: Intellimouse(c) Mouse Wheel Support
 
-#define K_MWHEELUP   239
-#define K_MWHEELDOWN 240
+#define K_MWHEELUP   241
+#define K_MWHEELDOWN 242
 
 typedef enum {key_game, key_console, key_message, key_menu} keydest_t;
 
