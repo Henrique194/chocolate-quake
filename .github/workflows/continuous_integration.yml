@@ -22,11 +22,13 @@ jobs:
         config:
           - name: Windows x64
             os: windows-latest
-            triplet: x64-windows
+            triplet: x64-mingw-dynamic
+            platform: x64
 
           - name: Windows x86
             os: windows-latest
-            triplet: x86-windows
+            triplet: x86-mingw-dynamic
+            platform: x86
 
           - name: macOS arm64
             os: macos-15
@@ -36,18 +38,16 @@ jobs:
             os: macos-13
             triplet: x64-osx
 
-          - name: Ubuntu x64
+          - name: Ubuntu
             os: ubuntu-24.04
             triplet: x64-linux
-
-          - name: Ubuntu x86
-            os: ubuntu-24.04
-            triplet: x86-linux
     env:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.config.triplet }}
+      VCPKG_DEFAULT_HOST_TRIPLET: ${{ matrix.config.triplet }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
@@ -58,7 +58,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libltdl-dev
 
-      - uses: lukka/get-cmake@latest
+      - name: Setup GCC/G++ (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          if [ "${{ matrix.config.platform }}" == "x86" ]; then
+            echo "C:\mingw32\bin" >> $GITHUB_PATH
+          fi
+          echo "CC=gcc" >> $GITHUB_ENV
+          echo "CXX=g++" >> $GITHUB_ENV
+
+      - name: Setup CMake
+        uses: lukka/get-cmake@latest
 
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
@@ -70,6 +81,10 @@ jobs:
         with:
           configurePreset: 'release'
           buildPreset: 'release'
+          # Toolchain file seems to ignore some environment variables,
+          # so we need to manually set the target triplet.
+          # GitHub Issue: https://github.com/microsoft/vcpkg/issues/23607
+          configurePresetAdditionalArgs: "['-DVCPKG_TARGET_TRIPLET=${{ matrix.config.triplet }}']"
 
       - name: Upload build artifact
         if: runner.os == 'Windows' || runner.os == 'macOS'
