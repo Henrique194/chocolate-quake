@@ -547,6 +547,24 @@ void Key_Init(void) {
     Cmd_AddCommand("unbindall", Key_Unbindall_f);
 }
 
+//
+// Checks if the specified key is bound to any action.
+// Returns true if the key is bound, false otherwise.
+//
+static qboolean Key_IsBound(const int key) {
+    if (keybindings[key]) {
+        return true;
+    }
+    switch (key) {
+        case K_MWHEELUP:
+        case K_MWHEELDOWN:
+            // In console, mouse wheel is used for scrolling.
+            return key_dest == key_console;
+        default:
+            return key < 200;
+    }
+}
+
 /*
 ===================
 Key_Event
@@ -577,7 +595,7 @@ void Key_Event(int key, qboolean down) {
             return; // ignore most autorepeats
         }
 
-        if (key >= 200 && !keybindings[key])
+        if (!Key_IsBound(key))
             Con_Printf("%s is unbound, hit F4 to set.\n",
                        Key_KeynumToString(key));
     }

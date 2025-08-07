@@ -1,3 +1,14 @@
+## v1.1.1
+
+### Bug Fixes
+
+- **Windows XP Compatibility**: Restored support for running Chocolate Quake on
+  Windows XP.
+- **Mouse Wheel Console Scrolling**: Fixed an issue where the mouse wheel would
+  not scroll the console.
+
+---
+
 ## v1.1.0
 
 ### General Updates
