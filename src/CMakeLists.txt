@@ -1,3 +1,4 @@
+add_subdirectory("end_screen")
 add_subdirectory("input")
 add_subdirectory("video")
 
@@ -137,7 +138,7 @@ target_include_directories(${PACKAGE_TARNAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
 )
-set(LIBS ${SDL2_LIBRARIES} Vorbis::vorbisfile input video)
+set(LIBS ${SDL2_LIBRARIES} Vorbis::vorbisfile end_screen input video)
 target_link_libraries("${PACKAGE_TARNAME}" ${LIBS})
 
 if(MSVC)

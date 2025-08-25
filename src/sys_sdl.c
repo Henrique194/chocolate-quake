@@ -20,6 +20,7 @@
 
 
 #include "quakedef.h"
+#include "end_screen.h"
 #include <assert.h>
 #ifdef HAVE_SIGNAL_H
 #include <signal.h>
@@ -161,6 +162,7 @@ void Sys_Printf(char* fmt, ...) {
 
 void Sys_Quit(void) {
     Host_Shutdown();
+    ES_DisplayScreen();
     exit(0);
 }
 
