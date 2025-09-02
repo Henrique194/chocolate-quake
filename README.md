@@ -13,14 +13,14 @@ Chocolate Quake's aims are:
   original experience.
 * No hardware acceleration or modern visual effects.
 
-# Philosophy
+## Philosophy
 
 This port is for purists: no fancy enhancements, no modern effects, just Quake
 as it was. If you're looking for visual upgrades or modern features, this may
 not be the port for you. But if you want Quake exactly as it felt in the '90s,
 you're in the right place.
 
-# Music
+## Music
 
 Chocolate Quake supports external music playback in OGG format. To enable it:
 
@@ -38,7 +38,10 @@ matching the original CD audio.
 |  Linux   |      yes      |
 |  MacOS   |      yes      |
 
-# Credits
+## Building
+See [BUILDING](./BUILDING.md) for instructions.
+
+## Credits
 
 Chocolate Quake builds upon the work of the Quake community and open-source
 contributors. Special thanks to:
