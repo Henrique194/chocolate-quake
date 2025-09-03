@@ -7,28 +7,59 @@
     },
     "configurePresets": [
         {
-            "name": "ninja-multi-vcpkg",
-            "displayName": "Ninja Multi-Config",
-            "description": "Base preset using Ninja Multi-Config with vcpkg toolchain",
+            "name": "ninja-multi",
             "binaryDir": "${sourceDir}/builds/${presetName}",
+            "description": "Base preset using Ninja Multi-Config",
+            "displayName": "Ninja Multi-Config",
             "generator": "Ninja Multi-Config",
+            "hidden": true
+        },
+        {
+            "name": "ninja-multi-vcpkg",
+            "inherits": "ninja-multi",
+            "displayName": "Ninja Multi-Config with vcpkg",
+            "description": "Base preset using Ninja Multi-Config with vcpkg toolchain",
             "toolchainFile": "${sourceDir}/external/vcpkg/scripts/buildsystems/vcpkg.cmake",
             "hidden": true
         },
         {
-            "name": "debug",
+            "name": "debug-vcpkg",
             "inherits": "ninja-multi-vcpkg",
+            "displayName": "Ninja Multi-Config (Debug w/vcpkg)",
+            "binaryDir": "${sourceDir}/cmake-build-debug"
+        },
+        {
+            "name": "release-vcpkg",
+            "inherits": "ninja-multi-vcpkg",
+            "displayName": "Ninja Multi-Config (Release w/vcpkg)",
+            "binaryDir": "${sourceDir}/cmake-build-release"
+        },
+        {
+            "name": "debug",
+            "inherits": "ninja-multi",
             "displayName": "Ninja Multi-Config (Debug)",
             "binaryDir": "${sourceDir}/cmake-build-debug"
         },
         {
             "name": "release",
-            "inherits": "ninja-multi-vcpkg",
+            "inherits": "ninja-multi",
             "displayName": "Ninja Multi-Config (Release)",
             "binaryDir": "${sourceDir}/cmake-build-release"
         }
     ],
     "buildPresets": [
+        {
+            "name": "debug-vcpkg",
+            "configurePreset": "debug-vcpkg",
+            "displayName": "Build with vcpkg (Debug)",
+            "configuration": "Debug"
+        },
+        {
+            "name": "release-vcpkg",
+            "configurePreset": "release-vcpkg",
+            "displayName": "Build with vcpkg (Release)",
+            "configuration": "Release"
+        },
         {
             "name": "debug",
             "configurePreset": "debug",
@@ -41,5 +72,5 @@
             "displayName": "Build (Release)",
             "configuration": "Release"
         }
-    ]
+   ]
 }

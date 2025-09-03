@@ -123,7 +123,7 @@ if(WIN32)
         "${PROJECT_VERSION_PATCH}, "
         "0"
     )
-    set(WIN_DIR "${CMAKE_SOURCE_DIR}/win")
+    set(WIN_DIR "${CMAKE_SOURCE_DIR}/dist/win")
     set(RC_NAME "quake.rc")
     set(RC_INPUT_FILE "${WIN_DIR}/${RC_NAME}.in")
     set(RC_OUTPUT_FILE "${CMAKE_CURRENT_BINARY_DIR}/${RC_NAME}")
@@ -138,7 +138,13 @@ target_include_directories(${PACKAGE_TARNAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
 )
-set(LIBS ${SDL2_LIBRARIES} Vorbis::vorbisfile end_screen input video)
+
+set(LIBS ${SDL2_LIBRARIES} end_screen input video)
+if(UNIX AND NOT APPLE)
+    list(APPEND LIBS ${VORBIS_LIBRARY} ${VORBISFILE_LIBRARY})
+else()
+    list(APPEND LIBS Vorbis::vorbisfile)
+endif()
 target_link_libraries("${PACKAGE_TARNAME}" ${LIBS})
 
 if(MSVC)

@@ -48,6 +48,9 @@ contributors. Special thanks to:
   authors for their solid groundwork.
 * [@arrowgent](https://github.com/arrowgent) - For thorough Linux testing and
   valuable bug reports.
+* The Chocolate Quake icon is based on graphics from the [EmojiTwo](https://github.com/EmojiTwo/emojitwo)
+  project, licensed under [Creative Commons Attribution International 4.0 (CC-BY-4.0)](https://creativecommons.org/licenses/by/4.0/),
+  with modifications made by [@fpiesche](https://github.com/fpiesche).
 
 Additional thanks to the broader Quake modding and source port community for
 maintaining an ecosystem that made this project possible.
