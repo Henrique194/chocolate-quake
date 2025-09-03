@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Chocolate Quake
+Comment=Faithful Quake port
+Exec=chocolate-quake
+Icon=io.github.henrique194.chocolate-quake
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Game;Shooter;
+Keywords=quake;first;person;shooter;
