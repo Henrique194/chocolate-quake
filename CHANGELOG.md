@@ -1,3 +1,16 @@
+## v1.2.0
+
+### General Updates
+
+- **Restored Quake End Screen**: The VGA end screen from the DOS version of
+  Quake now appears when quitting the game.
+- **Music Volume Control**: Music volume slider now works properly.
+- **New Logo**: Updated Chocolate Quake icon created by Florian Piesche.
+- **Distribution Improvements**: Added distribution files, including install
+  targets for the icon, metainfo, and other assets on Linux.
+
+---
+
 ## v1.1.1
 
 ### Bug Fixes
