@@ -405,22 +405,25 @@ static void BGMusic_UpdateStream() {
     }
 }
 
+static void BGMusic_UpdateVolume() {
+    if (bgmvolume.value == cdvolume) {
+        return;
+    }
+    bgmvolume.value = SDL_clamp(bgmvolume.value, 0, 1);
+    Cvar_SetValue("bgmvolume", bgmvolume.value);
+    cdvolume = bgmvolume.value;
+    if (cdvolume == 0) {
+        BGMusic_Pause();
+    } else {
+        BGMusic_Resume();
+    }
+}
+
 void BGMusic_Update() {
     if (!enabled) {
         return;
     }
-
-    if (bgmvolume.value != cdvolume) {
-        if (cdvolume != 0) {
-            Cvar_SetValue("bgmvolume", 0.0f);
-            cdvolume = bgmvolume.value;
-            BGMusic_Pause();
-        } else {
-            Cvar_SetValue("bgmvolume", 1.0f);
-            cdvolume = bgmvolume.value;
-            BGMusic_Resume();
-        }
-    }
+    BGMusic_UpdateVolume();
     if (bgmstream) {
         BGMusic_UpdateStream();
     }

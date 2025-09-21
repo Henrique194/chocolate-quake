@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21.0)
-project("Chocolate Quake" VERSION 1.1.1 LANGUAGES C)
+project("Chocolate Quake" VERSION 1.2.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 99)
 
 set(PACKAGE_NAME ${PROJECT_NAME})

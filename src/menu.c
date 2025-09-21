@@ -1040,11 +1040,8 @@ void M_AdjustSliders(int dir) {
             Cvar_SetValue("sensitivity", sensitivity.value);
             break;
         case 6: // music volume
-            bgmvolume.value += dir * 1.0;
-            if (bgmvolume.value < 0)
-                bgmvolume.value = 0;
-            if (bgmvolume.value > 1)
-                bgmvolume.value = 1;
+            bgmvolume.value += dir * 0.1f;
+            bgmvolume.value = SDL_clamp(bgmvolume.value, 0, 1);
             Cvar_SetValue("bgmvolume", bgmvolume.value);
             break;
         case 7: // sfx volume
