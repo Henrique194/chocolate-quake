@@ -53,6 +53,9 @@ Cvars are restricted from having the same names as commands to keep this
 interface from being ambiguous.
 */
 
+#ifndef __CVAR__
+#define __CVAR__
+
 typedef struct cvar_s {
     char* name;
     char* string;
@@ -94,3 +97,5 @@ void Cvar_WriteVariables(FILE* f);
 cvar_t* Cvar_FindVar(char* var_name);
 
 extern cvar_t* cvar_vars;
+
+#endif

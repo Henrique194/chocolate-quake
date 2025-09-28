@@ -188,7 +188,6 @@ void VID_UnlockBuffer(void);
 #include "common.h"
 #include "bspfile.h"
 #include "vid.h"
-#include "sys.h"
 #include "zone.h"
 #include "mathlib.h"
 
@@ -243,6 +242,8 @@ typedef struct {
     void* membase;
     int memsize;
 } quakeparms_t;
+
+#include "sys.h"
 
 
 //=============================================================================

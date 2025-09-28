@@ -70,4 +70,6 @@ void Sys_LowFPPrecision(void);
 
 void Sys_HighFPPrecision(void);
 
+quakeparms_t* Sys_Init(int argc, char* argv[]);
+
 #endif

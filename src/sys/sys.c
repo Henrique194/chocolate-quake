@@ -299,20 +299,9 @@ static quakeparms_t* Sys_InitParms(int argc, char** argv) {
     return &parms;
 }
 
-int main(int argc, char* argv[]) {
+quakeparms_t* Sys_Init(int argc, char* argv[]) {
 #ifdef HAVE_SIGNAL_H
     Sys_SigInit();
 #endif
-
-    printf("Host_Init\n");
-    quakeparms_t* parms = Sys_InitParms(argc, argv);
-    Host_Init(parms);
-
-    double oldtime = Sys_FloatTime();
-    while (true) {
-        double newtime = Sys_FloatTime();
-        double dt = newtime - oldtime;
-        Host_Frame((float) dt);
-        oldtime = newtime;
-    }
+    return Sys_InitParms(argc, argv);
 }
