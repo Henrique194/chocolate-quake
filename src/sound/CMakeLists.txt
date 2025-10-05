@@ -3,11 +3,18 @@ add_library(sound STATIC
     snd_codec.c
     snd_codec.h
     snd_dma.c
+    snd_flac.c
+    snd_flac.h
     snd_mem.c
     snd_mix.c
+    snd_mp3.c
+    snd_mp3.h
+    snd_mp3tag.c
     snd_sdl.c
     snd_vorbis.c
     snd_vorbis.h
+    snd_wave.c
+    snd_wave.h
 )
 
 target_include_directories(sound PRIVATE ${CMAKE_BINARY_DIR} "../")

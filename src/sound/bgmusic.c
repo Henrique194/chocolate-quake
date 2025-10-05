@@ -52,7 +52,8 @@ static music_handler_t wanted_handlers[] = {
 };
 
 #define ANY_CODECTYPE 0xFFFFFFFF
-#define CDRIP_TYPES   (CODECTYPE_VORBIS)
+#define CDRIP_TYPES                                                            \
+    (CODECTYPE_MP3 | CODECTYPE_VORBIS | CODECTYPE_FLAC | CODECTYPE_WAV)
 #define CDRIPTYPE(x) (((x) & CDRIP_TYPES) != 0)
 
 

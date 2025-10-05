@@ -30,9 +30,18 @@ endforeach()
 
 set(EXTERNAL_LIBS ${SDL2_LIBRARIES})
 if(UNIX AND NOT APPLE)
-    list(APPEND EXTERNAL_LIBS ${VORBIS_LIBRARY} ${VORBISFILE_LIBRARY})
+    list(APPEND EXTERNAL_LIBS
+        ${VORBIS_LIBRARY}
+        ${VORBISFILE_LIBRARY}
+        ${FLAC_LIBRARY}
+        ${MAD_LIBRARY}
+    )
 else()
-    list(APPEND EXTERNAL_LIBS Vorbis::vorbisfile)
+    list(APPEND EXTERNAL_LIBS
+        Vorbis::vorbisfile
+        mad::mad
+        FLAC::FLAC
+    )
 endif()
 
 

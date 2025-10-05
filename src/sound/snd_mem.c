@@ -258,7 +258,7 @@ wavinfo_t GetWavinfo(char* name, byte* wav, int wavlength) {
     }
     data_p += 8;
     format = GetLittleShort();
-    if (format != 1) {
+    if (format != WAV_FORMAT_PCM) {
         Con_Printf("Microsoft PCM format only\n");
         return info;
     }

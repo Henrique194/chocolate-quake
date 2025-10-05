@@ -1802,3 +1802,40 @@ long FS_ftell(fshandle_t* fh) {
     }
     return fh->pos;
 }
+
+void FS_rewind(fshandle_t* fh) {
+    if (!fh) {
+        return;
+    }
+    clearerr(fh->file);
+    fseek(fh->file, fh->start, SEEK_SET);
+    fh->pos = 0;
+}
+
+long FS_filelength(fshandle_t* fh) {
+    if (!fh) {
+        errno = EBADF;
+        return -1;
+    }
+    return fh->length;
+}
+
+int FS_feof(fshandle_t* fh) {
+    if (!fh) {
+        errno = EBADF;
+        return -1;
+    }
+    if (fh->pos >= fh->length) {
+        return -1;
+    }
+    return 0;
+}
+
+
+int FS_ferror(fshandle_t* fh) {
+    if (!fh) {
+        errno = EBADF;
+        return -1;
+    }
+    return ferror(fh->file);
+}

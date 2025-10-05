@@ -193,6 +193,10 @@ typedef struct _fshandle_t {
 size_t FS_fread(void* ptr, size_t size, size_t nmemb, fshandle_t* fh);
 int FS_fseek(fshandle_t* fh, long offset, int whence);
 long FS_ftell(fshandle_t* fh);
+void FS_rewind(fshandle_t* fh);
+long FS_filelength(fshandle_t* fh);
+int FS_feof(fshandle_t *fh);
+int FS_ferror(fshandle_t* fh);
 
 extern struct cvar_s registered;
 

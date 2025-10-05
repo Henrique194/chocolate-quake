@@ -61,7 +61,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libvorbis-dev libsdl2-dev
+          sudo apt-get install -y libvorbis-dev libmad0-dev libflac-dev libsdl2-dev
 
       - name: Set up cmake build preset
         shell: bash

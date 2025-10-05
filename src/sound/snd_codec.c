@@ -21,7 +21,10 @@
 
 #include "quakedef.h"
 #include "snd_codec.h"
+#include "snd_mp3.h"
 #include "snd_vorbis.h"
+#include "snd_flac.h"
+#include "snd_wave.h"
 
 
 static snd_codec_t* codecs;
@@ -46,7 +49,10 @@ void S_CodecInit() {
     snd_codec_t* codec;
     codecs = NULL;
 
+    S_CodecRegister(&mp3_codec);
     S_CodecRegister(&vorbis_codec);
+    S_CodecRegister(&flac_codec);
+    S_CodecRegister(&wav_codec);
 
     codec = codecs;
     while (codec) {
