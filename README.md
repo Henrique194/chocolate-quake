@@ -22,10 +22,11 @@ you're in the right place.
 
 # Music
 
-Chocolate Quake supports external music playback in OGG format. To enable it:
+Chocolate Quake supports external music playback in MP3, OGG, FLAC and WAV
+formats. To enable it:
 
 * Create a directory named `music` inside your `id1` game folder.
-* Place your OGG music tracks in this directory.
+* Place your music tracks in this directory.
 
 Tracks should follow the naming convention track02.ogg through track11.ogg,
 matching the original CD audio.

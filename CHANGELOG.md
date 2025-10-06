@@ -1,3 +1,11 @@
+## v1.3.0
+
+### General Updates
+
+- **New Audio Formats**: Added support for MP3, FLAC, and WAV music files.
+
+---
+
 ## v1.2.0
 
 ### General Updates
