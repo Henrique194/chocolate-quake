@@ -49,6 +49,7 @@ jobs:
     env:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.config.triplet }}
       VCPKG_DEFAULT_HOST_TRIPLET: ${{ matrix.config.triplet }}
+      BUILD_DIR: cmake-build-${{ matrix.buildtype.name }}/src/${{ matrix.buildtype.path }}/
 
     steps:
       - name: Checkout repository
@@ -63,7 +64,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libvorbis-dev libmad0-dev libflac-dev libsdl2-dev
 
-      - name: Set up cmake build preset
+      - name: Set up CMake build preset
         shell: bash
         run: |
           if [[ "${{ runner.os }}" == "Linux" ]]; then
@@ -74,20 +75,23 @@ jobs:
           echo "Using preset ${CMAKE_PRESET}."
           echo "CMAKE_PRESET=${CMAKE_PRESET}" >> $GITHUB_ENV
 
-      - name: Setup GCC/G++ (Windows)
+      - name: Set up MinGW (Windows)
         if: runner.os == 'Windows'
         shell: bash
         run: |
           if [ "${{ matrix.config.platform }}" == "x86" ]; then
-            echo "C:\mingw32\bin" >> $GITHUB_PATH
+            echo "C:/mingw32/bin" >> $GITHUB_PATH
+            echo "MINGW_PATH=C:/mingw32/bin" >> $GITHUB_ENV
+          else
+            echo "MINGW_PATH=C:/mingw64/bin" >> $GITHUB_ENV
           fi
           echo "CC=gcc" >> $GITHUB_ENV
           echo "CXX=g++" >> $GITHUB_ENV
 
-      - name: Setup CMake
+      - name: Set up CMake
         uses: lukka/get-cmake@latest
 
-      - name: Setup vcpkg
+      - name: Set up vcpkg
         if: runner.os == 'Windows'
         uses: lukka/run-vcpkg@v11
         with:
@@ -103,9 +107,20 @@ jobs:
           # GitHub Issue: https://github.com/microsoft/vcpkg/issues/23607
           configurePresetAdditionalArgs: "['-DVCPKG_TARGET_TRIPLET=${{ matrix.config.triplet }}']"
 
+      - name: Copy MinGW DLLs (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          if [ "${{ matrix.config.platform }}" == "x86" ]; then
+            cp $MINGW_PATH/libgcc_s_dw2-1.dll $BUILD_DIR
+          else
+            cp $MINGW_PATH/libgcc_s_seh-1.dll $BUILD_DIR
+          fi
+          cp $MINGW_PATH/libwinpthread-1.dll $BUILD_DIR
+
       - name: Upload build artifact
         if: runner.os == 'Windows' || runner.os == 'macOS'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.config.name }}-${{ matrix.buildtype.name }}
-          path: cmake-build-${{ matrix.buildtype.name }}/src/${{ matrix.buildtype.path }}/
+          path: ${{ env.BUILD_DIR }}
