@@ -1,4 +1,4 @@
-set(INTERNAL_LIBS
+set(LIBS
     camera
     client
     cmd
@@ -23,26 +23,9 @@ set(INTERNAL_LIBS
     video
     wad
 )
-foreach(LIB ${INTERNAL_LIBS})
+foreach(LIB ${LIBS})
     add_subdirectory(${LIB})
 endforeach()
-
-
-set(EXTERNAL_LIBS ${SDL2_LIBRARIES})
-if(UNIX AND NOT APPLE)
-    list(APPEND EXTERNAL_LIBS
-        ${VORBIS_LIBRARY}
-        ${VORBISFILE_LIBRARY}
-        ${FLAC_LIBRARY}
-        ${MAD_LIBRARY}
-    )
-else()
-    list(APPEND EXTERNAL_LIBS
-        Vorbis::vorbisfile
-        mad::mad
-        FLAC::FLAC
-    )
-endif()
 
 
 if(WIN32)
@@ -68,7 +51,7 @@ target_include_directories(${PACKAGE_TARNAME} PRIVATE
     ${CMAKE_BINARY_DIR}
 )
 
-target_link_libraries(${PACKAGE_TARNAME} ${INTERNAL_LIBS} ${EXTERNAL_LIBS})
+target_link_libraries(${PACKAGE_TARNAME} ${LIBS})
 
 if(MSVC)
     set_target_properties(${PACKAGE_TARNAME} PROPERTIES

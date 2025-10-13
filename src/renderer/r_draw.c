@@ -20,9 +20,9 @@
 // r_draw.c
 
 
-#include "quakedef.h"
 #include "r_local.h"
 #include "d_local.h" // FIXME: shouldn't need to include this
+#include <math.h>
 
 
 #define MAXLEFTCLIPEDGES 100

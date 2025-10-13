@@ -19,9 +19,10 @@
  */
 
 
-#include "quakedef.h"
-#include "es_buffer.h"
 #include "es_time.h"
+#include "es_buffer.h"
+#include <SDL_events.h>
+#include <SDL_timer.h>
 
 
 void ES_Sleep(void) {

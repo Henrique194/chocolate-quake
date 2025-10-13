@@ -17,30 +17,23 @@ add_library(sound STATIC
     snd_wave.h
 )
 
+set(LIBS ${SDL2_LIBRARIES})
+if(UNIX AND NOT APPLE)
+    list(APPEND LIBS
+        ${VORBIS_LIBRARY}
+        ${VORBISFILE_LIBRARY}
+        ${FLAC_LIBRARY}
+        ${MAD_LIBRARY}
+    )
+else()
+    list(APPEND LIBS
+        Vorbis::vorbisfile
+        mad::mad
+        FLAC::FLAC
+    )
+endif()
+
 target_include_directories(sound PRIVATE ${CMAKE_BINARY_DIR} "../")
 target_include_directories(sound PUBLIC "./include")
-target_link_libraries(sound PRIVATE
-    ${SDL2_LIBRARIES}
-    camera
-    client
-    cmd
-    common
-    console
-    crc
-    end_screen
-    host
-    input
-    mathlib
-    memory
-    menu
-    model
-    net
-    progs
-    renderer
-    screen
-    server
-    status_bar
-    sys
-    video
-    wad
-)
+target_link_libraries(sound PUBLIC common console mathlib memory)
+target_link_libraries(sound PRIVATE ${LIBS} client cmd host model sys)

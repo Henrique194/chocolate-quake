@@ -21,19 +21,16 @@
 #ifndef __VID_WINDOW__
 #define __VID_WINDOW__
 
+#include "quakedef.h"
+#include "vid.h"
+
 void VID_InitWindow(void);
 
 void VID_ShutdownWindow(void);
 
-qboolean VID_WindowedMouse(void);
-
-void VID_ToggleMouseGrab(void);
-
 void VID_ResizeScreen(void);
 
 void VID_UpdateWindow(vrect_t* rect);
-
-void VID_HandlePause(qboolean pause);
 
 void VID_MinimizeWindow(void);
 

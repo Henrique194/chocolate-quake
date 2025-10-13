@@ -21,8 +21,8 @@
 // sprites
 
 
-#include "quakedef.h"
 #include "d_local.h"
+#include <math.h>
 
 
 static int sprite_height;

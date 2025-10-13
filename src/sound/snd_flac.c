@@ -18,9 +18,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include <FLAC/stream_decoder.h>
-#include "quakedef.h"
 #include "snd_flac.h"
+#include "console.h"
+#include "zone.h"
+#include <FLAC/stream_decoder.h>
+#include <stdlib.h>
+#include <string.h>
 
 typedef size_t FLAC_SIZE_T;
 

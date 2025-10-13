@@ -19,7 +19,9 @@
  */
 
 
-#include "quakedef.h"
+#include "host.h"
+#include "sys.h"
+#include <SDL.h>
 
 
 int main(int argc, char* argv[]) {

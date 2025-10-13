@@ -20,7 +20,16 @@
 // sv_edict.c -- entity dictionary
 
 
-#include "quakedef.h"
+#include "progs.h"
+#include "cmd.h"
+#include "console.h"
+#include "crc.h"
+#include "cvar.h"
+#include "server.h"
+#include "sys.h"
+#include "world.h"
+#include <stdlib.h>
+#include <string.h>
 
 
 dprograms_t* progs;

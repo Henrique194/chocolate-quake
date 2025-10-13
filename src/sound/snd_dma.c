@@ -20,8 +20,16 @@
 // snd_dma.c -- main control for any streaming sound output device
 
 
-#include "quakedef.h"
+#include "sound.h"
+#include "client.h"
+#include "cmd.h"
+#include "console.h"
+#include "host.h"
+#include "model.h"
 #include "snd_codec.h"
+#include "sys.h"
+#include <stdlib.h>
+#include <string.h>
 
 
 static void S_Play(void);

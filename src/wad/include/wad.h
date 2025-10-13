@@ -22,6 +22,8 @@
 #ifndef __WAD__
 #define __WAD__
 
+#include "quakedef.h"
+
 //===============
 //   TYPES
 //===============

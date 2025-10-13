@@ -20,8 +20,12 @@
 // r_misc.c
 
 
-#include "quakedef.h"
 #include "r_local.h"
+#include "console.h"
+#include "sbar.h"
+#include "server.h"
+#include "sys.h"
+#include "view.h"
 
 
 /*

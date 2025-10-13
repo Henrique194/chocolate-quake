@@ -23,6 +23,7 @@
 #ifndef _SND_WAVE_H_
 #define _SND_WAVE_H_
 
+#include "quakedef.h"
 #include "snd_codec.h"
 
 extern snd_codec_t wav_codec;

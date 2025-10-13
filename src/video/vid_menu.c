@@ -20,9 +20,13 @@
 // vid_menu.c -- handles video menu drawing and user input.
 
 
-#include "quakedef.h"
 #include "vid_menu.h"
+#include "draw.h"
+#include "host.h"
+#include "keys.h"
+#include "sound.h"
 #include "vid_modes.h"
+#include "wad.h"
 
 
 #define VID_ROW_SIZE     3

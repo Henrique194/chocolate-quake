@@ -24,6 +24,9 @@
 #ifndef __DRAW__
 #define __DRAW__
 
+#include "quakedef.h"
+#include "wad.h"
+
 extern qpic_t* draw_disc; // also used on sbar
 
 void Draw_Init(void);

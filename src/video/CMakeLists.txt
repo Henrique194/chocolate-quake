@@ -12,28 +12,15 @@ add_library(video STATIC
 
 target_include_directories(video PRIVATE ${CMAKE_BINARY_DIR} "../")
 target_include_directories(video PUBLIC "./include")
+target_link_libraries(video PUBLIC common)
 target_link_libraries(video PRIVATE
     ${SDL2_LIBRARIES}
-    camera
-    client
     cmd
-    common
     console
-    crc
-    end_screen
     host
     input
-    mathlib
-    memory
-    menu
-    model
-    net
-    progs
     renderer
-    screen
-    server
     sound
-    status_bar
     sys
     wad
 )

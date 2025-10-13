@@ -20,10 +20,12 @@
 // vid_window.c -- handles window creation, management and resizing.
 
 
-#include "quakedef.h"
 #include "vid_window.h"
+#include "config.h"
+#include "cvar.h"
+#include "input.h"
+#include "sys.h"
 #include "vid_buffers.h"
-#include "vid_modes.h"
 
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;

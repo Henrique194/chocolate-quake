@@ -22,6 +22,11 @@
 #ifndef __SOUND__
 #define __SOUND__
 
+#include "quakedef.h"
+#include "cvar.h"
+#include "mathlib.h"
+#include "zone.h"
+
 #define DEFAULT_SOUND_PACKET_VOLUME      255
 #define DEFAULT_SOUND_PACKET_ATTENUATION 1.0
 #define WAV_FORMAT_PCM 1

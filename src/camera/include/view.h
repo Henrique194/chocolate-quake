@@ -22,6 +22,10 @@
 #ifndef __VIEW__
 #define __VIEW__
 
+#include "quakedef.h"
+#include "cvar.h"
+#include "mathlib.h"
+
 extern cvar_t v_gamma;
 
 extern byte gammatable[256]; // palette is sent through this
@@ -30,10 +34,16 @@ extern float v_blend[4];
 
 extern cvar_t lcd_x;
 
+extern cvar_t chase_active;
+
 
 void V_Init(void);
 void V_RenderView(void);
 float V_CalcRoll(vec3_t angles, vec3_t velocity);
 void V_UpdatePalette(void);
+
+void Chase_Init(void);
+void Chase_Reset(void);
+void Chase_Update(void);
 
 #endif

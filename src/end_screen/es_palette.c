@@ -19,7 +19,6 @@
  */
 
 
-#include "quakedef.h"
 #include "es_palette.h"
 
 #define COLOR(red, green, blue)                                                \

@@ -23,6 +23,9 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
+#include <stdio.h>
+#include <stdint.h>
+
 #if !defined BYTE_DEFINED
 typedef unsigned char byte;
 #define BYTE_DEFINED 1

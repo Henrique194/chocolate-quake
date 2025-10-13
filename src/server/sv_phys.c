@@ -20,7 +20,12 @@
 // sv_phys.c
 
 
-#include "quakedef.h"
+#include "server.h"
+#include "console.h"
+#include "host.h"
+#include "sys.h"
+#include "world.h"
+#include <math.h>
 
 
 /*

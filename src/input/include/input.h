@@ -23,6 +23,10 @@
 #ifndef __INPUT__
 #define __INPUT__
 
+#include "quakedef.h"
+#include "client.h"
+#include <SDL_events.h>
+
 void IN_Init(void);
 
 void IN_Shutdown(void);

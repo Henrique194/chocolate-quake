@@ -23,6 +23,15 @@
 #ifndef __CLIENT__
 #define __CLIENT__
 
+#include "quakedef.h"
+#include "cvar.h"
+#include "mathlib.h"
+#include "net.h"
+#include "render.h"
+#include "vid.h"
+#include <stdio.h>
+
+
 typedef struct {
     vec3_t viewangles;
 

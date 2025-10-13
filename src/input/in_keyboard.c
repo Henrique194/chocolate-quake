@@ -20,8 +20,8 @@
 // in_keyboard.c -- keyboard code
 
 
-#include "quakedef.h"
 #include "in_keyboard.h"
+#include "keys.h"
 
 
 static byte scancode_to_key[SDL_NUM_SCANCODES] = {

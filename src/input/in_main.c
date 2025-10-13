@@ -20,7 +20,7 @@
 // in_main.c -- main input functions
 
 
-#include "quakedef.h"
+#include "input.h"
 #include "in_mouse.h"
 #include "in_gamepad.h"
 

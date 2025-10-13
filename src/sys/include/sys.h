@@ -22,6 +22,17 @@
 #ifndef __SYS__
 #define __SYS__
 
+#include "quakedef.h"
+#include "host.h"
+
+
+// Suppresses resolution and cache size console output.
+// An fullscreen DIB focus gain/loss.
+extern qboolean msg_suppress_1;
+
+extern qboolean isDedicated;
+
+
 //
 // file IO
 //

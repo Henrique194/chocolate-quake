@@ -19,7 +19,6 @@
  */
 
 
-#include "quakedef.h"
 #include "net_loop.h"
 
 

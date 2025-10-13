@@ -20,9 +20,7 @@
 // r_sky.c
 
 
-#include "quakedef.h"
 #include "r_local.h"
-#include "d_local.h"
 
 
 int iskyspeed = 8;

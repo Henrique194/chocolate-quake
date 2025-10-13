@@ -20,7 +20,10 @@
 // snd_mem.c: sound caching
 
 
-#include "quakedef.h"
+#include "sound.h"
+#include "console.h"
+#include "sys.h"
+#include <string.h>
 
 
 /*

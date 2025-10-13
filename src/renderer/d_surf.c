@@ -20,9 +20,10 @@
 // d_surf.c: rasterization driver surface heap manager
 
 
-#include "quakedef.h"
 #include "d_local.h"
 #include "r_local.h"
+#include "console.h"
+#include "sys.h"
 
 
 float surfscale;

@@ -20,8 +20,9 @@
 // r_surf.c: surface-related refresh code
 
 
-#include "quakedef.h"
 #include "r_local.h"
+#include "sys.h"
+#include <math.h>
 
 
 drawsurf_t r_drawsurf;

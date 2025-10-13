@@ -20,7 +20,19 @@
 // cl_parse.c  -- parse a message received from the server
 
 
-#include "quakedef.h"
+#include "client.h"
+#include "bgmusic.h"
+#include "cmd.h"
+#include "console.h"
+#include "host.h"
+#include "model.h"
+#include "sbar.h"
+#include "screen.h"
+#include "server.h"
+#include "sys.h"
+#include "sound.h"
+#include <stdlib.h>
+#include <string.h>
 
 
 char* svc_strings[] = {

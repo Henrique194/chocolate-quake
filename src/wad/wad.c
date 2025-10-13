@@ -20,7 +20,9 @@
 // wad.c
 
 
-#include "quakedef.h"
+#include "wad.h"
+#include "sys.h"
+#include <string.h>
 
 
 int wad_numlumps;

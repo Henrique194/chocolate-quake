@@ -22,6 +22,9 @@
 #ifndef __ES_PALETTE__
 #define __ES_PALETTE__
 
+#include "quakedef.h"
+#include <SDL_surface.h>
+
 typedef enum {
     PAL_COLOR_BLACK,
     PAL_COLOR_BLUE,

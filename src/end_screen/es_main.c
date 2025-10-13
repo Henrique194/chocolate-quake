@@ -19,11 +19,12 @@
  */
 
 
-#include "quakedef.h"
 #include "end_screen.h"
 #include "es_font.h"
 #include "es_time.h"
 #include "es_window.h"
+#include "sys.h"
+#include <SDL_events.h>
 
 
 static qboolean ES_ShouldQuit(void) {

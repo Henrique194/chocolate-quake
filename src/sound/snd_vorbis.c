@@ -20,8 +20,9 @@
 
 
 #include "snd_vorbis.h"
+#include "console.h"
+#include "zone.h"
 #include <SDL_endian.h>
-#include "quakedef.h"
 
 #define OV_EXCLUDE_STATIC_CALLBACKS
 #include <vorbis/vorbisfile.h>

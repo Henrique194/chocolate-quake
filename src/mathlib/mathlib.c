@@ -20,8 +20,10 @@
 // mathlib.c -- math primitives
 
 
+#include "mathlib.h"
+#include "model.h"
 #include <math.h>
-#include "quakedef.h"
+#include <string.h>
 
 
 void Sys_Error(char* error, ...);

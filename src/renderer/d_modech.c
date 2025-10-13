@@ -20,7 +20,6 @@
 // d_modech.c: called when mode has just changed
 
 
-#include "quakedef.h"
 #include "d_local.h"
 
 

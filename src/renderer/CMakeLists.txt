@@ -33,28 +33,23 @@ add_library(renderer STATIC
 
 target_include_directories(renderer PRIVATE ${CMAKE_BINARY_DIR} "../")
 target_include_directories(renderer PUBLIC "./include")
-target_link_libraries(renderer PRIVATE
-    ${SDL2_LIBRARIES}
-    camera
+target_link_libraries(renderer PUBLIC
     client
-    cmd
     common
     console
-    crc
-    end_screen
-    host
-    input
     mathlib
-    memory
-    menu
     model
-    net
     progs
-    screen
+    video
+    wad
+)
+target_link_libraries(renderer PRIVATE
+    camera
+    cmd
+    memory
     server
+    screen
     sound
     status_bar
     sys
-    video
-    wad
 )

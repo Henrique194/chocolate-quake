@@ -20,8 +20,10 @@
 // in_mouse.c -- mouse code
 
 
-#include "quakedef.h"
 #include "in_mouse.h"
+#include "host.h"
+#include "keys.h"
+#include <SDL_hints.h>
 
 
 static qboolean mouse_active = true;

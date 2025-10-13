@@ -20,8 +20,12 @@
 // vid_modes.c -- manages screen resolution settings
 
 
-#include "quakedef.h"
 #include "vid_modes.h"
+#include "cmd.h"
+#include "console.h"
+#include "cvar.h"
+#include "host.h"
+#include "vid.h"
 #include "vid_window.h"
 
 

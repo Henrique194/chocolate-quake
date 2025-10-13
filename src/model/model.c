@@ -23,8 +23,12 @@
 // on the same machine.
 
 
-#include "quakedef.h"
+#include "model.h"
+#include "console.h"
 #include "r_local.h"
+#include "sys.h"
+#include <math.h>
+#include <string.h>
 
 
 model_t* loadmodel;

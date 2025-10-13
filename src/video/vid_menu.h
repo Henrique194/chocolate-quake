@@ -21,6 +21,8 @@
 #ifndef __VID_MENU__
 #define __VID_MENU__
 
+#include "quakedef.h"
+
 void VID_MenuDraw(void);
 
 void VID_MenuKey(int key);

@@ -37,6 +37,7 @@ The game starts with a Cbuf_AddText ("exec quake.rc\n"); Cbuf_Execute ();
 #ifndef __CMD__
 #define __CMD__
 
+#include "quakedef.h"
 
 void Cbuf_Init(void);
 // allocates an initial text buffer that will grow as needed

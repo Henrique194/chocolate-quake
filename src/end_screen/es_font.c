@@ -19,11 +19,13 @@
  */
 
 
-#include "quakedef.h"
 #include "es_font.h"
 #include "fonts/large.h"
 #include "fonts/normal.h"
 #include "fonts/small.h"
+#include <SDL_stdinc.h>
+#include <SDL_video.h>
+#include <string.h>
 #ifdef _WIN32
 #include "windows.h"
 #endif

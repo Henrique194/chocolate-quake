@@ -19,7 +19,13 @@
  */
 
 
-#include "quakedef.h"
+#include "client.h"
+#include "cmd.h"
+#include "console.h"
+#include "host.h"
+#include "sys.h"
+#include <stdlib.h>
+#include <string.h>
 
 
 void CL_FinishTimeDemo(void);

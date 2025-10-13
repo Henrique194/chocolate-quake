@@ -22,7 +22,11 @@
 #ifndef __D_LOCAL__
 #define __D_LOCAL__
 
+#include "quakedef.h"
 #include "r_shared.h"
+#include "cvar.h"
+#include "model.h"
+#include "vid.h"
 
 //
 // TODO: fine-tune this; it's based on providing some overage even if there

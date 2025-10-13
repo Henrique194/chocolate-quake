@@ -19,8 +19,11 @@
  */
 
 
-#include "quakedef.h"
 #include "r_local.h"
+#include "console.h"
+#include "server.h"
+#include <math.h>
+#include <stdlib.h>
 
 
 // default max # of particles at one time

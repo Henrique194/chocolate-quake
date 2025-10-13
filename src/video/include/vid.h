@@ -22,6 +22,8 @@
 #ifndef __VID__
 #define __VID__
 
+#include "quakedef.h"
+
 #define VID_CBITS  6
 #define VID_GRADES (1 << VID_CBITS)
 
@@ -46,6 +48,10 @@ typedef struct {
 } viddef_t;
 
 extern viddef_t vid; // global video state
+
+void VID_LockBuffer(void);
+
+void VID_UnlockBuffer(void);
 
 void VID_SetPalette(const byte* palette);
 // called at startup and after any gamma correction

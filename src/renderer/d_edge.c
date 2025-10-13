@@ -20,8 +20,8 @@
 // d_edge.c
 
 
-#include "quakedef.h"
 #include "d_local.h"
+#include "client.h"
 
 
 static int miplevel;

@@ -25,6 +25,13 @@
 #ifndef _R_SHARED_H_
 #define _R_SHARED_H_
 
+#include "quakedef.h"
+#include "cvar.h"
+#include "d_iface.h"
+#include "mathlib.h"
+#include "model.h"
+#include "vid.h"
+
 #define MAXVERTS 16 // max points in a surface polygon
 #define MAXWORKINGVERTS                                                        \
     (MAXVERTS + 4) // max points in an intermediate                            \

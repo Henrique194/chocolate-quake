@@ -20,8 +20,9 @@
 // net_vcr.c
 
 
-#include "quakedef.h"
 #include "net_vcr.h"
+#include "server.h"
+#include "sys.h"
 
 
 extern int vcrFile;

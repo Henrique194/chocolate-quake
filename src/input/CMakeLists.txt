@@ -11,28 +11,14 @@ add_library(input STATIC
 
 target_include_directories(input PRIVATE ${CMAKE_BINARY_DIR} "../")
 target_include_directories(input PUBLIC "./include")
+target_link_libraries(input PUBLIC client common ${SDL2_LIBRARIES})
 target_link_libraries(input PRIVATE
-    ${SDL2_LIBRARIES}
-    camera
-    client
     cmd
-    common
     console
-    crc
-    end_screen
     host
-    mathlib
     memory
     menu
-    model
-    net
-    progs
-    renderer
     screen
-    server
-    sound
-    status_bar
     sys
     video
-    wad
 )

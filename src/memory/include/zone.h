@@ -86,6 +86,8 @@ Zone block
 #ifndef __ZONE__
 #define __ZONE__
 
+#include "quakedef.h"
+
 void Memory_Init(void* buf, int size);
 
 void Z_Free(void* ptr);

@@ -20,7 +20,13 @@
 // sv_main.c -- server main program
 
 
-#include "quakedef.h"
+#include "server.h"
+#include "cmd.h"
+#include "console.h"
+#include "sound.h"
+#include "sys.h"
+#include "world.h"
+#include <string.h>
 
 
 server_t sv;

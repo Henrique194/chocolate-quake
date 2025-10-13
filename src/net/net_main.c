@@ -20,8 +20,14 @@
 // net_main.c
 
 
-#include "quakedef.h"
+#include "net.h"
+#include "client.h"
+#include "cmd.h"
+#include "console.h"
 #include "net_vcr.h"
+#include "server.h"
+#include "zone.h"
+#include "sys.h"
 
 
 qsocket_t* net_activeSockets = NULL;

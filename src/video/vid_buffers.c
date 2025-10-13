@@ -20,9 +20,9 @@
 // vid_buffers.c -- video buffers for screen drawing
 
 
-#include "quakedef.h"
 #include "vid_buffers.h"
 #include "d_local.h"
+#include "sys.h"
 
 
 // The paletted buffer that we draw to (i.e. the one that holds vid_buffer).

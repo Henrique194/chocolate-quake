@@ -20,7 +20,6 @@
 // r_light.c
 
 
-#include "quakedef.h"
 #include "r_local.h"
 
 

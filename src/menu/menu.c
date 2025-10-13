@@ -19,7 +19,20 @@
  */
 
 
-#include "quakedef.h"
+#include "menu.h"
+#include "client.h"
+#include "cmd.h"
+#include "console.h"
+#include "draw.h"
+#include "host.h"
+#include "keys.h"
+#include "screen.h"
+#include "server.h"
+#include "sound.h"
+#include "vid.h"
+#include "view.h"
+#include <SDL_stdinc.h>
+#include <string.h>
 
 
 enum {

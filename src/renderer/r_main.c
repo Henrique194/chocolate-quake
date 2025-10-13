@@ -20,8 +20,14 @@
 // r_main.c
 
 
-#include "quakedef.h"
 #include "r_local.h"
+#include "cmd.h"
+#include "console.h"
+#include "screen.h"
+#include "sound.h"
+#include "sys.h"
+#include "view.h"
+#include <math.h>
 
 
 //#define PASSAGES

@@ -20,8 +20,27 @@
 // host.c -- coordinates spawning and killing of local servers
 
 
-#include "quakedef.h"
-#include "r_local.h"
+#include "host.h"
+#include "bgmusic.h"
+#include "client.h"
+#include "cmd.h"
+#include "console.h"
+#include "draw.h"
+#include "input.h"
+#include "keys.h"
+#include "menu.h"
+#include "model.h"
+#include "progs.h"
+#include "sbar.h"
+#include "screen.h"
+#include "server.h"
+#include "sound.h"
+#include "sys.h"
+#include "view.h"
+#include "wad.h"
+#include <SDL.h>
+#include <stdarg.h>
+#include <string.h>
 
 
 /*

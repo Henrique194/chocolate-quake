@@ -20,8 +20,11 @@
 // in_gamepad.c -- gamepad code
 
 
-#include "quakedef.h"
 #include "in_gamepad.h"
+#include "console.h"
+#include "keys.h"
+#include "sys.h"
+#include <SDL.h>
 
 
 static cvar_t joy_deadzone_look = {"joy_deadzone_look", "0.175", true};

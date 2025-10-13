@@ -22,6 +22,8 @@
 #ifndef __ES_TIME__
 #define __ES_TIME__
 
+#include "quakedef.h"
+
 #define BLINK_PERIOD 250
 
 void ES_Sleep(void);

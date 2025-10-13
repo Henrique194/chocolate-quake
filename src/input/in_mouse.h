@@ -23,6 +23,10 @@
 #ifndef __IN_MOUSE__
 #define __IN_MOUSE__
 
+#include "quakedef.h"
+#include "client.h"
+#include <SDL_events.h>
+
 void IN_ActivateMouse(void);
 
 void IN_DeactivateMouse(void);

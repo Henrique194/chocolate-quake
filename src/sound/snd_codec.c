@@ -19,12 +19,14 @@
  */
 
 
-#include "quakedef.h"
 #include "snd_codec.h"
+#include "console.h"
 #include "snd_mp3.h"
 #include "snd_vorbis.h"
 #include "snd_flac.h"
 #include "snd_wave.h"
+#include "zone.h"
+#include <stdio.h>
 
 
 static snd_codec_t* codecs;

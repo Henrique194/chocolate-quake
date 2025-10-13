@@ -22,6 +22,9 @@
 #ifndef __ES_BUFFER__
 #define __ES_BUFFER__
 
+#include "quakedef.h"
+#include <SDL_render.h>
+
 // VGA text mode resolution
 #define TEXT_SCREEN_WIDTH  80
 #define TEXT_SCREEN_HEIGHT 25

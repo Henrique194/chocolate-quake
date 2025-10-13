@@ -24,6 +24,8 @@
 #ifndef __SBAR__
 #define __SBAR__
 
+#include "quakedef.h"
+
 #define SBAR_HEIGHT 24
 
 extern int sb_lines; // scan lines to draw

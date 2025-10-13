@@ -20,10 +20,10 @@
 // r_alias.c: routines for setting up to draw alias models
 
 
-#include "quakedef.h"
 #include "r_local.h"
-#include "d_local.h" // FIXME: shouldn't be needed (is needed for patch
-                     // right now, but that should move)
+#include "d_local.h" // FIXME: shouldn't be needed (is needed for patch right now, but that should move)
+#include "console.h"
+#include "sys.h"
 
 // lowest light value we'll allow, to avoid the need for inner-loop light clamping
 #define LIGHT_MIN 5

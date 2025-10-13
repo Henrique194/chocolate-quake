@@ -19,7 +19,16 @@
  */
 
 
-#include "quakedef.h"
+#include "keys.h"
+#include "client.h"
+#include "cmd.h"
+#include "console.h"
+#include "menu.h"
+#include "screen.h"
+#include "sys.h"
+#include "vid.h"
+#include "zone.h"
+#include <string.h>
 
 
 /*

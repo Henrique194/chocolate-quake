@@ -20,7 +20,11 @@
 // cvar.c -- dynamic variable tracking
 
 
-#include "quakedef.h"
+#include "cvar.h"
+#include "cmd.h"
+#include "console.h"
+#include "server.h"
+#include "zone.h"
 
 
 cvar_t* cvar_vars;

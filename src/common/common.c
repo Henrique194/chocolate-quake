@@ -21,6 +21,17 @@
 
 
 #include "quakedef.h"
+#include "cmd.h"
+#include "console.h"
+#include "crc.h"
+#include "cvar.h"
+#include "draw.h"
+#include "net.h"
+#include "sys.h"
+#include "zone.h"
+#include <errno.h>
+#include <stdarg.h>
+#include <string.h>
 
 
 #define NUM_SAFE_ARGVS 7

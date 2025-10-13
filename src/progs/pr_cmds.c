@@ -19,7 +19,16 @@
  */
 
 
-#include "quakedef.h"
+#include "progs.h"
+#include "cmd.h"
+#include "console.h"
+#include "host.h"
+#include "server.h"
+#include "sys.h"
+#include "world.h"
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 #define RETURN_EDICT(e) (((int*) pr_globals)[OFS_RETURN] = EDICT_TO_PROG(e))

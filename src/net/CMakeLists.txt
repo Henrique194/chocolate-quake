@@ -9,28 +9,12 @@ add_library(net STATIC
 
 target_include_directories(net PRIVATE ${CMAKE_BINARY_DIR} "../")
 target_include_directories(net PUBLIC "./include")
+target_link_libraries(net PUBLIC common console)
 target_link_libraries(net PRIVATE
-    ${SDL2_LIBRARIES}
-    camera
     client
     cmd
-    common
-    console
-    crc
-    end_screen
     host
-    input
-    mathlib
     memory
-    menu
-    model
-    progs
-    renderer
-    screen
     server
-    sound
-    status_bar
     sys
-    video
-    wad
 )

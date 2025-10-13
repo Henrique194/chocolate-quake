@@ -20,8 +20,23 @@
 // screen.c -- master for refresh, status bar, console, chat, notify, etc
 
 
-#include "quakedef.h"
-#include "r_local.h"
+#include "screen.h"
+#include "client.h"
+#include "cmd.h"
+#include "console.h"
+#include "d_iface.h"
+#include "draw.h"
+#include "host.h"
+#include "keys.h"
+#include "menu.h"
+#include "sbar.h"
+#include "sound.h"
+#include "sys.h"
+#include "vid.h"
+#include "view.h"
+#include "wad.h"
+#include <math.h>
+#include <string.h>
 
 
 // only the refresh window will be updated unless these variables are flagged

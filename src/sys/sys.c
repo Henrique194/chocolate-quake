@@ -19,9 +19,21 @@
  */
 
 
-#include "quakedef.h"
+#include "sys.h"
+#include "client.h"
+#include "cmd.h"
 #include "end_screen.h"
+#include "input.h"
+#include "keys.h"
+#include "menu.h"
+#include <SDL_events.h>
+#include <SDL_hints.h>
+#include <SDL_stdinc.h>
+#include <SDL_timer.h>
 #include <assert.h>
+#include <errno.h>
+#include <stdarg.h>
+#include <string.h>
 #ifdef HAVE_SIGNAL_H
 #include <signal.h>
 #endif

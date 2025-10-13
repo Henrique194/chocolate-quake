@@ -23,6 +23,10 @@
 #ifndef __IN_GAMEPAD__
 #define __IN_GAMEPAD__
 
+#include "quakedef.h"
+#include "client.h"
+#include <SDL_events.h>
+
 void IN_GamepadEvent(const SDL_Event* event);
 
 void IN_JoyMove(usercmd_t* cmd);

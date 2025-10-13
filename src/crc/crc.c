@@ -20,7 +20,6 @@
 /* crc.c */
 
 
-#include "quakedef.h"
 #include "crc.h"
 
 

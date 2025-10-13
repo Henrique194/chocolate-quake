@@ -20,7 +20,11 @@
 // chase.c -- chase camera code
 
 
-#include "quakedef.h"
+#include "view.h"
+#include "client.h"
+#include "world.h"
+#include <math.h>
+#include <string.h>
 
 
 cvar_t chase_back = {"chase_back", "100"};

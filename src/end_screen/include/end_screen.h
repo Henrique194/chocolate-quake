@@ -22,6 +22,8 @@
 #ifndef __END_SCREEN__
 #define __END_SCREEN__
 
+#include "quakedef.h"
+
 void ES_DisplayScreen(void);
 
 #endif

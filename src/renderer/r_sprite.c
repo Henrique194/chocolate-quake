@@ -20,8 +20,10 @@
 // r_sprite.c
 
 
-#include "quakedef.h"
 #include "r_local.h"
+#include "console.h"
+#include "sys.h"
+#include <math.h>
 
 
 static int clip_current;

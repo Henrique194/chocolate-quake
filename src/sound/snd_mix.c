@@ -20,7 +20,9 @@
 // snd_mix.c -- portable code to mix sounds for snd_dma.c
 
 
-#include "quakedef.h"
+#include "sound.h"
+#include <SDL_stdinc.h>
+#include <stdlib.h>
 
 
 #define PAINTBUFFER_SIZE 2048

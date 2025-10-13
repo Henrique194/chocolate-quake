@@ -19,10 +19,11 @@
  */
 
 
-#include "quakedef.h"
 #include "es_window.h"
+#include "config.h"
 #include "es_buffer.h"
 #include "es_font.h"
+#include <SDL.h>
 
 static SDL_Window* window;
 static SDL_Renderer* renderer;

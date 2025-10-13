@@ -20,7 +20,10 @@
 // sv_move.c -- monster movement
 
 
-#include "quakedef.h"
+#include "server.h"
+#include "world.h"
+#include <math.h>
+#include <stdlib.h>
 
 
 #define STEPSIZE 18

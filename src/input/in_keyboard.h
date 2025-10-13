@@ -23,6 +23,9 @@
 #ifndef __IN_KEYBOARD__
 #define __IN_KEYBOARD__
 
+#include "quakedef.h"
+#include <SDL_events.h>
+
 void IN_KeyboardEvent(const SDL_Event* event);
 
 #endif

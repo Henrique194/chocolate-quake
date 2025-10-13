@@ -56,6 +56,9 @@ interface from being ambiguous.
 #ifndef __CVAR__
 #define __CVAR__
 
+#include "quakedef.h"
+#include <stdio.h>
+
 typedef struct cvar_s {
     char* name;
     char* string;

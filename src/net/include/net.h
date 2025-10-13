@@ -23,6 +23,10 @@
 #ifndef __NET__
 #define __NET__
 
+#include "quakedef.h"
+#include "protocol.h"
+#include "cvar.h"
+
 struct qsockaddr {
     short sa_family;
     unsigned char sa_data[14];

@@ -20,8 +20,9 @@
 // r_efrag.c
 
 
-#include "quakedef.h"
 #include "r_local.h"
+#include "console.h"
+#include "sys.h"
 
 
 mnode_t* r_pefragtopnode;

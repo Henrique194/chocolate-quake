@@ -20,7 +20,6 @@
 // r_aclip.c: clip routines for drawing Alias models directly to the screen
 
 
-#include "quakedef.h"
 #include "r_local.h"
 
 

@@ -22,6 +22,8 @@
 #ifndef __CONSOLE__
 #define __CONSOLE__
 
+#include "quakedef.h"
+
 //
 // console
 //

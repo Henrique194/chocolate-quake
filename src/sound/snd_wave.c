@@ -18,8 +18,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include "quakedef.h"
 #include "snd_wave.h"
+#include "console.h"
+#include "sound.h"
+#include <stdio.h>
+#include <string.h>
 
 /*
 =================

@@ -20,8 +20,8 @@
 // r_edge.c
 
 
-#include "quakedef.h"
 #include "r_local.h"
+#include "sound.h"
 
 
 #if 0

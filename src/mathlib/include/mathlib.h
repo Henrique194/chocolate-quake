@@ -23,6 +23,8 @@
 #ifndef __MATHLIB__
 #define __MATHLIB__
 
+#include "quakedef.h"
+
 typedef float vec_t;
 typedef vec_t vec3_t[3];
 typedef vec_t vec5_t[5];

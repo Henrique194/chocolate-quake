@@ -20,7 +20,14 @@
 // sbar.c -- status bar code
 
 
-#include "quakedef.h"
+#include "sbar.h"
+#include "client.h"
+#include "cmd.h"
+#include "draw.h"
+#include "screen.h"
+#include "server.h"
+#include "wad.h"
+#include <string.h>
 
 
 int sb_updates; // if >= vid.numpages, no update needed

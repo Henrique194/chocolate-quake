@@ -20,7 +20,11 @@
 // cl.input.c  -- builds an intended movement command to send to the server
 
 
-#include "quakedef.h"
+#include "client.h"
+#include "cmd.h"
+#include "console.h"
+#include "host.h"
+#include <stdlib.h>
 
 
 /*

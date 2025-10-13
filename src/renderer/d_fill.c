@@ -20,7 +20,7 @@
 // d_clear: clears a specified rectangle to the specified color
 
 
-#include "quakedef.h"
+#include "d_local.h"
 
 
 /*

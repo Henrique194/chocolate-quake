@@ -22,9 +22,7 @@
 #ifndef __BGMUSIC__
 #define __BGMUSIC__
 
-
-#include "common.h"
-
+#include "quakedef.h"
 
 int BGMusic_Init(void);
 void BGMusic_Play(byte track, qboolean looping);

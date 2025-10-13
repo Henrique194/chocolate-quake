@@ -18,8 +18,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include "quakedef.h"
 #include "snd_mp3.h"
+#include "console.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define IS_DIGIT(c) (c >= '0' && c <= '9')
 

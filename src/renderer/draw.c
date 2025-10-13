@@ -21,7 +21,13 @@
 // vid buffer
 
 
-#include "quakedef.h"
+#include "draw.h"
+#include "d_iface.h"
+#include "sound.h"
+#include "sys.h"
+#include "vid.h"
+#include "zone.h"
+#include <string.h>
 
 
 typedef struct {

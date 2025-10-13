@@ -20,7 +20,11 @@
 // world.c -- world query functions
 
 
-#include "quakedef.h"
+#include "world.h"
+#include "console.h"
+#include "server.h"
+#include "sys.h"
+#include <string.h>
 
 
 /*

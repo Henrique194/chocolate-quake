@@ -20,7 +20,16 @@
 // view.c -- player eye positioning
 
 
-#include "quakedef.h"
+#include "view.h"
+#include "client.h"
+#include "cmd.h"
+#include "console.h"
+#include "draw.h"
+#include "host.h"
+#include "model.h"
+#include "screen.h"
+#include <math.h>
+#include <stdlib.h>
 
 
 /*

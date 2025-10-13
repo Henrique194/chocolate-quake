@@ -19,7 +19,16 @@
  */
 
 
-#include "quakedef.h"
+#include "host.h"
+#include "cmd.h"
+#include "console.h"
+#include "keys.h"
+#include "screen.h"
+#include "server.h"
+#include "sys.h"
+#include "world.h"
+#include <stdlib.h>
+#include <string.h>
 
 
 extern cvar_t pausable;

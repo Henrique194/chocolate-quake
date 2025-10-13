@@ -20,7 +20,12 @@
 // Z_zone.c
 
 
-#include "quakedef.h"
+#include "zone.h"
+#include "cmd.h"
+#include "console.h"
+#include "sys.h"
+#include <SDL_stdinc.h>
+#include <string.h>
 
 
 #define DYNAMIC_SIZE (4 * 1024 * 1024)

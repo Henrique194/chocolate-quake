@@ -20,7 +20,7 @@
 // r_vars.c: global refresh variables
 
 
-#include "quakedef.h"
+#include "d_local.h"
 
 
 // all global and static refresh variables are collected in a contiguous block

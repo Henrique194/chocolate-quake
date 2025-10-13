@@ -22,6 +22,11 @@
 #ifndef __RENDER__
 #define __RENDER__
 
+#include "quakedef.h"
+#include "mathlib.h"
+#include "progs.h"
+#include "vid.h"
+
 #define MAXCLIPPLANES 11
 
 #define TOP_RANGE    16 // soldier uniform colors

@@ -20,7 +20,16 @@
 // sv_user.c -- server code for moving users
 
 
-#include "quakedef.h"
+#include "server.h"
+#include "cmd.h"
+#include "console.h"
+#include "host.h"
+#include "keys.h"
+#include "sys.h"
+#include "view.h"
+#include "world.h"
+#include <math.h>
+#include <string.h>
 
 
 edict_t* sv_player;

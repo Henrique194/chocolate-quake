@@ -19,7 +19,9 @@
  */
 
 
-#include "quakedef.h"
+#include "sound.h"
+#include "console.h"
+#include <SDL.h>
 
 
 static int buffersize;

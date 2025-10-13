@@ -4,28 +4,22 @@ add_library(host STATIC
 )
 
 target_include_directories(host PRIVATE ${CMAKE_BINARY_DIR} "../")
+target_include_directories(host PUBLIC "./include")
+target_link_libraries(host PUBLIC common console)
 target_link_libraries(host PRIVATE
     ${SDL2_LIBRARIES}
     camera
     client
     cmd
-    common
-    console
-    crc
-    end_screen
     input
-    mathlib
-    memory
     menu
     model
-    net
     progs
     renderer
     screen
     server
     sound
-    status_bar
     sys
-    video
+    status_bar
     wad
 )

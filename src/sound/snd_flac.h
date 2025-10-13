@@ -23,6 +23,7 @@
 #ifndef _SND_FLAC_H_
 #define _SND_FLAC_H_
 
+#include "quakedef.h"
 #include "snd_codec.h"
 
 extern snd_codec_t flac_codec;

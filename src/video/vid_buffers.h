@@ -21,17 +21,13 @@
 #ifndef __VID_BUFFERS__
 #define __VID_BUFFERS__
 
-void VID_SetPalette(const byte* palette);
-
-void VID_ShiftPalette(const byte* palette);
+#include "quakedef.h"
+#include "vid.h"
+#include <SDL_render.h>
 
 void VID_ReallocBuffers(void);
 
 void VID_FreeBuffers(void);
-
-void VID_LockBuffer(void);
-
-void VID_UnlockBuffer(void);
 
 void VID_UpdateTexture(SDL_Texture* texture, vrect_t* rect);
 

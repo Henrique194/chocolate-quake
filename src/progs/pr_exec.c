@@ -19,7 +19,13 @@
  */
 
 
-#include "quakedef.h"
+#include "progs.h"
+#include "console.h"
+#include "host.h"
+#include "server.h"
+#include "sys.h"
+#include <stdarg.h>
+#include <string.h>
 
 
 typedef struct {

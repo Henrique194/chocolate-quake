@@ -22,8 +22,13 @@
 #ifndef __MODEL__
 #define __MODEL__
 
+#include "quakedef.h"
+#include "bspfile.h"
 #include "modelgen.h"
 #include "spritegn.h"
+#include "mathlib.h"
+#include "render.h"
+#include "zone.h"
 
 /*
 

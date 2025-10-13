@@ -22,6 +22,11 @@
 #ifndef __WORLD__
 #define __WORLD__
 
+#include "quakedef.h"
+#include "mathlib.h"
+#include "model.h"
+#include "progs.h"
+
 typedef struct {
     vec3_t normal;
     float dist;

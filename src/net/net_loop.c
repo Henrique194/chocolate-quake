@@ -20,8 +20,11 @@
 // net_loop.c
 
 
-#include "quakedef.h"
 #include "net_loop.h"
+#include "client.h"
+#include "console.h"
+#include "server.h"
+#include "sys.h"
 
 
 qboolean localconnectpending = false;

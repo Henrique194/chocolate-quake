@@ -22,9 +22,8 @@
 // Portable C scan-level rasterization code, all pixel depths.
 
 
-#include "quakedef.h"
-#include "r_local.h"
 #include "d_local.h"
+#include "r_local.h"
 
 
 unsigned char *r_turb_pbase, *r_turb_pdest;

@@ -23,6 +23,12 @@
 #ifndef __D_IFACE__
 #define __D_IFACE__
 
+#include "quakedef.h"
+#include "cvar.h"
+#include "mathlib.h"
+#include "model.h"
+#include "vid.h"
+
 #define WARP_WIDTH  320
 #define WARP_HEIGHT 200
 

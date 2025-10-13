@@ -19,11 +19,13 @@
  */
 
 
-#include "quakedef.h"
 #include "es_buffer.h"
+#include "cvar.h"
 #include "es_palette.h"
 #include "es_font.h"
 #include "es_time.h"
+#include <SDL_hints.h>
+#include <SDL_timer.h>
 
 typedef struct {
     byte ch;

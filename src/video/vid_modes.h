@@ -21,6 +21,8 @@
 #ifndef __VID_MODES__
 #define __VID_MODES__
 
+#include "quakedef.h"
+
 #define NUM_WINDOWED_MODES   3
 #define NUM_FULLSCREEN_MODES 12
 #define NUM_MODES            (NUM_WINDOWED_MODES + NUM_FULLSCREEN_MODES)

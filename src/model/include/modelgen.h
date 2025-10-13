@@ -41,9 +41,10 @@
 #include "scriplib.h"
 #include "trilib.h"
 #include "lbmlib.h"
-#include "mathlib.h"
 
 #endif
+
+#include "mathlib.h"
 
 #define ALIAS_VERSION 6
 

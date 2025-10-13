@@ -20,7 +20,13 @@
 // cmd.c -- Quake script command processing module
 
 
-#include "quakedef.h"
+#include "cmd.h"
+#include "client.h"
+#include "console.h"
+#include "host.h"
+#include "sys.h"
+#include "zone.h"
+#include <string.h>
 
 
 void Cmd_ForwardToServer(void);

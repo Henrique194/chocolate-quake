@@ -22,6 +22,8 @@
 #ifndef __ES_FONT__
 #define __ES_FONT__
 
+#include "quakedef.h"
+
 typedef enum {
     FONT_SMALL,
     FONT_NORMAL,

@@ -18,9 +18,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include <mad.h>
-#include "quakedef.h"
 #include "snd_mp3.h"
+#include "console.h"
+#include <mad.h>
+#include <SDL_endian.h>
+#include <SDL_stdinc.h>
+
 
 // Under Windows, importing data from DLLs is a dicey proposition.
 // This is true when using dlopen, but also true if linking directly

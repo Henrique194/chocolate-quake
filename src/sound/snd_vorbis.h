@@ -23,6 +23,7 @@
 #ifndef _SND_VORBIS_H_
 #define _SND_VORBIS_H_
 
+#include "quakedef.h"
 #include "snd_codec.h"
 
 extern snd_codec_t vorbis_codec;

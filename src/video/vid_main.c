@@ -19,10 +19,12 @@
 */
 
 
-#include "quakedef.h"
+#include "vid.h"
+#include "sys.h"
 #include "vid_buffers.h"
 #include "vid_modes.h"
 #include "vid_window.h"
+#include <SDL.h>
 
 
 //

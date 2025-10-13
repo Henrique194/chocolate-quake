@@ -23,6 +23,9 @@
 #ifndef __NET_LOOP__
 #define __NET_LOOP__
 
+#include "quakedef.h"
+#include "net.h"
+
 int Loop_Init(void);
 void Loop_Listen(qboolean state);
 void Loop_SearchForHosts(qboolean xmit);

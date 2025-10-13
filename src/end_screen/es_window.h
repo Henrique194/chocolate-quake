@@ -22,6 +22,8 @@
 #ifndef __ES_WINDOW__
 #define __ES_WINDOW__
 
+#include "quakedef.h"
+
 int ES_InitWindow(void);
 
 void ES_ShutdownWindow(void);

@@ -23,8 +23,10 @@
 #ifndef __CRC__
 #define __CRC__
 
-void CRC_Init(unsigned short *crcvalue);
-void CRC_ProcessByte(unsigned short *crcvalue, byte data);
+#include "quakedef.h"
+
+void CRC_Init(unsigned short* crcvalue);
+void CRC_ProcessByte(unsigned short* crcvalue, byte data);
 unsigned short CRC_Value(unsigned short crcvalue);
 
 #endif

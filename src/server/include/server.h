@@ -22,6 +22,15 @@
 #ifndef __SERVER__
 #define __SERVER__
 
+#include "quakedef.h"
+#include "client.h"
+#include "cvar.h"
+#include "mathlib.h"
+#include "net.h"
+#include "progs.h"
+#include <setjmp.h>
+
+
 typedef struct {
     int maxclients;
     int maxclientslimit;

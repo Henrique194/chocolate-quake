@@ -20,6 +20,18 @@
 // console.c
 
 
+#include "console.h"
+#include "client.h"
+#include "cmd.h"
+#include "cvar.h"
+#include "draw.h"
+#include "keys.h"
+#include "screen.h"
+#include "sound.h"
+#include "sys.h"
+#include <fcntl.h>
+#include <stdarg.h>
+#include <string.h>
 #ifdef NeXT
 #include <libc.h>
 #endif
@@ -28,8 +40,6 @@
 #else
 #include <unistd.h>
 #endif
-#include <fcntl.h>
-#include "quakedef.h"
 
 
 int con_linewidth;

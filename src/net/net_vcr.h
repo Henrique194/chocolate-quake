@@ -23,6 +23,9 @@
 #ifndef __NET_VCR__
 #define __NET_VCR__
 
+#include "quakedef.h"
+#include "net.h"
+
 #define VCR_OP_CONNECT        1
 #define VCR_OP_GETMESSAGE     2
 #define VCR_OP_SENDMESSAGE    3

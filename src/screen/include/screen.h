@@ -22,6 +22,9 @@
 #ifndef __SCREEN__
 #define __SCREEN__
 
+#include "quakedef.h"
+#include "cvar.h"
+
 void SCR_Init(void);
 
 void SCR_UpdateScreen(void);
