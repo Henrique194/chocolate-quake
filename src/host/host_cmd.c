@@ -121,7 +121,7 @@ void Host_God_f(void) {
         return;
     }
 
-    if (pr_global_struct->deathmatch && !host_client->privileged)
+    if (pr_global_struct->deathmatch)
         return;
 
     sv_player->v.flags = (int) sv_player->v.flags ^ FL_GODMODE;
@@ -137,7 +137,7 @@ void Host_Notarget_f(void) {
         return;
     }
 
-    if (pr_global_struct->deathmatch && !host_client->privileged)
+    if (pr_global_struct->deathmatch)
         return;
 
     sv_player->v.flags = (int) sv_player->v.flags ^ FL_NOTARGET;
@@ -155,7 +155,7 @@ void Host_Noclip_f(void) {
         return;
     }
 
-    if (pr_global_struct->deathmatch && !host_client->privileged)
+    if (pr_global_struct->deathmatch)
         return;
 
     if (sv_player->v.movetype != MOVETYPE_NOCLIP) {
@@ -182,7 +182,7 @@ void Host_Fly_f(void) {
         return;
     }
 
-    if (pr_global_struct->deathmatch && !host_client->privileged)
+    if (pr_global_struct->deathmatch)
         return;
 
     if (sv_player->v.movetype != MOVETYPE_FLY) {
@@ -660,52 +660,6 @@ void Host_Version_f(void) {
                "\n");
 }
 
-#ifdef IDGODS
-void Host_Please_f(void) {
-    client_t* cl;
-    int j;
-
-    if (cmd_source != src_command)
-        return;
-
-    if ((Cmd_Argc() == 3) && Q_strcmp(Cmd_Argv(1), "#") == 0) {
-        j = Q_atof(Cmd_Argv(2)) - 1;
-        if (j < 0 || j >= svs.maxclients)
-            return;
-        if (!svs.clients[j].active)
-            return;
-        cl = &svs.clients[j];
-        if (cl->privileged) {
-            cl->privileged = false;
-            cl->edict->v.flags =
-                (int) cl->edict->v.flags & ~(FL_GODMODE | FL_NOTARGET);
-            cl->edict->v.movetype = MOVETYPE_WALK;
-            noclip_anglehack = false;
-        } else
-            cl->privileged = true;
-    }
-
-    if (Cmd_Argc() != 2)
-        return;
-
-    for (j = 0, cl = svs.clients; j < svs.maxclients; j++, cl++) {
-        if (!cl->active)
-            continue;
-        if (Q_strcasecmp(cl->name, Cmd_Argv(1)) == 0) {
-            if (cl->privileged) {
-                cl->privileged = false;
-                cl->edict->v.flags =
-                    (int) cl->edict->v.flags & ~(FL_GODMODE | FL_NOTARGET);
-                cl->edict->v.movetype = MOVETYPE_WALK;
-                noclip_anglehack = false;
-            } else
-                cl->privileged = true;
-            break;
-        }
-    }
-}
-#endif
-
 
 void Host_Say(qboolean teamonly) {
     client_t* client;
@@ -1101,7 +1055,7 @@ void Host_Kick_f(void) {
             Cmd_ForwardToServer();
             return;
         }
-    } else if (pr_global_struct->deathmatch && !host_client->privileged)
+    } else if (pr_global_struct->deathmatch)
         return;
 
     save = host_client;
@@ -1181,7 +1135,7 @@ void Host_Give_f(void) {
         return;
     }
 
-    if (pr_global_struct->deathmatch && !host_client->privileged)
+    if (pr_global_struct->deathmatch)
         return;
 
     t = Cmd_Argv(1);
@@ -1511,9 +1465,6 @@ void Host_InitCommands(void) {
     Cmd_AddCommand("name", Host_Name_f);
     Cmd_AddCommand("noclip", Host_Noclip_f);
     Cmd_AddCommand("version", Host_Version_f);
-#ifdef IDGODS
-    Cmd_AddCommand("please", Host_Please_f);
-#endif
     Cmd_AddCommand("say", Host_Say_f);
     Cmd_AddCommand("say_team", Host_Say_Team_f);
     Cmd_AddCommand("tell", Host_Tell_f);

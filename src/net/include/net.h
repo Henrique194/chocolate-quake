@@ -241,10 +241,6 @@ typedef struct {
 extern int hostCacheCount;
 extern hostcache_t hostcache[HOSTCACHESIZE];
 
-#ifdef IDGODS
-qboolean IsID(struct qsockaddr* addr);
-#endif
-
 //============================================================================
 //
 // public network functions
