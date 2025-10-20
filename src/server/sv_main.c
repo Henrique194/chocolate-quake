@@ -248,13 +248,13 @@ void SV_ConnectClient(int clientnum) {
     edict_t* ent;
     client_t* client;
     int edictnum;
-    struct qsocket_s* netconnection;
+    qsocket_t* netconnection;
     int i;
     float spawn_parms[NUM_SPAWN_PARMS];
 
     client = svs.clients + clientnum;
 
-    Con_DPrintf("Client %s connected\n", client->netconnection->address);
+    Con_DPrintf("Client %s connected\n", NET_GetSocketAddr(client->netconnection));
 
     edictnum = clientnum + 1;
 
@@ -296,7 +296,7 @@ SV_CheckForNewClients
 ===================
 */
 void SV_CheckForNewClients(void) {
-    struct qsocket_s* ret;
+    qsocket_t* ret;
     int i;
 
     //

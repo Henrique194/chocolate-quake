@@ -27,10 +27,10 @@
 #include "protocol.h"
 #include "cvar.h"
 
-struct qsockaddr {
+typedef struct qsockaddr {
     short sa_family;
     unsigned char sa_data[14];
-};
+} qsockaddr_t;
 
 
 #define NET_NAMELEN 64
@@ -123,40 +123,7 @@ struct qsockaddr {
 #define CCREP_PLAYER_INFO 0x84
 #define CCREP_RULE_INFO   0x85
 
-typedef struct qsocket_s {
-    struct qsocket_s* next;
-    double connecttime;
-    double lastMessageTime;
-    double lastSendTime;
-
-    qboolean disconnected;
-    qboolean canSend;
-    qboolean sendNext;
-
-    int driver;
-    int landriver;
-    int socket;
-    void* driverdata;
-
-    unsigned int ackSequence;
-    unsigned int sendSequence;
-    unsigned int unreliableSendSequence;
-    int sendMessageLength;
-    byte sendMessage[NET_MAXMESSAGE];
-
-    unsigned int receiveSequence;
-    unsigned int unreliableReceiveSequence;
-    int receiveMessageLength;
-    byte receiveMessage[NET_MAXMESSAGE];
-
-    struct qsockaddr addr;
-    char address[NET_NAMELEN];
-
-} qsocket_t;
-
-extern qsocket_t* net_activeSockets;
-extern qsocket_t* net_freeSockets;
-extern int net_numsockets;
+typedef struct qsocket_s qsocket_t;
 
 typedef struct {
     char* name;
@@ -220,8 +187,6 @@ extern int messagesReceived;
 extern int unreliableMessagesSent;
 extern int unreliableMessagesReceived;
 
-qsocket_t* NET_NewQSocket(void);
-void NET_FreeQSocket(qsocket_t*);
 double SetNetTime(void);
 
 
@@ -254,25 +219,25 @@ extern int net_activeconnections;
 void NET_Init(void);
 void NET_Shutdown(void);
 
-struct qsocket_s* NET_CheckNewConnections(void);
+qsocket_t* NET_CheckNewConnections(void);
 // returns a new connection number if there is one pending, else -1
 
-struct qsocket_s* NET_Connect(char* host);
+qsocket_t* NET_Connect(char* host);
 // called by client to connect to a host.  Returns -1 if not able to
 
 qboolean NET_CanSendMessage(qsocket_t* sock);
 // Returns true or false if the given qsocket can currently accept a
 // message to be transmitted.
 
-int NET_GetMessage(struct qsocket_s* sock);
+int NET_GetMessage(qsocket_t* sock);
 // returns data in net_message sizebuf
 // returns 0 if no data is waiting
 // returns 1 if a message was received
 // returns 2 if an unreliable message was received
 // returns -1 if the connection died
 
-int NET_SendMessage(struct qsocket_s* sock, sizebuf_t* data);
-int NET_SendUnreliableMessage(struct qsocket_s* sock, sizebuf_t* data);
+int NET_SendMessage(qsocket_t* sock, sizebuf_t* data);
+int NET_SendUnreliableMessage(qsocket_t* sock, sizebuf_t* data);
 // returns 0 if the message connot be delivered reliably, but the connection
 //		is still considered valid
 // returns 1 if the message was sent properly
@@ -282,7 +247,7 @@ int NET_SendToAll(sizebuf_t* data, int blocktime);
 // This is a reliable *blocking* send to all attached clients.
 
 
-void NET_Close(struct qsocket_s* sock);
+void NET_Close(qsocket_t* sock);
 // if a dead connection is returned by a get or send function, this function
 // should be called when it is convenient
 
@@ -292,6 +257,10 @@ void NET_Close(struct qsocket_s* sock);
 // A netcon_t number will not be reused until this function is called for it
 
 void NET_Poll(void);
+
+const char* NET_GetSocketAddr(const qsocket_t* sock);
+
+double NET_GetSocketConnectTime(const qsocket_t* sock);
 
 
 typedef struct _PollProcedure {

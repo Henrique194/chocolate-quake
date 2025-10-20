@@ -92,7 +92,9 @@ void Host_Status_f(void) {
     for (j = 0, client = svs.clients; j < svs.maxclients; j++, client++) {
         if (!client->active)
             continue;
-        seconds = (int) (net_time - client->netconnection->connecttime);
+        const qsocket_t* conn = client->netconnection;
+        const double connect_time = NET_GetSocketConnectTime(conn);
+        seconds = (int) (net_time - connect_time);
         minutes = seconds / 60;
         if (minutes) {
             seconds -= (minutes * 60);
@@ -103,7 +105,7 @@ void Host_Status_f(void) {
             hours = 0;
         print("#%-2u %-16.16s  %3i  %2i:%02i:%02i\n", j + 1, client->name,
               (int) client->edict->v.frags, hours, minutes, seconds);
-        print("   %s\n", client->netconnection->address);
+        print("   %s\n", NET_GetSocketAddr(conn));
     }
 }
 
@@ -946,8 +948,9 @@ void Host_Spawn_f(void) {
         pr_global_struct->self = EDICT_TO_PROG(sv_player);
         PR_ExecuteProgram(pr_global_struct->ClientConnect);
 
-        if ((Sys_FloatTime() - host_client->netconnection->connecttime) <=
-            sv.time)
+        const double now = Sys_FloatTime();
+        const double connect_time = NET_GetSocketConnectTime(host_client->netconnection);
+        if ((now - connect_time) <= sv.time)
             Sys_Printf("%s entered the game\n", host_client->name);
 
         PR_ExecuteProgram(pr_global_struct->PutClientInServer);

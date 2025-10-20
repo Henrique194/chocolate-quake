@@ -3,6 +3,8 @@ add_library(net STATIC
     net_loop.h
     net_main.c
     net_none.c
+    net_socket.c
+    net_socket.h
     net_vcr.c
     net_vcr.h
 )
