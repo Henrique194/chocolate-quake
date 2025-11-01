@@ -263,15 +263,6 @@ const char* NET_GetSocketAddr(const qsocket_t* sock);
 double NET_GetSocketConnectTime(const qsocket_t* sock);
 
 
-typedef struct _PollProcedure {
-    struct _PollProcedure* next;
-    double nextTime;
-    void (*procedure)();
-    void* arg;
-} PollProcedure;
-
-void SchedulePollProcedure(PollProcedure* pp, double timeOffset);
-
 extern qboolean serialAvailable;
 extern qboolean ipxAvailable;
 extern qboolean tcpipAvailable;

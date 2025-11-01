@@ -24,6 +24,7 @@
 #include "client.h"
 #include "cmd.h"
 #include "console.h"
+#include "net_poll.h"
 #include "net_socket.h"
 #include "net_vcr.h"
 #include "server.h"
@@ -50,17 +51,6 @@ void (*SetModemConfig)(int portNumber, char* dialType, char* clear, char* init,
                        char* hangup);
 
 static qboolean listening = false;
-
-qboolean slistInProgress = false;
-qboolean slistSilent = false;
-qboolean slistLocal = true;
-static double slistStartTime;
-static int slistLastShown;
-
-static void Slist_Send(void);
-static void Slist_Poll(void);
-PollProcedure slistSendProcedure = {NULL, 0.0, Slist_Send};
-PollProcedure slistPollProcedure = {NULL, 0.0, Slist_Poll};
 
 
 sizebuf_t net_message;
@@ -178,97 +168,6 @@ static void NET_Port_f(void) {
 }
 
 
-static void PrintSlistHeader(void) {
-    Con_Printf("Server          Map             Users\n");
-    Con_Printf("--------------- --------------- -----\n");
-    slistLastShown = 0;
-}
-
-
-static void PrintSlist(void) {
-    int n;
-
-    for (n = slistLastShown; n < hostCacheCount; n++) {
-        if (hostcache[n].maxusers)
-            Con_Printf("%-15.15s %-15.15s %2u/%2u\n", hostcache[n].name,
-                       hostcache[n].map, hostcache[n].users,
-                       hostcache[n].maxusers);
-        else
-            Con_Printf("%-15.15s %-15.15s\n", hostcache[n].name,
-                       hostcache[n].map);
-    }
-    slistLastShown = n;
-}
-
-
-static void PrintSlistTrailer(void) {
-    if (hostCacheCount)
-        Con_Printf("== end list ==\n\n");
-    else
-        Con_Printf("No Quake servers found.\n\n");
-}
-
-
-void NET_Slist_f(void) {
-    if (slistInProgress)
-        return;
-
-    if (!slistSilent) {
-        Con_Printf("Looking for Quake servers...\n");
-        PrintSlistHeader();
-    }
-
-    slistInProgress = true;
-    slistStartTime = Sys_FloatTime();
-
-    SchedulePollProcedure(&slistSendProcedure, 0.0);
-    SchedulePollProcedure(&slistPollProcedure, 0.1);
-
-    hostCacheCount = 0;
-}
-
-
-static void Slist_Send(void) {
-    for (net_driverlevel = 0; net_driverlevel < net_numdrivers;
-         net_driverlevel++) {
-        if (!slistLocal && net_driverlevel == 0)
-            continue;
-        if (net_drivers[net_driverlevel].initialized == false)
-            continue;
-        dfunc.SearchForHosts(true);
-    }
-
-    if ((Sys_FloatTime() - slistStartTime) < 0.5)
-        SchedulePollProcedure(&slistSendProcedure, 0.75);
-}
-
-
-static void Slist_Poll(void) {
-    for (net_driverlevel = 0; net_driverlevel < net_numdrivers;
-         net_driverlevel++) {
-        if (!slistLocal && net_driverlevel == 0)
-            continue;
-        if (net_drivers[net_driverlevel].initialized == false)
-            continue;
-        dfunc.SearchForHosts(false);
-    }
-
-    if (!slistSilent)
-        PrintSlist();
-
-    if ((Sys_FloatTime() - slistStartTime) < 1.5) {
-        SchedulePollProcedure(&slistPollProcedure, 0.1);
-        return;
-    }
-
-    if (!slistSilent)
-        PrintSlistTrailer();
-    slistInProgress = false;
-    slistSilent = false;
-    slistLocal = true;
-}
-
-
 /*
 ===================
 NET_Connect
@@ -335,10 +234,7 @@ JustDoIt:
     }
 
     if (host) {
-        Con_Printf("\n");
-        PrintSlistHeader();
-        PrintSlist();
-        PrintSlistTrailer();
+        NET_PrintSlist();
     }
 
     return NULL;
@@ -676,58 +572,4 @@ void NET_Shutdown(void) {
         Con_Printf("Closing vcrfile.\n");
         Sys_FileClose(vcrFile);
     }
-}
-
-
-static PollProcedure* pollProcedureList = NULL;
-
-void NET_Poll(void) {
-    PollProcedure* pp;
-    qboolean useModem;
-
-    if (!configRestored) {
-        if (serialAvailable) {
-            if (config_com_modem.value == 1.0)
-                useModem = true;
-            else
-                useModem = false;
-            SetComPortConfig(0, (int) config_com_port.value,
-                             (int) config_com_irq.value,
-                             (int) config_com_baud.value, useModem);
-            SetModemConfig(0, config_modem_dialtype.string,
-                           config_modem_clear.string, config_modem_init.string,
-                           config_modem_hangup.string);
-        }
-        configRestored = true;
-    }
-
-    SetNetTime();
-
-    for (pp = pollProcedureList; pp; pp = pp->next) {
-        if (pp->nextTime > net_time)
-            break;
-        pollProcedureList = pp->next;
-        pp->procedure(pp->arg);
-    }
-}
-
-
-void SchedulePollProcedure(PollProcedure* proc, double timeOffset) {
-    PollProcedure *pp, *prev;
-
-    proc->nextTime = Sys_FloatTime() + timeOffset;
-    for (pp = pollProcedureList, prev = NULL; pp; pp = pp->next) {
-        if (pp->nextTime >= proc->nextTime)
-            break;
-        prev = pp;
-    }
-
-    if (prev == NULL) {
-        proc->next = pollProcedureList;
-        pollProcedureList = proc;
-        return;
-    }
-
-    proc->next = pp;
-    prev->next = proc;
 }
