@@ -30,13 +30,6 @@
 #define dfunc net_drivers[net_driverlevel]
 
 
-typedef struct poll_procedure_s {
-    struct poll_procedure_s* next;
-    double nextTime;
-    void (*procedure)();
-} poll_procedure_t;
-
-
 extern qboolean configRestored;
 extern cvar_t config_com_port;
 extern cvar_t config_com_irq;
@@ -71,7 +64,7 @@ PROCEDURE SCHEDULING
 ================================================================================
 */
 
-static void NET_SchedulePollProcedure(poll_procedure_t* proc, double timeOffset) {
+void NET_SchedulePollProcedure(poll_procedure_t* proc, double timeOffset) {
     poll_procedure_t* pp;
     poll_procedure_t* prev = NULL;
 

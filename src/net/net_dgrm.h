@@ -17,30 +17,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+// net_dgrm.h
 
 
-#include "net_loop.h"
+#ifndef __NET_DGRM__
+#define __NET_DGRM__
 
+#include "quakedef.h"
+#include "net.h"
 
-net_driver_t net_drivers[MAX_NET_DRIVERS] = {
-    {
-        "Loopback",
-        false,
-        Loop_Init,
-        Loop_Listen,
-        Loop_SearchForHosts,
-        Loop_Connect,
-        Loop_CheckNewConnections,
-        Loop_GetMessage,
-        Loop_SendMessage,
-        Loop_SendUnreliableMessage,
-        Loop_CanSendMessage,
-        Loop_CanSendUnreliableMessage,
-        Loop_Close,
-        Loop_Shutdown
-    }
-};
-int net_numdrivers = 1;
+int Datagram_Init(void);
+void Datagram_Listen(qboolean state);
+void Datagram_SearchForHosts(qboolean xmit);
+qsocket_t* Datagram_Connect(char* host);
+qsocket_t* Datagram_CheckNewConnections(void);
+int Datagram_GetMessage(qsocket_t* sock);
+int Datagram_SendMessage(qsocket_t* sock, sizebuf_t* data);
+int Datagram_SendUnreliableMessage(qsocket_t* sock, sizebuf_t* data);
+qboolean Datagram_CanSendMessage(qsocket_t* sock);
+qboolean Datagram_CanSendUnreliableMessage(qsocket_t* sock);
+void Datagram_Close(qsocket_t* sock);
+void Datagram_Shutdown(void);
 
-net_landriver_t net_landrivers[MAX_NET_DRIVERS];
-int net_numlandrivers = 0;
+#endif

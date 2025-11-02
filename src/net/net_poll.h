@@ -26,6 +26,13 @@
 #include "quakedef.h"
 #include "net.h"
 
+typedef struct poll_procedure_s {
+    struct poll_procedure_s* next;
+    double nextTime;
+    void (*procedure)();
+} poll_procedure_t;
+
 void NET_PrintSlist(void);
+void NET_SchedulePollProcedure(poll_procedure_t* proc, double timeOffset);
 
 #endif

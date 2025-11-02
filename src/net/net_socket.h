@@ -25,6 +25,7 @@
 
 #include "quakedef.h"
 #include "net.h"
+#include <SDL_net.h>
 
 typedef struct qsocket_s {
     struct qsocket_s* next;
@@ -37,8 +38,7 @@ typedef struct qsocket_s {
     qboolean sendNext;
 
     int driver;
-    int landriver;
-    int socket;
+    UDPsocket socket;
     void* driverdata;
 
     unsigned int ackSequence;
@@ -52,9 +52,12 @@ typedef struct qsocket_s {
     int receiveMessageLength;
     byte receiveMessage[NET_MAXMESSAGE];
 
-    qsockaddr_t addr;
+    IPaddress addr;
     char address[NET_NAMELEN];
 } qsocket_t;
+
+
+extern qsocket_t* net_activeSockets;
 
 //
 // Called by drivers when a new communications endpoint is required.
@@ -65,6 +68,8 @@ qsocket_t* NET_NewQSocket(void);
 void NET_FreeQSocket(qsocket_t* sock);
 
 qboolean NET_IsSocketDisconnected(const qsocket_t* sock);
+
+void NET_PrintSocketStats(const char* addr);
 
 int NET_GetSocketMessage(qsocket_t* sock);
 

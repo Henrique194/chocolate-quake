@@ -27,7 +27,7 @@
 #include "zone.h"
 
 
-static qsocket_t* net_activeSockets = NULL;
+qsocket_t* net_activeSockets = NULL;
 static qsocket_t* net_freeSockets = NULL;
 
 static cvar_t net_messagetimeout = {"net_messagetimeout", "300"};
@@ -125,6 +125,60 @@ double NET_GetSocketConnectTime(const qsocket_t* sock) {
 
 qboolean NET_IsSocketDisconnected(const qsocket_t* sock) {
     return sock->disconnected;
+}
+
+//==============================================================================
+
+
+/*
+================================================================================
+
+SOCKET STATS
+
+================================================================================
+*/
+
+static void NET_PrintStats(const qsocket_t* s) {
+    Con_Printf("canSend = %4u   \n", s->canSend);
+    Con_Printf("sendSeq = %4u   ", s->sendSequence);
+    Con_Printf("recvSeq = %4u   \n", s->receiveSequence);
+    Con_Printf("\n");
+}
+
+static qsocket_t* NET_GetSocketByAddr(const char* addr) {
+    qsocket_t* s;
+    for (s = net_activeSockets; s; s = s->next) {
+        if (Q_strcasecmp(addr, s->address) == 0) {
+            return s;
+        }
+    }
+    for (s = net_freeSockets; s; s = s->next) {
+        if (Q_strcasecmp(addr, s->address) == 0) {
+            return s;
+        }
+    }
+    return NULL;
+}
+
+static void NET_PrintAllSockets(void) {
+    const qsocket_t* s;
+    for (s = net_activeSockets; s; s = s->next) {
+        NET_PrintStats(s);
+    }
+    for (s = net_freeSockets; s; s = s->next) {
+        NET_PrintStats(s);
+    }
+}
+
+void NET_PrintSocketStats(const char* addr) {
+    if (Q_strcmp(addr, "*") == 0) {
+        NET_PrintAllSockets();
+        return;
+    }
+    const qsocket_t* s = NET_GetSocketByAddr(addr);
+    if (s) {
+        NET_PrintStats(s);
+    }
 }
 
 //==============================================================================
