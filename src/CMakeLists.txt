@@ -52,6 +52,9 @@ target_include_directories(${PACKAGE_TARNAME} PRIVATE
 )
 
 target_link_libraries(${PACKAGE_TARNAME} ${LIBS})
+if(WIN32)
+    target_link_libraries(${PACKAGE_TARNAME} ws2_32)
+endif()
 
 if(MSVC)
     set_target_properties(${PACKAGE_TARNAME} PROPERTIES

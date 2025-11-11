@@ -134,7 +134,7 @@ typedef struct {
 
     // connection information
     int signon; // 0 to SIGNONS
-    struct qsocket_s* netcon;
+    qsocket_t* netcon;
     sizebuf_t message; // writing buffer to send to server
 
 } client_static_t;

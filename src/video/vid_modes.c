@@ -30,6 +30,9 @@
 
 
 #define VALID_MODE(mode) ((mode) >= 0 && (mode) < NUM_MODES)
+#define IS_WINDOWED(mode) ((mode) >= 0 && (mode) < NUM_WINDOWED_MODES)
+
+#define DEFAULT_WINDOWED_MODE 1
 
 #define VID_MODE(w, h, mode_type, name)                                        \
     {                                                                          \
@@ -42,6 +45,7 @@
 
 #define WINDOWED_MODE(w, h) VID_MODE(w, h, VID_MODE_WINDOWED, windowed)
 #define FULLSCREEN_MODE(w, h) VID_MODE(w, h, VID_MODE_FULLSCREEN, fullscreen)
+
 
 static vid_mode_t modes[NUM_MODES] = {
     WINDOWED_MODE(320, 240),
@@ -75,6 +79,7 @@ static double test_end_time = 0.0;
 
 static qboolean first_update = true;
 static qboolean force_set_mode = false;
+static qboolean start_windowed = false;
 
 
 /*
@@ -94,6 +99,17 @@ static void VID_ForceMode_f(void);
 static void VID_Windowed_f(void);
 static void VID_Fullscreen_f(void);
 static void VID_Minimize_f(void);
+
+static void VID_SetInitialMode(void) {
+    int init_mode;
+    if (COM_CheckParm("-startwindowed")) {
+        init_mode = DEFAULT_WINDOWED_MODE;
+        start_windowed = true;
+    } else {
+        init_mode = default_mode;
+    }
+    VID_SetMode(init_mode);
+}
 
 static void VID_RegisterCommands(void) {
     Cmd_AddCommand("vid_testmode", VID_TestMode_f);
@@ -118,7 +134,7 @@ static void VID_RegisterCvars(void) {
 void VID_InitModes(void) {
     VID_RegisterCvars();
     VID_RegisterCommands();
-    VID_SetMode(default_mode);
+    VID_SetInitialMode();
 }
 
 //==============================================================================
@@ -290,27 +306,35 @@ static void VID_Minimize_f(void) {
 //==============================================================================
 
 
-static void VID_SetStartupMode(void) {
+static void VID_UpdateDefaultMode(void) {
     default_mode = (int) _vid_default_mode_win.value;
     if (!VALID_MODE(default_mode)) {
         default_mode = 0;
         Cvar_SetValue("_vid_default_mode_win", (float) default_mode);
     }
-    VID_SetMode(default_mode);
+    if (!start_windowed || IS_WINDOWED(default_mode)) {
+        VID_SetMode(default_mode);
+    }
+}
+
+static qboolean VID_IsFirstUpdate(void) {
+    if (!first_update) {
+        return false;
+    }
+    return default_mode != (int) _vid_default_mode_win.value;
 }
 
 void VID_UpdateModes(void) {
-    if (first_update && (int) _vid_default_mode_win.value != default_mode) {
-        VID_SetStartupMode();
+    if (VID_IsFirstUpdate()) {
         first_update = false;
+        VID_UpdateDefaultMode();
     }
-
     if (testing_mode && realtime >= test_end_time) {
         testing_mode = false;
         VID_SetMode(previous_mode);
-    } else {
-        if ((int) vid_mode.value != current_mode) {
-            VID_SetMode((int) vid_mode.value);
-        }
+        return;
+    }
+    if ((int) vid_mode.value != current_mode) {
+        VID_SetMode((int) vid_mode.value);
     }
 }

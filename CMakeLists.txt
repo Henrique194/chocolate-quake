@@ -17,6 +17,7 @@ if(MATH)
 endif()
 
 find_package(SDL2 2.26.5 REQUIRED)
+find_package(SDL2_net CONFIG REQUIRED)
 if(UNIX AND NOT APPLE)
 	find_library(VORBIS_LIBRARY vorbis REQUIRED)
 	find_library(VORBISFILE_LIBRARY vorbisfile REQUIRED)

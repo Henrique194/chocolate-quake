@@ -23,6 +23,7 @@
 #include "net_loop.h"
 #include "client.h"
 #include "console.h"
+#include "net_socket.h"
 #include "server.h"
 #include "sys.h"
 
