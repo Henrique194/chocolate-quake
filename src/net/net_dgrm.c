@@ -849,7 +849,7 @@ static qboolean NET_IsAlreadyConnected(
             continue;
         }
         const int ret = UDP_AddrCompare(addr, &s->addr);
-        if (ret < 0) {
+        if (ret != 0) {
             continue;
         }
         // Is this a duplicate connection request?
