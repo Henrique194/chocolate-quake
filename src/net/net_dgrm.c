@@ -853,7 +853,7 @@ static qboolean NET_IsAlreadyConnected(
             continue;
         }
         // Is this a duplicate connection request?
-        if (ret == 0 && net_time - s->connecttime < 2.0) {
+        if (net_time - s->connecttime < 2.0) {
             // Yes, so send a duplicate reply.
             NET_REP_Accept(acceptsock, addr, s->socket);
             return true;
@@ -866,7 +866,10 @@ static qboolean NET_IsAlreadyConnected(
     return false;
 }
 
-static qsocket_t* NET_REP_Connect(UDPsocket acceptsock, IPaddress* addr) {
+static qsocket_t* NET_REP_Connect(
+    UDPsocket acceptsock,
+    const IPaddress* addr
+) {
     if (Q_strcmp(MSG_ReadString(), "QUAKE") != 0) {
         return NULL;
     }
@@ -959,7 +962,10 @@ static void NET_REP_ServerInfo(UDPsocket acceptsock, const IPaddress* addr) {
     SZ_Clear(&net_message);
 }
 
-static qsocket_t* NET_ControlResponse(UDPsocket acceptsock, IPaddress* addr) {
+static qsocket_t* NET_ControlResponse(
+    UDPsocket acceptsock,
+    const IPaddress* addr
+) {
     const int command = MSG_ReadByte();
     switch (command) {
         case CCREQ_SERVER_INFO:
@@ -1109,7 +1115,7 @@ static void NET_ReadServerInfo(void) {
         }
         net_message.cursize = ret;
 
-        if (UDP_AddrCompare(&readaddr, &my_addr) >= 0) {
+        if (UDP_AddrCompare(&readaddr, &my_addr) == 0) {
             // Don't answer our own query.
             continue;
         }

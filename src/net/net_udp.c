@@ -257,7 +257,10 @@ int UDP_AddrCompare(const IPaddress* addr1, const IPaddress* addr2) {
     if (addr1->host != addr2->host) {
         return -1;
     }
-    return addr1->port != addr2->port;
+    if (addr1->port == addr2->port) {
+        return 0;
+    }
+    return 1;
 }
 
 int UDP_GetSocketPort(const IPaddress* addr) {
