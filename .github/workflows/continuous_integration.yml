@@ -40,7 +40,7 @@ jobs:
             triplet: arm64-osx
 
           - name: macOS x64
-            os: macos-13
+            os: macos-15-intel
             triplet: x64-osx
 
           - name: Ubuntu
