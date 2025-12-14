@@ -1,3 +1,16 @@
+## v2.0.0
+
+### General Updates
+
+- **Multiplayer**: Added support for multiplayer.
+- **Start Windowed**: Restored "-startwindowed" command line.
+
+### Bug Fixes
+
+- **Arch Linux**: Fixed compilation issue when building with GCC on Arch Linux.
+
+---
+
 ## v1.3.0
 
 ### General Updates
