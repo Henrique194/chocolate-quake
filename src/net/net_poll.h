@@ -17,30 +17,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+// net_poll.h
 
 
-#include "net_loop.h"
+#ifndef __NET_POLL__
+#define __NET_POLL__
 
+#include "quakedef.h"
+#include "net.h"
 
-net_driver_t net_drivers[MAX_NET_DRIVERS] = {
-    {
-        "Loopback",
-        false,
-        Loop_Init,
-        Loop_Listen,
-        Loop_SearchForHosts,
-        Loop_Connect,
-        Loop_CheckNewConnections,
-        Loop_GetMessage,
-        Loop_SendMessage,
-        Loop_SendUnreliableMessage,
-        Loop_CanSendMessage,
-        Loop_CanSendUnreliableMessage,
-        Loop_Close,
-        Loop_Shutdown
-    }
-};
-int net_numdrivers = 1;
+typedef struct poll_procedure_s {
+    struct poll_procedure_s* next;
+    double nextTime;
+    void (*procedure)();
+} poll_procedure_t;
 
-net_landriver_t net_landrivers[MAX_NET_DRIVERS];
-int net_numlandrivers = 0;
+void NET_PrintSlist(void);
+void NET_SchedulePollProcedure(poll_procedure_t* proc, double timeOffset);
+
+#endif

@@ -26,11 +26,7 @@
 #include "quakedef.h"
 #include "protocol.h"
 #include "cvar.h"
-
-struct qsockaddr {
-    short sa_family;
-    unsigned char sa_data[14];
-};
+#include <SDL_net.h>
 
 
 #define NET_NAMELEN 64
@@ -123,68 +119,9 @@ struct qsockaddr {
 #define CCREP_PLAYER_INFO 0x84
 #define CCREP_RULE_INFO   0x85
 
-typedef struct qsocket_s {
-    struct qsocket_s* next;
-    double connecttime;
-    double lastMessageTime;
-    double lastSendTime;
-
-    qboolean disconnected;
-    qboolean canSend;
-    qboolean sendNext;
-
-    int driver;
-    int landriver;
-    int socket;
-    void* driverdata;
-
-    unsigned int ackSequence;
-    unsigned int sendSequence;
-    unsigned int unreliableSendSequence;
-    int sendMessageLength;
-    byte sendMessage[NET_MAXMESSAGE];
-
-    unsigned int receiveSequence;
-    unsigned int unreliableReceiveSequence;
-    int receiveMessageLength;
-    byte receiveMessage[NET_MAXMESSAGE];
-
-    struct qsockaddr addr;
-    char address[NET_NAMELEN];
-
-} qsocket_t;
-
-extern qsocket_t* net_activeSockets;
-extern qsocket_t* net_freeSockets;
-extern int net_numsockets;
-
-typedef struct {
-    char* name;
-    qboolean initialized;
-    int controlSock;
-    int (*Init)(void);
-    void (*Shutdown)(void);
-    void (*Listen)(qboolean state);
-    int (*OpenSocket)(int port);
-    int (*CloseSocket)(int socket);
-    int (*Connect)(int socket, struct qsockaddr* addr);
-    int (*CheckNewConnections)(void);
-    int (*Read)(int socket, byte* buf, int len, struct qsockaddr* addr);
-    int (*Write)(int socket, byte* buf, int len, struct qsockaddr* addr);
-    int (*Broadcast)(int socket, byte* buf, int len);
-    char* (*AddrToString)(struct qsockaddr* addr);
-    int (*StringToAddr)(char* string, struct qsockaddr* addr);
-    int (*GetSocketAddr)(int socket, struct qsockaddr* addr);
-    int (*GetNameFromAddr)(struct qsockaddr* addr, char* name);
-    int (*GetAddrFromName)(char* name, struct qsockaddr* addr);
-    int (*AddrCompare)(struct qsockaddr* addr1, struct qsockaddr* addr2);
-    int (*GetSocketPort)(struct qsockaddr* addr);
-    int (*SetSocketPort)(struct qsockaddr* addr, int port);
-} net_landriver_t;
+typedef struct qsocket_s qsocket_t;
 
 #define MAX_NET_DRIVERS 8
-extern int net_numlandrivers;
-extern net_landriver_t net_landrivers[MAX_NET_DRIVERS];
 
 typedef struct {
     char* name;
@@ -220,8 +157,6 @@ extern int messagesReceived;
 extern int unreliableMessagesSent;
 extern int unreliableMessagesReceived;
 
-qsocket_t* NET_NewQSocket(void);
-void NET_FreeQSocket(qsocket_t*);
 double SetNetTime(void);
 
 
@@ -235,15 +170,11 @@ typedef struct {
     int maxusers;
     int driver;
     int ldriver;
-    struct qsockaddr addr;
+    IPaddress addr;
 } hostcache_t;
 
 extern int hostCacheCount;
 extern hostcache_t hostcache[HOSTCACHESIZE];
-
-#ifdef IDGODS
-qboolean IsID(struct qsockaddr* addr);
-#endif
 
 //============================================================================
 //
@@ -258,25 +189,25 @@ extern int net_activeconnections;
 void NET_Init(void);
 void NET_Shutdown(void);
 
-struct qsocket_s* NET_CheckNewConnections(void);
+qsocket_t* NET_CheckNewConnections(void);
 // returns a new connection number if there is one pending, else -1
 
-struct qsocket_s* NET_Connect(char* host);
+qsocket_t* NET_Connect(char* host);
 // called by client to connect to a host.  Returns -1 if not able to
 
 qboolean NET_CanSendMessage(qsocket_t* sock);
 // Returns true or false if the given qsocket can currently accept a
 // message to be transmitted.
 
-int NET_GetMessage(struct qsocket_s* sock);
+int NET_GetMessage(qsocket_t* sock);
 // returns data in net_message sizebuf
 // returns 0 if no data is waiting
 // returns 1 if a message was received
 // returns 2 if an unreliable message was received
 // returns -1 if the connection died
 
-int NET_SendMessage(struct qsocket_s* sock, sizebuf_t* data);
-int NET_SendUnreliableMessage(struct qsocket_s* sock, sizebuf_t* data);
+int NET_SendMessage(qsocket_t* sock, sizebuf_t* data);
+int NET_SendUnreliableMessage(qsocket_t* sock, sizebuf_t* data);
 // returns 0 if the message connot be delivered reliably, but the connection
 //		is still considered valid
 // returns 1 if the message was sent properly
@@ -286,7 +217,7 @@ int NET_SendToAll(sizebuf_t* data, int blocktime);
 // This is a reliable *blocking* send to all attached clients.
 
 
-void NET_Close(struct qsocket_s* sock);
+void NET_Close(qsocket_t* sock);
 // if a dead connection is returned by a get or send function, this function
 // should be called when it is convenient
 
@@ -297,15 +228,10 @@ void NET_Close(struct qsocket_s* sock);
 
 void NET_Poll(void);
 
+const char* NET_GetSocketAddr(const qsocket_t* sock);
 
-typedef struct _PollProcedure {
-    struct _PollProcedure* next;
-    double nextTime;
-    void (*procedure)();
-    void* arg;
-} PollProcedure;
+double NET_GetSocketConnectTime(const qsocket_t* sock);
 
-void SchedulePollProcedure(PollProcedure* pp, double timeOffset);
 
 extern qboolean serialAvailable;
 extern qboolean ipxAvailable;

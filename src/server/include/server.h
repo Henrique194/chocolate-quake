@@ -86,13 +86,12 @@ typedef struct client_s {
     qboolean active;     // false = client is free
     qboolean spawned;    // false = don't send datagrams
     qboolean dropasap;   // has been told to go to another level
-    qboolean privileged; // can execute any host command
     qboolean sendsignon; // only valid before spawned
 
     double last_message; // reliable messages must be sent
                          // periodically
 
-    struct qsocket_s* netconnection; // communications handle
+    qsocket_t* netconnection; // communications handle
 
     usercmd_t cmd;  // movement
     vec3_t wishdir; // intended motion calced from cmd
@@ -214,7 +213,6 @@ void SV_SetIdealPitch(void);
 void SV_AddUpdates(void);
 
 void SV_ClientThink(void);
-void SV_AddClientToServer(struct qsocket_s* ret);
 
 void SV_ClientPrintf(char* fmt, ...);
 void SV_BroadcastPrintf(char* fmt, ...);

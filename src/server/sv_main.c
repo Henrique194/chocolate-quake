@@ -248,13 +248,13 @@ void SV_ConnectClient(int clientnum) {
     edict_t* ent;
     client_t* client;
     int edictnum;
-    struct qsocket_s* netconnection;
+    qsocket_t* netconnection;
     int i;
     float spawn_parms[NUM_SPAWN_PARMS];
 
     client = svs.clients + clientnum;
 
-    Con_DPrintf("Client %s connected\n", client->netconnection->address);
+    Con_DPrintf("Client %s connected\n", NET_GetSocketAddr(client->netconnection));
 
     edictnum = clientnum + 1;
 
@@ -276,12 +276,6 @@ void SV_ConnectClient(int clientnum) {
     client->message.maxsize = sizeof(client->msgbuf);
     client->message.allowoverflow = true; // we can catch it
 
-#ifdef IDGODS
-    client->privileged = IsID(&client->netconnection->addr);
-#else
-    client->privileged = false;
-#endif
-
     if (sv.loadgame)
         memcpy(client->spawn_parms, spawn_parms, sizeof(spawn_parms));
     else {
@@ -302,7 +296,7 @@ SV_CheckForNewClients
 ===================
 */
 void SV_CheckForNewClients(void) {
-    struct qsocket_s* ret;
+    qsocket_t* ret;
     int i;
 
     //

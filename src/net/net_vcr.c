@@ -21,6 +21,7 @@
 
 
 #include "net_vcr.h"
+#include "net_socket.h"
 #include "server.h"
 #include "sys.h"
 
