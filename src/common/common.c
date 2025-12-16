@@ -1686,13 +1686,27 @@ void COM_InitFilesystem(void) {
 
     //
     // -game <gamedir>
-    // Adds basedir/gamedir as an override game
+    // Adds basedir/gamedir or gamedir (if <gamedir> is absolute) as an override game
     //
     i = COM_CheckParm("-game");
     if (i && i < com_argc - 1) {
         com_modified = true;
-        COM_AddGameDirectory(va("%s/%s", basedir, com_argv[i + 1]));
+        if (com_argv[i + 1][0] == '/') {
+            COM_AddGameDirectory(va("%s", com_argv[i + 1]));
+        }
+        if (com_argv[i + 1][0] == '~') {
+            // we expand the tilde to home dir since fopen does not automatically expand the tilde character
+            const char* homeDir = getenv("HOME");
+            if (homeDir) {
+                COM_AddGameDirectory(va("%s%s", homeDir, com_argv[i + 1] + 1));
+            } else {
+                COM_AddGameDirectory(va("%s/%s", basedir, com_argv[i + 1]));
+            }
+        } else {
+            COM_AddGameDirectory(va("%s/%s", basedir, com_argv[i + 1]));
+        }
     }
+
 
     //
     // -path <dir or packfile> [<dir or packfile>] ...
