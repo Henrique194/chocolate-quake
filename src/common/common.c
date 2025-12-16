@@ -1692,9 +1692,9 @@ void COM_InitFilesystem(void) {
     if (i && i < com_argc - 1) {
         com_modified = true;
         if (com_argv[i + 1][0] == '/') {
-            COM_AddGameDirectory(va("%s", com_argv[i + 1]));
+            COM_AddGameDirectory(com_argv[i + 1]);
         }
-        if (com_argv[i + 1][0] == '~') {
+        if (com_argv[i + 1][0] == '~' && com_argv[i + 1][1] == '/') {
             // we expand the tilde to home dir since fopen does not automatically expand the tilde character
             const char* homeDir = getenv("HOME");
             if (homeDir) {
