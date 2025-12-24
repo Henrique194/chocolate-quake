@@ -20,7 +20,83 @@ as it was. If you're looking for visual upgrades or modern features, this may
 not be the port for you. But if you want Quake exactly as it felt in the '90s,
 you're in the right place.
 
-# Music
+# Build Instructions
+
+Chocolate Quake uses CMake (>= 3.21) and is built as a C99 project.
+Predefined CMake presets are provided to simplify building across platforms.
+
+The repository includes vcpkg as a Git submodule, which is the recommended way
+to build Chocolate Quake on Windows and macOS.
+
+## Requirements
+
+* C compiler with C99 support
+* CMake 3.21 or newer
+* Ninja (recommended)
+* Git
+* SDL2 >= 2.26.5
+* SDL2_net
+* Audio libraries:
+    * libvorbis + libvorbisfile
+    * libflac
+    * libmad (MP3)
+
+## Cloning the repository
+
+If you are not using vcpkg:
+> git clone https://github.com/Henrique194/chocolate-quake.git
+
+If you plan to use vcpkg to manage dependencies:
+> git clone --recurse-submodules https://github.com/Henrique194/chocolate-quake.git
+
+If you already cloned the repository without submodules and want to fetch
+vcpkg later:
+> git submodule update --init --recursive
+
+## Windows and macOS (using bundled vcpkg)
+
+The project provides CMake presets to build with vcpkg.
+From the repository root:
+> cmake --preset release-vcpkg
+>
+> cmake --build --preset release-vcpkg
+
+For a debug build:
+> cmake --preset debug-vcpkg
+>
+> cmake --build --preset debug-vcpkg
+
+## Linux
+
+On Linux, Chocolate Quake is typically built against system-provided libraries.
+
+Install the required dependencies using your distribution's package manager,
+then build using the provided presets:
+> cmake --preset release
+>
+> cmake --build --preset release
+
+For a debug build:
+> cmake --preset debug
+>
+> cmake --build --preset debug
+
+## Build output
+
+Once compilation is complete, the resulting executable can be found at:
+- **Release build**: `cmake-build-release/src/Release`
+- **Debug build**: `cmake-build-debug/src/Debug`
+
+# Running The Game
+
+To run Chocolate Quake, you need a directory named `id1` containing your
+game data (PAK files) next to the executable. You can also customize the
+location and name of the game directory using the command-line parameters
+(`-basedir` and `-game`, respectively). Most IDEs also allow you to set a
+working directory so the game directory can be placed in a more convenient
+location, without the need for command-line parameters.
+
+## Music
 
 Chocolate Quake supports external music playback in MP3, OGG, FLAC and WAV
 formats. To enable it:
@@ -31,7 +107,7 @@ formats. To enable it:
 Tracks should follow the naming convention track02.ogg through track11.ogg,
 matching the original CD audio.
 
-## Supported Platforms
+# Supported Platforms
 
 | Platform | is supported? |
 |:--------:|:-------------:|
