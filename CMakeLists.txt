@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 3.21.0)
 project("Chocolate Quake" VERSION 2.0.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 99)
 
+string(TIMESTAMP CURRENT_YEAR "%Y")
 set(PACKAGE_NAME ${PROJECT_NAME})
 set(PACKAGE_TARNAME "chocolate-quake")
 set(PACKAGE_VERSION ${PROJECT_VERSION})
 set(PACKAGE_STRING "${PROJECT_NAME} ${PROJECT_VERSION}")
-set(PACKAGE_COPYRIGHT "Copyright (C) 1996-2026")
+set(PACKAGE_COPYRIGHT "Copyright (C) 1996-${CURRENT_YEAR}")
 set(PACKAGE_LICENSE "GNU General Public License, version 3")
 set(APPSTREAM_APP_ID "io.github.henrique194.chocolate-quake")
 
