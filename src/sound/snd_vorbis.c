@@ -42,13 +42,13 @@ static int ovc_fclose(void* f) {
 static int ovc_fseek(void* f, ogg_int64_t off, int whence) {
     if (f == NULL)
         return (-1);
-    return FS_fseek((fshandle_t*) f, (long) off, whence);
+    return Q_fseek((fshandle_t*) f, (long) off, whence);
 }
 
 static ov_callbacks ovc_qfs = {
-    (size_t(*)(void*, size_t, size_t, void*)) FS_fread,
+    (size_t(*)(void*, size_t, size_t, void*)) Q_fread,
     (int (*)(void*, ogg_int64_t, int)) ovc_fseek, (int (*)(void*)) ovc_fclose,
-    (long (*)(void*)) FS_ftell};
+    (long (*)(void*)) Q_ftell};
 
 static qboolean S_VORBIS_CodecInitialize(void) {
     return true;

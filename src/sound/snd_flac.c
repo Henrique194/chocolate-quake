@@ -57,8 +57,8 @@ static FLAC__StreamDecoderReadStatus FLAC_Read_f(
     if (*bytes <= 0) {
         return FLAC__STREAM_DECODER_READ_STATUS_ABORT;
     }
-    *bytes = FS_fread(buffer, 1, *bytes, ff->file);
-    if (FS_ferror(ff->file)) {
+    *bytes = Q_fread(buffer, 1, *bytes, ff->file);
+    if (Q_ferror(ff->file)) {
         return FLAC__STREAM_DECODER_READ_STATUS_ABORT;
     }
     if (*bytes == 0) {
@@ -76,7 +76,7 @@ static FLAC__StreamDecoderSeekStatus FLAC_Seek_f(
     fshandle_t* fh = ff->file;
     const long offset = (long) absolute_byte_offset;
     const int whence = SEEK_SET;
-    if (FS_fseek(fh, offset, whence) < 0) {
+    if (Q_fseek(fh, offset, whence) < 0) {
         return FLAC__STREAM_DECODER_SEEK_STATUS_ERROR;
     }
     return FLAC__STREAM_DECODER_SEEK_STATUS_OK;
@@ -88,7 +88,7 @@ static FLAC__StreamDecoderTellStatus FLAC_Tell_f(
     void* client_data
 ) {
     const flacfile_t* ff = client_data;
-    const long pos = FS_ftell(ff->file);
+    const long pos = Q_ftell(ff->file);
     if (pos < 0) {
         return FLAC__STREAM_DECODER_TELL_STATUS_ERROR;
     }
@@ -102,7 +102,7 @@ static FLAC__StreamDecoderLengthStatus FLAC_Length_f(
     void* client_data
 ) {
     const flacfile_t* ff = client_data;
-    *stream_length = (FLAC__uint64) FS_filelength(ff->file);
+    *stream_length = (FLAC__uint64) Q_filelength(ff->file);
     return FLAC__STREAM_DECODER_LENGTH_STATUS_OK;
 }
 
@@ -111,7 +111,7 @@ static FLAC__bool FLAC_EOF_f(
     void* client_data
 ) {
     const flacfile_t* ff = client_data;
-    return FS_feof(ff->file) != 0;
+    return Q_feof(ff->file) != 0;
 }
 
 static FLAC__StreamDecoderWriteStatus FLAC_Write_f(

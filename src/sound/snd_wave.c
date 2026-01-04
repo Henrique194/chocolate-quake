@@ -218,7 +218,7 @@ static void S_WAV_CodecCloseStream(snd_stream_t* stream) {
 }
 
 static int S_WAV_CodecRewindStream(snd_stream_t* stream) {
-    FS_rewind(&stream->fh);
+    Q_rewind(&stream->fh);
     return 0;
 }
 

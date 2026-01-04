@@ -76,7 +76,7 @@ static int MP3_InputData(snd_stream_t* stream) {
     // Is 2016 bytes the size of the largest frame? (448000*(1152/32000))/8
     memmove(p->mp3_buffer, p->stream.next_frame, remaining);
 
-    bytes_read = FS_fread(p->mp3_buffer + remaining, 1,
+    bytes_read = Q_fread(p->mp3_buffer + remaining, 1,
                           MP3_BUFFER_SIZE - remaining, &stream->fh);
     if (bytes_read == 0)
         return -1;
@@ -98,8 +98,8 @@ static int MP3_StartRead(snd_stream_t* stream) {
 
     // Decode at least one valid frame to find out the input format.
     // The decoded frame will be saved off so that it can be processed later.
-    ReadSize = FS_fread(p->mp3_buffer, 1, MP3_BUFFER_SIZE, &stream->fh);
-    if (!ReadSize || FS_ferror(&stream->fh)) {
+    ReadSize = Q_fread(p->mp3_buffer, 1, MP3_BUFFER_SIZE, &stream->fh);
+    if (!ReadSize || Q_ferror(&stream->fh)) {
         return -1;
     }
 
@@ -239,7 +239,7 @@ static int MP3_MadSeek(snd_stream_t* stream, unsigned long offset) {
     unsigned long to_skip_samples = 0;
 
     // Reset all.
-    FS_rewind(&stream->fh);
+    Q_rewind(&stream->fh);
     mad_timer_reset(&p->timer);
     p->frame_count = 0;
 
@@ -262,7 +262,7 @@ static int MP3_MadSeek(snd_stream_t* stream, unsigned long offset) {
         size_t leftover = p->stream.bufend - p->stream.next_frame;
 
         memcpy(p->mp3_buffer, p->stream.this_frame, leftover);
-        bytes_read = FS_fread(p->mp3_buffer + leftover, (size_t) 1,
+        bytes_read = Q_fread(p->mp3_buffer + leftover, (size_t) 1,
                               MP3_BUFFER_SIZE - leftover, &stream->fh);
         if (bytes_read <= 0) {
             Con_DPrintf(
@@ -321,7 +321,7 @@ static int MP3_MadSeek(snd_stream_t* stream, unsigned long offset) {
             if (p->frame_count == 64 && !vbr) {
                 p->frame_count = offset / samples;
                 to_skip_samples = offset % samples;
-                if (0 != FS_fseek(&stream->fh, (p->frame_count * consumed / 64), SEEK_SET)) {
+                if (0 != Q_fseek(&stream->fh, (p->frame_count * consumed / 64), SEEK_SET)) {
                     return -1;
                 }
 

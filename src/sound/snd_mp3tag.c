@@ -125,8 +125,8 @@ static long MP3_GetLyrics3v1Len(snd_stream_t* stream) {
         return -1;
     }
     len = (stream->fh.length > 5109) ? 5109 : stream->fh.length;
-    FS_fseek(&stream->fh, -len, SEEK_END);
-    FS_fread(buf, 1, (len -= 9), &stream->fh); // exclude footer
+    Q_fseek(&stream->fh, -len, SEEK_END);
+    Q_fread(buf, 1, (len -= 9), &stream->fh); // exclude footer
     // strstr() won't work here.
     for (i = len - 11, p = buf; i >= 0; --i, ++p) {
         if (memcmp(p, "LYRICSBEGIN", 11) == 0) {
@@ -211,8 +211,8 @@ static long MP3_GetMusicMatchLen(snd_stream_t* stream) {
     int i, j, imgext_ofs, version_ofs;
     long len;
 
-    FS_fseek(&stream->fh, -68, SEEK_END);
-    FS_fread(buf, 1, 20, &stream->fh);
+    Q_fseek(&stream->fh, -68, SEEK_END);
+    Q_fread(buf, 1, 20, &stream->fh);
     imgext_ofs = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
     version_ofs = (buf[15] << 24) | (buf[14] << 16) | (buf[13] << 8) | buf[12];
     if (version_ofs <= imgext_ofs) {
@@ -232,8 +232,8 @@ static long MP3_GetMusicMatchLen(snd_stream_t* stream) {
         if (stream->fh.length < len) {
             return -1;
         }
-        FS_fseek(&stream->fh, -len, SEEK_END);
-        FS_fread(buf, 1, 256, &stream->fh);
+        Q_fseek(&stream->fh, -len, SEEK_END);
+        Q_fread(buf, 1, 256, &stream->fh);
         // [0..9]: sync string, [30..255]: 0x20
         for (j = 30; j < 256; ++j) {
             if (buf[j] != ' ') {
@@ -251,8 +251,8 @@ static long MP3_GetMusicMatchLen(snd_stream_t* stream) {
         return -1; // no luck.
     }
     // unused section: (4 bytes of 0x00)
-    FS_fseek(&stream->fh, -(len + 4), SEEK_END);
-    FS_fread(buf, 1, 4, &stream->fh);
+    Q_fseek(&stream->fh, -(len + 4), SEEK_END);
+    Q_fread(buf, 1, 4, &stream->fh);
     j = 0;
     if (memcmp(buf, &j, 4) != 0) {
         return -1;
@@ -261,8 +261,8 @@ static long MP3_GetMusicMatchLen(snd_stream_t* stream) {
     if (stream->fh.length < len) {
         return -1;
     }
-    FS_fseek(&stream->fh, -len, SEEK_END);
-    FS_fread(buf, 1, 8, &stream->fh);
+    Q_fseek(&stream->fh, -len, SEEK_END);
+    Q_fread(buf, 1, 8, &stream->fh);
     j = (buf[7] << 24) | (buf[6] << 16) | (buf[5] << 8) | buf[4];
     if (j < 0) {
         return -1;
@@ -275,8 +275,8 @@ static long MP3_GetMusicMatchLen(snd_stream_t* stream) {
     if (stream->fh.length < len + 256) {
         return len;
     }
-    FS_fseek(&stream->fh, -(len + 256), SEEK_END);
-    FS_fread(buf, 1, 256, &stream->fh);
+    Q_fseek(&stream->fh, -(len + 256), SEEK_END);
+    Q_fread(buf, 1, 256, &stream->fh);
     // [0..9]: sync string, [30..255]: 0x20
     if (memcmp(buf, syncstr, 10) != 0) {
         return len;
@@ -291,8 +291,8 @@ static long MP3_GetMusicMatchLen(snd_stream_t* stream) {
 
 static int MP3_ProbeId3v1(snd_stream_t* stream, unsigned char* buf, int atend) {
     if (stream->fh.length >= 128) {
-        FS_fseek(&stream->fh, -128, SEEK_END);
-        if (FS_fread(buf, 1, 128, &stream->fh) != 128) {
+        Q_fseek(&stream->fh, -128, SEEK_END);
+        if (Q_fread(buf, 1, 128, &stream->fh) != 128) {
             return -1;
         }
         if (MP3_IsId3v1(buf, 128)) {
@@ -316,8 +316,8 @@ static int MP3_ProbeId3v1(snd_stream_t* stream, unsigned char* buf, int atend) {
 static int MP3_ProbeMMTag(snd_stream_t* stream, unsigned char* buf) {
     long len;
     if (stream->fh.length >= 68) {
-        FS_fseek(&stream->fh, -48, SEEK_END);
-        if (FS_fread(buf, 1, 48, &stream->fh) != 48) {
+        Q_fseek(&stream->fh, -48, SEEK_END);
+        if (Q_fread(buf, 1, 48, &stream->fh) != 48) {
             return -1;
         }
         if (Mp3_IsMusicMatch(buf, 48)) {
@@ -339,8 +339,8 @@ static int MP3_ProbeMMTag(snd_stream_t* stream, unsigned char* buf) {
 static int MP3_ProbeApeTag(snd_stream_t* stream, unsigned char* buf) {
     long len;
     if (stream->fh.length >= 32) {
-        FS_fseek(&stream->fh, -32, SEEK_END);
-        if (FS_fread(buf, 1, 32, &stream->fh) != 32) {
+        Q_fseek(&stream->fh, -32, SEEK_END);
+        if (Q_fread(buf, 1, 32, &stream->fh) != 32) {
             return -1;
         }
         if (MP3_IsApeTag(buf, 32)) {
@@ -359,8 +359,8 @@ static int MP3_ProbeApeTag(snd_stream_t* stream, unsigned char* buf) {
 static int MP3_ProbeLyrics3(snd_stream_t* stream, unsigned char* buf) {
     long len;
     if (stream->fh.length >= 15) {
-        FS_fseek(&stream->fh, -15, SEEK_END);
-        if (FS_fread(buf, 1, 15, &stream->fh) != 15) {
+        Q_fseek(&stream->fh, -15, SEEK_END);
+        if (Q_fread(buf, 1, 15, &stream->fh) != 15) {
             return -1;
         }
         len = MP3_IsLyrics3Tag(buf, 15);
@@ -372,8 +372,8 @@ static int MP3_ProbeLyrics3(snd_stream_t* stream, unsigned char* buf) {
             if (len < 15) {
                 return -1;
             }
-            FS_fseek(&stream->fh, -len, SEEK_END);
-            if (FS_fread(buf, 1, 11, &stream->fh) != 11) {
+            Q_fseek(&stream->fh, -len, SEEK_END);
+            if (Q_fread(buf, 1, 11, &stream->fh) != 11) {
                 return -1;
             }
             if (!MP3_VerifyLyrics3v2(buf, 11)) {
@@ -412,8 +412,8 @@ int MP3_SkipTags(snd_stream_t* stream) {
     // Note: I don't yet care about freaky broken mp3 files with
     // double tags. -- O.S.
 
-    readsize = FS_fread(buf, 1, 128, &stream->fh);
-    if (!readsize || FS_ferror(&stream->fh)) {
+    readsize = Q_fread(buf, 1, 128, &stream->fh);
+    if (!readsize || Q_ferror(&stream->fh)) {
         goto fail;
     }
 
@@ -486,6 +486,6 @@ fail:
         stream->fh.start = oldstart;
         stream->fh.length = oldlength;
     }
-    FS_rewind(&stream->fh);
+    Q_rewind(&stream->fh);
     return rc;
 }
