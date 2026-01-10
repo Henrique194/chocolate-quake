@@ -23,10 +23,9 @@
 #include "console.h"
 #include "sys.h"
 #include "zone.h"
-#include <errno.h>
 
 
-void SZ_Alloc(sizebuf_t* buf, int startsize) {
+void SZ_Alloc(sizebuf_t* buf, i32 startsize) {
     if (startsize < 256) {
         startsize = 256;
     }
@@ -43,7 +42,7 @@ void SZ_Clear(sizebuf_t* buf) {
     buf->cursize = 0;
 }
 
-void* SZ_GetSpace(sizebuf_t* buf, int length) {
+void* SZ_GetSpace(sizebuf_t* buf, i32 length) {
     if (buf->cursize + length > buf->maxsize) {
         if (!buf->allowoverflow) {
             Sys_Error("SZ_GetSpace: overflow without allowoverflow set");
@@ -60,12 +59,12 @@ void* SZ_GetSpace(sizebuf_t* buf, int length) {
     return data;
 }
 
-void SZ_Write(sizebuf_t* buf, void* data, int length) {
+void SZ_Write(sizebuf_t* buf, void* data, i32 length) {
     Q_memcpy(SZ_GetSpace(buf, length), data, length);
 }
 
 void SZ_Print(sizebuf_t* buf, char* data) {
-    int len = Q_strlen(data) + 1;
+    i32 len = (i32) Q_strlen(data) + 1;
     void* dest;
     if (buf->data[buf->cursize - 1]) {
         // no trailing 0

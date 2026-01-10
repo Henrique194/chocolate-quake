@@ -52,18 +52,18 @@
 
 extern void R_DrawLine(polyvert_t* polyvert0, polyvert_t* polyvert1);
 
-extern int cachewidth;
+extern i32 cachewidth;
 extern pixel_t* cacheblock;
-extern int screenwidth;
+extern i32 screenwidth;
 
 extern float pixelAspect;
 
-extern int r_drawnpolycount;
+extern i32 r_drawnpolycount;
 
 extern cvar_t r_clearcolor;
 
-extern int sintable[SIN_BUFFER_SIZE];
-extern int intsintable[SIN_BUFFER_SIZE];
+extern i32 sintable[SIN_BUFFER_SIZE];
+extern i32 intsintable[SIN_BUFFER_SIZE];
 
 extern vec3_t vup, base_vup;
 extern vec3_t vpn, base_vpn;
@@ -78,7 +78,7 @@ extern entity_t* currententity;
 
 // !!! if this is changed, it must be changed in asm_draw.h too !!!
 typedef struct espan_s {
-    int u, v, count;
+    i32 u, v, count;
     struct espan_s* pnext;
 } espan_t;
 
@@ -88,20 +88,20 @@ typedef struct surf_s {
     struct surf_s* next;   // active surface stack in r_edge.c
     struct surf_s* prev;   // used in r_edge.c for active surf stack
     struct espan_s* spans; // pointer to linked list of spans to draw
-    int key;               // sorting key (BSP order)
-    int last_u;            // set during tracing
-    int spanstate;         // 0 = not in span
+    i32 key;               // sorting key (BSP order)
+    i32 last_u;            // set during tracing
+    i32 spanstate;         // 0 = not in span
                            // 1 = in span
                            // -1 = in inverted span (end before
                            //  start)
-    int flags;             // currentface flags
+    i32 flags;             // currentface flags
     void* data;            // associated data like msurface_t
     entity_t* entity;
     float nearzi; // nearest 1/z on surface, for mipmapping
     qboolean insubmodel;
     float d_ziorigin, d_zistepu, d_zistepv;
 
-    int pad[2]; // to 64 bytes
+    i32 pad[2]; // to 64 bytes
 } surf_t;
 
 extern surf_t *surfaces, *surface_p, *surf_max;
@@ -124,16 +124,16 @@ extern float xscale, yscale;
 extern float xscaleinv, yscaleinv;
 extern float xscaleshrink, yscaleshrink;
 
-extern int d_lightstylevalue[256]; // 8.8 frac of base light value
+extern i32 d_lightstylevalue[256]; // 8.8 frac of base light value
 
 extern void TransformVector(vec3_t in, vec3_t out);
 extern void SetUpForLineScan(fixed8_t startvertu, fixed8_t startvertv,
                              fixed8_t endvertu, fixed8_t endvertv);
 
-extern int r_skymade;
+extern i32 r_skymade;
 extern void R_MakeSky(void);
 
-extern int ubasestep, errorterm, erroradjustup, erroradjustdown;
+extern i32 ubasestep, errorterm, erroradjustup, erroradjustdown;
 
 // flags in finalvert_t.flags
 #define ALIAS_LEFT_CLIP   0x0001
@@ -152,7 +152,7 @@ typedef struct edge_s {
     fixed16_t u;
     fixed16_t u_step;
     struct edge_s *prev, *next;
-    unsigned short surfs[2];
+    u16 surfs[2];
     struct edge_s* nextremove;
     float nearzi;
     medge_t* owner;

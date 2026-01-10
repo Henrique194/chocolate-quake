@@ -31,9 +31,9 @@
 #define FULLY_CLIPPED_CACHED 0x80000000
 #define FRAMECOUNT_MASK      0x7FFFFFFF
 
-unsigned int cacheoffset;
+u32 cacheoffset;
 
-int c_faceclip; // number of faces clipped
+i32 c_faceclip; // number of faces clipped
 
 zpointdesc_t r_zpointdesc;
 
@@ -50,21 +50,21 @@ qboolean r_leftclipped, r_rightclipped;
 static qboolean makeleftedge, makerightedge;
 qboolean r_nearzionly;
 
-int sintable[SIN_BUFFER_SIZE];
-int intsintable[SIN_BUFFER_SIZE];
+i32 sintable[SIN_BUFFER_SIZE];
+i32 intsintable[SIN_BUFFER_SIZE];
 
 mvertex_t r_leftenter, r_leftexit;
 mvertex_t r_rightenter, r_rightexit;
 
 typedef struct {
     float u, v;
-    int ceilv;
+    i32 ceilv;
 } evert_t;
 
-int r_emitted;
+i32 r_emitted;
 float r_nearzi;
 float r_u1, r_v1, r_lzi1;
-int r_ceilv1;
+i32 r_ceilv1;
 
 qboolean r_lastvertvalid;
 
@@ -75,13 +75,13 @@ R_EmitEdge
 */
 void R_EmitEdge(mvertex_t* pv0, mvertex_t* pv1) {
     edge_t *edge, *pcheck;
-    int u_check;
+    i32 u_check;
     float u, u_step;
     vec3_t local, transformed;
     float* world;
-    int v, v2, ceilv0;
+    i32 v, v2, ceilv0;
     float scale, lzi0, u0, v0;
-    int side;
+    i32 side;
 
     if (r_lastvertvalid) {
         u0 = r_u1;
@@ -115,7 +115,7 @@ void R_EmitEdge(mvertex_t* pv0, mvertex_t* pv1) {
         if (v0 > r_refdef.fvrectbottom_adj)
             v0 = r_refdef.fvrectbottom_adj;
 
-        ceilv0 = (int) ceil(v0);
+        ceilv0 = (i32) ceil(v0);
     }
 
     world = &pv1->position[0];
@@ -155,7 +155,7 @@ void R_EmitEdge(mvertex_t* pv0, mvertex_t* pv1) {
 
     r_emitted = 1;
 
-    r_ceilv1 = (int) ceil(r_v1);
+    r_ceilv1 = (i32) ceil(r_v1);
 
 
     // create the edge
@@ -355,9 +355,9 @@ void R_EmitCachedEdge(void) {
 R_RenderFace
 ================
 */
-void R_RenderFace(msurface_t* fa, int clipflags) {
-    int i, lindex;
-    unsigned mask;
+void R_RenderFace(msurface_t* fa, i32 clipflags) {
+    i32 i, lindex;
+    u32 mask;
     mplane_t* pplane;
     float distinv;
     vec3_t p_normal;
@@ -531,8 +531,8 @@ R_RenderBmodelFace
 ================
 */
 void R_RenderBmodelFace(bedge_t* pedges, msurface_t* psurf) {
-    int i;
-    unsigned mask;
+    i32 i;
+    u32 mask;
     mplane_t* pplane;
     float distinv;
     vec3_t p_normal;
@@ -637,17 +637,17 @@ void R_RenderBmodelFace(bedge_t* pedges, msurface_t* psurf) {
 R_RenderPoly
 ================
 */
-void R_RenderPoly(msurface_t* fa, int clipflags) {
-    int i, lindex, lnumverts, s_axis, t_axis;
+void R_RenderPoly(msurface_t* fa, i32 clipflags) {
+    i32 i, lindex, lnumverts, s_axis, t_axis;
     float dist, lastdist, lzi, scale, u, v, frac;
-    unsigned mask;
+    u32 mask;
     vec3_t local, transformed;
     clipplane_t* pclip;
     medge_t* pedges;
     mplane_t* pplane;
     mvertex_t verts[2][100]; //FIXME: do real number
     polyvert_t pverts[100];  //FIXME: do real number, safely
-    int vertpage, newverts, newpage, lastvert;
+    i32 vertpage, newverts, newpage, lastvert;
     qboolean visible;
 
     // FIXME: clean this up and make it faster
@@ -812,7 +812,7 @@ R_ZDrawSubmodelPolys
 ================
 */
 void R_ZDrawSubmodelPolys(model_t* pmodel) {
-    int i, numsurfaces;
+    i32 i, numsurfaces;
     msurface_t* psurf;
     float dot;
     mplane_t* pplane;

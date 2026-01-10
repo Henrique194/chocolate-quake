@@ -31,12 +31,12 @@
 ResampleSfx
 ================
 */
-void ResampleSfx(sfx_t* sfx, int inrate, int inwidth, byte* data) {
-    int outcount;
-    int srcsample;
+void ResampleSfx(sfx_t* sfx, i32 inrate, i32 inwidth, byte* data) {
+    i32 outcount;
+    i32 srcsample;
     float stepscale;
-    int i;
-    int sample, samplefrac, fracstep;
+    i32 i;
+    i32 sample, samplefrac, fracstep;
     sfxcache_t* sc;
 
     sc = Cache_Check(&sfx->cache);
@@ -62,8 +62,7 @@ void ResampleSfx(sfx_t* sfx, int inrate, int inwidth, byte* data) {
     if (stepscale == 1 && inwidth == 1 && sc->width == 1) {
         // fast special case
         for (i = 0; i < outcount; i++)
-            ((signed char*) sc->data)[i] =
-                (int) ((unsigned char) (data[i]) - 128);
+            ((i8*) sc->data)[i] = (i32) ((byte) (data[i]) - 128);
     } else {
         // general case
         samplefrac = 0;
@@ -72,13 +71,13 @@ void ResampleSfx(sfx_t* sfx, int inrate, int inwidth, byte* data) {
             srcsample = samplefrac >> 8;
             samplefrac += fracstep;
             if (inwidth == 2)
-                sample = LittleShort(((short*) data)[srcsample]);
+                sample = LittleShort(((i16*) data)[srcsample]);
             else
-                sample = (int) ((unsigned char) (data[srcsample]) - 128) << 8;
+                sample = (i32) ((byte) (data[srcsample]) - 128) << 8;
             if (sc->width == 2)
-                ((short*) sc->data)[i] = sample;
+                ((i16*) sc->data)[i] = sample;
             else
-                ((signed char*) sc->data)[i] = sample >> 8;
+                ((i8*) sc->data)[i] = sample >> 8;
         }
     }
 }
@@ -94,7 +93,7 @@ sfxcache_t* S_LoadSound(sfx_t* s) {
     char namebuffer[256];
     byte* data;
     wavinfo_t info;
-    int len;
+    i32 len;
     float stepscale;
     sfxcache_t* sc;
     byte stackbuf[1 * 1024]; // avoid dirtying the cache heap
@@ -104,7 +103,7 @@ sfxcache_t* S_LoadSound(sfx_t* s) {
     if (sc)
         return sc;
 
-    //Con_Printf ("S_LoadSound: %x\n", (int)stackbuf);
+    //Con_Printf ("S_LoadSound: %x\n", (i32)stackbuf);
     // load it in
     Q_strcpy(namebuffer, "sound/");
     Q_strcat(namebuffer, s->name);
@@ -158,19 +157,19 @@ byte* data_p;
 byte* iff_end;
 byte* last_chunk;
 byte* iff_data;
-int iff_chunk_len;
+i32 iff_chunk_len;
 
 
-short GetLittleShort(void) {
-    short val = 0;
+i16 GetLittleShort(void) {
+    i16 val = 0;
     val = *data_p;
     val = val + (*(data_p + 1) << 8);
     data_p += 2;
     return val;
 }
 
-int GetLittleLong(void) {
-    int val = 0;
+i32 GetLittleLong(void) {
+    i32 val = 0;
     val = *data_p;
     val = val + (*(data_p + 1) << 8);
     val = val + (*(data_p + 2) << 16);
@@ -216,7 +215,7 @@ void DumpChunks(void) {
     str[4] = 0;
     data_p = iff_data;
     do {
-        memcpy(str, data_p, 4);
+        Q_memcpy(str, data_p, 4);
         data_p += 4;
         iff_chunk_len = GetLittleLong();
         Con_Printf("%p : %s (%d)\n", (data_p - 4), str, iff_chunk_len);
@@ -229,13 +228,13 @@ void DumpChunks(void) {
 GetWavinfo
 ============
 */
-wavinfo_t GetWavinfo(char* name, byte* wav, int wavlength) {
+wavinfo_t GetWavinfo(char* name, byte* wav, i32 wavlength) {
     wavinfo_t info;
-    int i;
-    int format;
-    int samples;
+    i32 i;
+    i32 format;
+    i32 samples;
 
-    memset(&info, 0, sizeof(info));
+    Q_memset(&info, 0, sizeof(info));
 
     if (!wav)
         return info;
@@ -281,7 +280,7 @@ wavinfo_t GetWavinfo(char* name, byte* wav, int wavlength) {
         // if the next chunk is a LIST chunk, look for a cue length marker
         FindNextChunk("LIST");
         if (data_p) {
-            if (!strncmp(
+            if (!Q_strncmp(
                     data_p + 28, "mark",
                     4)) { // this is not a proper parse, but it works with cooledit...
                 data_p += 24;

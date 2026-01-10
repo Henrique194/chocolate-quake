@@ -90,7 +90,7 @@ void R_SplitEntityOnNode(mnode_t* node) {
     efrag_t* ef;
     mplane_t* splitplane;
     mleaf_t* leaf;
-    int sides;
+    i32 sides;
 
     if (node->contents == CONTENTS_SOLID) {
         return;
@@ -155,7 +155,7 @@ R_SplitEntityOnNode2
 */
 void R_SplitEntityOnNode2(mnode_t* node) {
     mplane_t* splitplane;
-    int sides;
+    i32 sides;
 
     if (node->visframe != r_visframecount)
         return;
@@ -191,7 +191,7 @@ R_AddEfrags
 */
 void R_AddEfrags(entity_t* ent) {
     model_t* entmodel;
-    int i;
+    i32 i;
 
     if (!ent->model)
         return;

@@ -32,8 +32,8 @@
 
 
 typedef struct music_handler_s {
-    unsigned int type;   // 1U << n (see snd_codec.h)
-    int is_available;    // -1 means not present
+    u32 type;   // 1U << n (see snd_codec.h)
+    i32 is_available;    // -1 means not present
     const char* ext;     // Expected file extension
     struct music_handler_s* next;
 } music_handler_t;
@@ -74,8 +74,8 @@ static byte remap[100];
 
 static void CD_f(void) {
     char* command;
-    int ret;
-    int n;
+    i32 ret;
+    i32 n;
 
     if (Cmd_Argc() < 2) {
         return;
@@ -163,7 +163,7 @@ static void CD_f(void) {
 
 
 static void BGMusic_GetTrackPath(char* tmp, byte track, const char* ext) {
-    snprintf(tmp, MAX_QPATH, "%s/track%02d.%s", MUSIC_DIRNAME, (int) track,
+    snprintf(tmp, MAX_QPATH, "%s/track%02d.%s", MUSIC_DIRNAME, (i32) track,
              ext);
 }
 
@@ -189,7 +189,7 @@ void BGMusic_Play(byte track, qboolean looping) {
         return;
     }
 
-    unsigned int type;
+    u32 type;
     const char* ext = NULL;
     music_handler_t* handler = music_handlers;
 
@@ -208,7 +208,7 @@ void BGMusic_Play(byte track, qboolean looping) {
         }
     }
     if (ext == NULL) {
-        Con_Printf("Couldn't find a cdrip for track %d\n", (int) track);
+        Con_Printf("Couldn't find a cdrip for track %d\n", (i32) track);
         return;
     }
 
@@ -269,7 +269,7 @@ void BGMusic_Resume() {
 }
 
 
-int BGMusic_Init() {
+i32 BGMusic_Init() {
     if (cls.state == ca_dedicated) {
         return -1;
     }
@@ -331,7 +331,7 @@ static qboolean BGMusic_EndOfFile() {
         Con_Printf("Stream keeps returning EOF.\n");
         return false;
     }
-    int rewind_res = S_CodecRewindStream(bgmstream);
+    i32 rewind_res = S_CodecRewindStream(bgmstream);
     if (rewind_res != 0) {
         Con_Printf("Stream seek error (%i), stopping.\n", rewind_res);
         return false;
@@ -340,10 +340,10 @@ static qboolean BGMusic_EndOfFile() {
     return true;
 }
 
-static qboolean BGMusic_ReadStream(int file_samples, int file_size) {
+static qboolean BGMusic_ReadStream(i32 file_samples, i32 file_size) {
     const snd_info_t* info = &bgmstream->info;
 
-    int bytes_read = S_CodecReadStream(bgmstream, file_size, raw_audio_buffer);
+    i32 bytes_read = S_CodecReadStream(bgmstream, file_size, raw_audio_buffer);
     if (bytes_read < file_size) {
         file_samples = bytes_read / (info->width * info->channels);
     }
@@ -363,21 +363,21 @@ static qboolean BGMusic_ReadStream(int file_samples, int file_size) {
     return false;
 }
 
-static void BGMusic_GetStreamInfo(int* file_samples, int* file_size) {
+static void BGMusic_GetStreamInfo(i32* file_samples, i32* file_size) {
     const snd_info_t* info = &bgmstream->info;
 
     // Decide how much data needs to be read from the file.
-    int buffer_samples = MAX_RAW_SAMPLES - (s_rawend - paintedtime);
+    i32 buffer_samples = MAX_RAW_SAMPLES - (s_rawend - paintedtime);
     *file_samples = buffer_samples * info->rate / shm->speed;
     if (*file_samples == 0) {
         return;
     }
 
     // Our max buffer size.
-    int file_sample_size = info->width * info->channels;
+    i32 file_sample_size = info->width * info->channels;
     *file_size = (*file_samples) * file_sample_size;
-    if (*file_size > (int) sizeof(raw_audio_buffer)) {
-        *file_size = (int) sizeof(raw_audio_buffer);
+    if (*file_size > (i32) sizeof(raw_audio_buffer)) {
+        *file_size = (i32) sizeof(raw_audio_buffer);
         *file_samples = (*file_size) / file_sample_size;
     }
 }
@@ -397,8 +397,8 @@ static void BGMusic_UpdateStream() {
         s_rawend = paintedtime;
     }
     while (s_rawend < paintedtime + MAX_RAW_SAMPLES) {
-        int file_samples;
-        int file_size;
+        i32 file_samples;
+        i32 file_size;
         BGMusic_GetStreamInfo(&file_samples, &file_size);
         if (!file_samples || !file_size) {
             return;

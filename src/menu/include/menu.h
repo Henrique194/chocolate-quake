@@ -31,13 +31,13 @@
 #define MNET_IPX 1
 #define MNET_TCP 2
 
-extern int m_activenet;
+extern i32 m_activenet;
 
 //
 // menus
 //
 void M_Init(void);
-void M_Keydown(int key);
+void M_Keydown(i32 key);
 void M_Draw(void);
 void M_ToggleMenu_f(void);
 qboolean M_IsInQuitScreen(void);

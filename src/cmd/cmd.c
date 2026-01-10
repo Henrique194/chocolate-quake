@@ -41,8 +41,8 @@ typedef struct cmdalias_s {
 
 cmdalias_t* cmd_alias;
 
-int trashtest;
-int* trashspot;
+i32 trashtest;
+i32* trashspot;
 
 qboolean cmd_wait;
 
@@ -90,16 +90,12 @@ Adds command text at the end of the buffer
 ============
 */
 void Cbuf_AddText(char* text) {
-    int l;
-
-    l = Q_strlen(text);
-
+    i32 l = (i32) Q_strlen(text);
     if (cmd_text.cursize + l >= cmd_text.maxsize) {
         Con_Printf("Cbuf_AddText: overflow\n");
         return;
     }
-
-    SZ_Write(&cmd_text, text, Q_strlen(text));
+    SZ_Write(&cmd_text, text, l);
 }
 
 
@@ -114,7 +110,7 @@ FIXME: actually change the command buffer to do less copying
 */
 void Cbuf_InsertText(char* text) {
     char* temp;
-    int templen;
+    i32 templen;
 
     // copy off any commands still remaining in the exec buffer
     templen = cmd_text.cursize;
@@ -141,10 +137,10 @@ Cbuf_Execute
 ============
 */
 void Cbuf_Execute(void) {
-    int i;
+    i32 i;
     char* text;
     char line[1024];
-    int quotes;
+    i32 quotes;
 
     while (cmd_text.cursize) {
         // find a \n or ; line break
@@ -161,7 +157,7 @@ void Cbuf_Execute(void) {
         }
 
 
-        memcpy(line, text, i);
+        Q_memcpy(line, text, i);
         line[i] = 0;
 
         // delete the text from the command buffer and move remaining commands down
@@ -206,8 +202,8 @@ quake -nosound +cmd amlev1
 ===============
 */
 void Cmd_StuffCmds_f(void) {
-    int i, j;
-    int s;
+    i32 i, j;
+    i32 s;
     char *text, *build, c;
 
     if (Cmd_Argc() != 1) {
@@ -220,7 +216,7 @@ void Cmd_StuffCmds_f(void) {
     for (i = 1; i < com_argc; i++) {
         if (!com_argv[i])
             continue; // NEXTSTEP nulls out -NXHost
-        s += Q_strlen(com_argv[i]) + 1;
+        s += (i32) Q_strlen(com_argv[i]) + 1;
     }
     if (!s)
         return;
@@ -272,7 +268,7 @@ Cmd_Exec_f
 */
 void Cmd_Exec_f(void) {
     char* f;
-    int mark;
+    i32 mark;
 
     if (Cmd_Argc() != 2) {
         Con_Printf("exec <filename> : execute a script file\n");
@@ -300,7 +296,7 @@ Just prints the rest of the line to the console
 ===============
 */
 void Cmd_Echo_f(void) {
-    int i;
+    i32 i;
 
     for (i = 1; i < Cmd_Argc(); i++)
         Con_Printf("%s ", Cmd_Argv(i));
@@ -318,15 +314,15 @@ Creates a new command that executes a command string (possibly ; seperated)
 char* CopyString(char* in) {
     char* out;
 
-    out = Z_Malloc(strlen(in) + 1);
-    strcpy(out, in);
+    out = Z_Malloc(Q_strlen(in) + 1);
+    Q_strcpy(out, in);
     return out;
 }
 
 void Cmd_Alias_f(void) {
     cmdalias_t* a;
     char cmd[1024];
-    int i, c;
+    i32 i, c;
     char* s;
 
     if (Cmd_Argc() == 1) {
@@ -337,14 +333,14 @@ void Cmd_Alias_f(void) {
     }
 
     s = Cmd_Argv(1);
-    if (strlen(s) >= MAX_ALIAS_NAME) {
+    if (Q_strlen(s) >= MAX_ALIAS_NAME) {
         Con_Printf("Alias name is too long\n");
         return;
     }
 
     // if the alias allready exists, reuse it
     for (a = cmd_alias; a; a = a->next) {
-        if (!strcmp(s, a->name)) {
+        if (!Q_strcmp(s, a->name)) {
             Z_Free(a->value);
             break;
         }
@@ -355,17 +351,17 @@ void Cmd_Alias_f(void) {
         a->next = cmd_alias;
         cmd_alias = a;
     }
-    strcpy(a->name, s);
+    Q_strcpy(a->name, s);
 
     // copy the rest of the command line
     cmd[0] = 0; // start out with a null string
     c = Cmd_Argc();
     for (i = 2; i < c; i++) {
-        strcat(cmd, Cmd_Argv(i));
+        Q_strcat(cmd, Cmd_Argv(i));
         if (i != c)
-            strcat(cmd, " ");
+            Q_strcat(cmd, " ");
     }
-    strcat(cmd, "\n");
+    Q_strcat(cmd, "\n");
 
     a->value = CopyString(cmd);
 }
@@ -387,7 +383,7 @@ typedef struct cmd_function_s {
 
 #define MAX_ARGS 80
 
-static int cmd_argc;
+static i32 cmd_argc;
 static char* cmd_argv[MAX_ARGS];
 static char* cmd_null_string = "";
 static char* cmd_args = NULL;
@@ -419,7 +415,7 @@ void Cmd_Init(void) {
 Cmd_Argc
 ============
 */
-int Cmd_Argc(void) {
+i32 Cmd_Argc(void) {
     return cmd_argc;
 }
 
@@ -428,8 +424,8 @@ int Cmd_Argc(void) {
 Cmd_Argv
 ============
 */
-char* Cmd_Argv(int arg) {
-    if ((unsigned) arg >= cmd_argc)
+char* Cmd_Argv(i32 arg) {
+    if ((u32) arg >= cmd_argc)
         return cmd_null_string;
     return cmd_argv[arg];
 }
@@ -452,7 +448,7 @@ Parses the given string into command line tokens.
 ============
 */
 void Cmd_TokenizeString(char* text) {
-    int i;
+    i32 i;
 
     // clear the args from the last string
     for (i = 0; i < cmd_argc; i++)
@@ -483,7 +479,7 @@ void Cmd_TokenizeString(char* text) {
             return;
 
         if (cmd_argc < MAX_ARGS) {
-            cmd_argv[cmd_argc] = Z_Malloc(Q_strlen(com_token) + 1);
+            cmd_argv[cmd_argc] = Z_Malloc((i32) Q_strlen(com_token) + 1);
             Q_strcpy(cmd_argv[cmd_argc], com_token);
             cmd_argc++;
         }
@@ -546,19 +542,17 @@ Cmd_CompleteCommand
 ============
 */
 char* Cmd_CompleteCommand(char* partial) {
-    cmd_function_t* cmd;
-    int len;
-
-    len = Q_strlen(partial);
-
-    if (!len)
+    i32 len = (i32) Q_strlen(partial);
+    if (!len) {
         return NULL;
-
+    }
     // check functions
-    for (cmd = cmd_functions; cmd; cmd = cmd->next)
-        if (!Q_strncmp(partial, cmd->name, len))
+    cmd_function_t* cmd = cmd_functions;
+    for (; cmd; cmd = cmd->next) {
+        if (!Q_strncmp(partial, cmd->name, len)) {
             return cmd->name;
-
+        }
+    }
     return NULL;
 }
 
@@ -640,8 +634,8 @@ where the given parameter apears, or 0 if not present
 ================
 */
 
-int Cmd_CheckParm(char* parm) {
-    int i;
+i32 Cmd_CheckParm(char* parm) {
+    i32 i;
 
     if (!parm)
         Sys_Error("Cmd_CheckParm: NULL");

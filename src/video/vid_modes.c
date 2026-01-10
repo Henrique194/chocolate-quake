@@ -65,9 +65,9 @@ static vid_mode_t modes[NUM_MODES] = {
     FULLSCREEN_MODE(1280, 1024),
 };
 
-static int current_mode = 0;
-static int previous_mode = 0;
-static int default_mode = 0;
+static i32 current_mode = 0;
+static i32 previous_mode = 0;
+static i32 default_mode = 0;
 
 static cvar_t vid_mode = {"vid_mode", "0", false};
 static cvar_t _vid_default_mode_win = {"_vid_default_mode_win", "3", true};
@@ -101,7 +101,7 @@ static void VID_Fullscreen_f(void);
 static void VID_Minimize_f(void);
 
 static void VID_SetInitialMode(void) {
-    int init_mode;
+    i32 init_mode;
     if (COM_CheckParm("-startwindowed")) {
         init_mode = DEFAULT_WINDOWED_MODE;
         start_windowed = true;
@@ -128,7 +128,7 @@ static void VID_RegisterCvars(void) {
     Cvar_RegisterVariable(&_vid_default_mode_win);
     Cvar_RegisterVariable(&vid_windowed_mode);
     Cvar_RegisterVariable(&vid_fullscreen_mode);
-    default_mode = (int) _vid_default_mode_win.value;
+    default_mode = (i32) _vid_default_mode_win.value;
 }
 
 void VID_InitModes(void) {
@@ -148,7 +148,7 @@ QUERY MODE INFORMATION
 ================================================================================
 */
 
-const vid_mode_t* VID_GetMode(int mode_num) {
+const vid_mode_t* VID_GetMode(i32 mode_num) {
     if (!VALID_MODE(mode_num)) {
         return NULL;
     }
@@ -188,7 +188,7 @@ CHANGE MODE
 ================================================================================
 */
 
-static void VID_ApplyMode(int mode_num) {
+static void VID_ApplyMode(i32 mode_num) {
     current_mode = mode_num;
     const vid_mode_t* mode = VID_GetMode(mode_num);
     vid.width = mode->width;
@@ -199,7 +199,7 @@ static void VID_ApplyMode(int mode_num) {
     vid.colormap = host_colormap;
 }
 
-void VID_SetMode(int mode_num) {
+void VID_SetMode(i32 mode_num) {
     if (!VALID_MODE(mode_num)) {
         return;
     }
@@ -217,7 +217,7 @@ void VID_SetCurrentModeAsDefault(void) {
     Cvar_SetValue("_vid_default_mode_win", (float) default_mode);
 }
 
-static void VID_TestModeFor(int mode_num, double duration) {
+static void VID_TestModeFor(i32 mode_num, double duration) {
     if (!VALID_MODE(mode_num)) {
         return;
     }
@@ -227,7 +227,7 @@ static void VID_TestModeFor(int mode_num, double duration) {
     VID_SetMode(mode_num);
 }
 
-void VID_TestMode(int mode_num) {
+void VID_TestMode(i32 mode_num) {
     VID_TestModeFor(mode_num, DEFAULT_TEST_TIME);
 }
 
@@ -246,7 +246,7 @@ static void VID_TestMode_f(void) {
     if (VID_IsInTestMode()) {
         return;
     }
-    int mode_num = Q_atoi(Cmd_Argv(1));
+    i32 mode_num = Q_atoi(Cmd_Argv(1));
     double test_duration = Q_atof(Cmd_Argv(2));
     if (test_duration == 0) {
         test_duration = DEFAULT_TEST_TIME;
@@ -264,14 +264,14 @@ static void VID_DescribeCurrentMode_f(void) {
 }
 
 static void VID_DescribeMode_f(void) {
-    int mode_num = Q_atoi(Cmd_Argv(1));
+    i32 mode_num = Q_atoi(Cmd_Argv(1));
     const vid_mode_t* mode = VID_GetMode(mode_num);
     const char* desc = (mode ? mode->full_description : NULL);
     Con_Printf("%s\n", desc);
 }
 
 static void VID_DescribeModes_f(void) {
-    for (int i = 0; i < NUM_MODES; i++) {
+    for (i32 i = 0; i < NUM_MODES; i++) {
         const vid_mode_t* mode = VID_GetMode(i);
         Con_Printf("%2d: %s\n", i, mode->full_description);
     }
@@ -281,18 +281,18 @@ static void VID_ForceMode_f(void) {
     if (VID_IsInTestMode()) {
         return;
     }
-    int mode_num = Q_atoi(Cmd_Argv(1));
+    i32 mode_num = Q_atoi(Cmd_Argv(1));
     force_set_mode = true;
     VID_SetMode(mode_num);
     force_set_mode = false;
 }
 
 static void VID_Windowed_f(void) {
-    VID_SetMode((int) vid_windowed_mode.value);
+    VID_SetMode((i32) vid_windowed_mode.value);
 }
 
 static void VID_Fullscreen_f(void) {
-    VID_SetMode((int) vid_fullscreen_mode.value);
+    VID_SetMode((i32) vid_fullscreen_mode.value);
 }
 
 static void VID_Minimize_f(void) {
@@ -307,7 +307,7 @@ static void VID_Minimize_f(void) {
 
 
 static void VID_UpdateDefaultMode(void) {
-    default_mode = (int) _vid_default_mode_win.value;
+    default_mode = (i32) _vid_default_mode_win.value;
     if (!VALID_MODE(default_mode)) {
         default_mode = 0;
         Cvar_SetValue("_vid_default_mode_win", (float) default_mode);
@@ -321,7 +321,7 @@ static qboolean VID_IsFirstUpdate(void) {
     if (!first_update) {
         return false;
     }
-    return default_mode != (int) _vid_default_mode_win.value;
+    return default_mode != (i32) _vid_default_mode_win.value;
 }
 
 void VID_UpdateModes(void) {
@@ -334,7 +334,7 @@ void VID_UpdateModes(void) {
         VID_SetMode(previous_mode);
         return;
     }
-    if ((int) vid_mode.value != current_mode) {
-        VID_SetMode((int) vid_mode.value);
+    if ((i32) vid_mode.value != current_mode) {
+        VID_SetMode((i32) vid_mode.value);
     }
 }

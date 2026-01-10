@@ -71,7 +71,7 @@ typedef struct polyvert_s {
 } polyvert_t;
 
 typedef struct polydesc_s {
-    int numverts;
+    i32 numverts;
     float nearzi;
     msurface_t* pcurrentface;
     polyvert_t* pverts;
@@ -79,8 +79,8 @@ typedef struct polydesc_s {
 
 // !!! if this is changed, it must be changed in d_ifacea.h too !!!
 typedef struct finalvert_s {
-    int v[6]; // u, v, s, t, l, 1/z
-    int flags;
+    i32 v[6]; // u, v, s, t, l, 1/z
+    i32 flags;
     float reserved;
 } finalvert_t;
 
@@ -88,13 +88,13 @@ typedef struct finalvert_s {
 typedef struct {
     void* pskin;
     maliasskindesc_t* pskindesc;
-    int skinwidth;
-    int skinheight;
+    i32 skinwidth;
+    i32 skinheight;
     mtriangle_t* ptriangles;
     finalvert_t* pfinalverts;
-    int numtriangles;
-    int drawtype;
-    int seamfixupX16;
+    i32 numtriangles;
+    i32 drawtype;
+    i32 seamfixupX16;
 } affinetridesc_t;
 
 // !!! if this is changed, it must be changed in d_ifacea.h too !!!
@@ -103,7 +103,7 @@ typedef struct {
 } screenpart_t;
 
 typedef struct {
-    int nump;
+    i32 nump;
     emitpoint_t* pverts; // there's room for an extra element at [nump],
                          //  if the driver wants to duplicate element [0] at
                          //  element [nump] to avoid dealing with wrapping
@@ -113,14 +113,14 @@ typedef struct {
 } spritedesc_t;
 
 typedef struct {
-    int u, v;
+    i32 u, v;
     float zi;
-    int color;
+    i32 color;
 } zpointdesc_t;
 
 extern cvar_t r_drawflat;
-extern int d_spanpixcount;
-extern int r_framecount;           // sequence # of current frame since Quake
+extern i32 d_spanpixcount;
+extern i32 r_framecount;           // sequence # of current frame since Quake
                                    //  started
 extern qboolean r_drawpolys;       // 1 if driver wants clipped polygons
                                    //  rather than a span list
@@ -146,7 +146,7 @@ extern spritedesc_t r_spritedesc;
 extern zpointdesc_t r_zpointdesc;
 extern polydesc_t r_polydesc;
 
-extern int d_con_indirect; // if 0, Quake will draw console directly
+extern i32 d_con_indirect; // if 0, Quake will draw console directly
                            //  to vid.buffer; if 1, Quake will
                            //  draw console via D_DrawRect. Must be
                            //  defined by driver
@@ -155,11 +155,11 @@ extern vec3_t r_pright, r_pup, r_ppn;
 
 
 void D_Aff8Patch(void* pcolormap);
-void D_BeginDirectRect(int x, int y, byte* pbitmap, int width, int height);
+void D_BeginDirectRect(i32 x, i32 y, byte* pbitmap, i32 width, i32 height);
 void D_DisableBackBufferAccess(void);
-void D_EndDirectRect(int x, int y, int width, int height);
+void D_EndDirectRect(i32 x, i32 y, i32 width, i32 height);
 void D_PolysetDraw(void);
-void D_PolysetDrawFinalVerts(finalvert_t* fv, int numverts);
+void D_PolysetDrawFinalVerts(finalvert_t* fv, i32 numverts);
 void D_DrawParticle(particle_t* pparticle);
 void D_DrawPoly(void);
 void D_DrawSprite(void);
@@ -174,7 +174,7 @@ void D_StartParticles(void);
 void D_TurnZOn(void);
 void D_WarpScreen(void);
 
-void D_FillRect(vrect_t* vrect, int color);
+void D_FillRect(vrect_t* vrect, i32 color);
 void D_DrawRect(void);
 void D_UpdateRects(vrect_t* prect);
 
@@ -184,7 +184,7 @@ void D_UpdateRects(vrect_t* prect);
 void D_PolysetUpdateTables(void);
 
 // these are currently for internal use only, and should not be used by drivers
-extern int r_skydirect;
+extern i32 r_skydirect;
 extern byte* r_skysource;
 
 // transparency types for D_DrawRect ()
@@ -202,14 +202,14 @@ extern void* acolormap; // FIXME: should go away
 
 typedef struct {
     pixel_t* surfdat; // destination for generated surface
-    int rowbytes;     // destination logical width in bytes
+    i32 rowbytes;     // destination logical width in bytes
     msurface_t* surf; // description for surface to generate
     fixed8_t lightadj[MAXLIGHTMAPS];
     // adjust for lightmap levels for dynamic lighting
     texture_t* texture; // corrected for animating textures
-    int surfmip;        // mipmapped ratio of surface texels / world pixels
-    int surfwidth;      // in mipmapped texels
-    int surfheight;     // in mipmapped texels
+    i32 surfmip;        // mipmapped ratio of surface texels / world pixels
+    i32 surfwidth;      // in mipmapped texels
+    i32 surfheight;     // in mipmapped texels
 } drawsurf_t;
 
 extern drawsurf_t r_drawsurf;
@@ -233,7 +233,7 @@ void R_GenTile(msurface_t* psurf, void* pdest);
 extern float skyspeed, skyspeed2;
 extern float skytime;
 
-extern int c_surf;
+extern i32 c_surf;
 extern vrect_t scr_vrect;
 
 extern byte* r_warpbuffer;

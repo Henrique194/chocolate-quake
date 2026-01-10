@@ -23,7 +23,7 @@
 #include "r_local.h"
 
 
-int r_dlightframecount;
+i32 r_dlightframecount;
 
 
 /*
@@ -32,12 +32,12 @@ R_AnimateLight
 ==================
 */
 void R_AnimateLight(void) {
-    int i, j, k;
+    i32 i, j, k;
 
     //
     // light animations
     // 'm' is normal light, 'a' is no light, 'z' is double bright
-    i = (int) (cl.time * 10);
+    i = (i32) (cl.time * 10);
     for (j = 0; j < MAX_LIGHTSTYLES; j++) {
         if (!cl_lightstyle[j].length) {
             d_lightstylevalue[j] = 256;
@@ -64,11 +64,11 @@ DYNAMIC LIGHTS
 R_MarkLights
 =============
 */
-void R_MarkLights(dlight_t* light, int bit, mnode_t* node) {
+void R_MarkLights(dlight_t* light, i32 bit, mnode_t* node) {
     mplane_t* splitplane;
     float dist;
     msurface_t* surf;
-    int i;
+    i32 i;
 
     if (node->contents < 0)
         return;
@@ -106,7 +106,7 @@ R_PushDlights
 =============
 */
 void R_PushDlights(void) {
-    int i;
+    i32 i;
     dlight_t* l;
 
     r_dlightframecount = r_framecount + 1; // because the count hasn't
@@ -129,19 +129,19 @@ LIGHT SAMPLING
 =============================================================================
 */
 
-int RecursiveLightPoint(mnode_t* node, vec3_t start, vec3_t end) {
-    int r;
+i32 RecursiveLightPoint(mnode_t* node, vec3_t start, vec3_t end) {
+    i32 r;
     float front, back, frac;
-    int side;
+    i32 side;
     mplane_t* plane;
     vec3_t mid;
     msurface_t* surf;
-    int s, t, ds, dt;
-    int i;
+    i32 s, t, ds, dt;
+    i32 i;
     mtexinfo_t* tex;
     byte* lightmap;
-    unsigned scale;
-    int maps;
+    u32 scale;
+    i32 maps;
 
     if (node->contents < 0)
         return -1; // didn't hit anything
@@ -222,9 +222,9 @@ int RecursiveLightPoint(mnode_t* node, vec3_t start, vec3_t end) {
     return RecursiveLightPoint(node->children[!side], mid, end);
 }
 
-int R_LightPoint(vec3_t p) {
+i32 R_LightPoint(vec3_t p) {
     vec3_t end;
-    int r;
+    i32 r;
 
     if (!cl.worldmodel->lightdata)
         return 255;

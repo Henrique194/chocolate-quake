@@ -43,18 +43,18 @@
 struct in_addr {
     union {
         struct {
-            unsigned char s_b1, s_b2, s_b3, s_b4;
+            byte s_b1, s_b2, s_b3, s_b4;
         } S_un_b;
         struct {
-            unsigned short s_w1, s_w2;
+            u16 s_w1, s_w2;
         } S_un_w;
-        unsigned long S_addr;
+        u32 S_addr;
     } S_un;
 };
 #define s_addr  S_un.S_addr /* can be used for most tcp & ip code */
 struct sockaddr_in {
-    short sin_family;
-    unsigned short sin_port;
+    i16 sin_family;
+    u16 sin_port;
     struct in_addr sin_addr;
     char sin_zero[8];
 };
@@ -65,23 +65,23 @@ unsigned long inet_addr(const char* cp);
 
 
 // Statistic Counters
-static int packetsSent = 0;
-static int packetsReSent = 0;
-static int packetsReceived = 0;
-static int receivedDuplicateCount = 0;
-static int shortPacketCount = 0;
-static int droppedDatagrams;
+static i32 packetsSent = 0;
+static i32 packetsReSent = 0;
+static i32 packetsReceived = 0;
+static i32 receivedDuplicateCount = 0;
+static i32 shortPacketCount = 0;
+static i32 droppedDatagrams;
 
-static int myDriverLevel;
+static i32 myDriverLevel;
 
 struct {
-    unsigned int length;
-    unsigned int sequence;
+    u32 length;
+    u32 sequence;
     byte data[MAX_DATAGRAM];
 } packetBuffer;
 
-extern int m_return_state;
-extern int m_state;
+extern i32 m_return_state;
+extern i32 m_state;
 extern qboolean m_return_onerror;
 extern char m_return_reason[32];
 
@@ -91,7 +91,7 @@ char *StrAddr (IPaddress* addr)
 {
 	static char buf[34];
 	byte *p = (byte *)addr;
-	int n;
+	i32 n;
 
 	for (n = 0; n < 16; n++)
 		sprintf (buf + n * 2, "%02x", *p++);
@@ -101,8 +101,8 @@ char *StrAddr (IPaddress* addr)
 
 
 #ifdef BAN_TEST
-static unsigned long banAddr = 0x00000000;
-static unsigned long banMask = 0xffffffff;
+static u32 banAddr = 0x00000000;
+static u32 banMask = 0xffffffff;
 
 void NET_Ban_f(void) {
     char addrStr[32];
@@ -152,10 +152,10 @@ void NET_Ban_f(void) {
 #endif
 
 
-int Datagram_SendMessage(qsocket_t* sock, sizebuf_t* data) {
-    unsigned int packetLen;
-    unsigned int dataLen;
-    unsigned int eom;
+i32 Datagram_SendMessage(qsocket_t* sock, sizebuf_t* data) {
+    u32 packetLen;
+    u32 dataLen;
+    u32 eom;
 
 #ifdef PARANOID
     if (data->cursize == 0) {
@@ -197,10 +197,10 @@ int Datagram_SendMessage(qsocket_t* sock, sizebuf_t* data) {
 }
 
 
-static int SendMessageNext(qsocket_t* sock) {
-    unsigned int packetLen;
-    unsigned int dataLen;
-    unsigned int eom;
+static i32 SendMessageNext(qsocket_t* sock) {
+    u32 packetLen;
+    u32 dataLen;
+    u32 eom;
 
     if (sock->sendMessageLength <= MAX_DATAGRAM) {
         dataLen = sock->sendMessageLength;
@@ -227,10 +227,10 @@ static int SendMessageNext(qsocket_t* sock) {
 }
 
 
-static int ReSendMessage(qsocket_t* sock) {
-    unsigned int packetLen;
-    unsigned int dataLen;
-    unsigned int eom;
+static i32 ReSendMessage(qsocket_t* sock) {
+    u32 packetLen;
+    u32 dataLen;
+    u32 eom;
 
     if (sock->sendMessageLength <= MAX_DATAGRAM) {
         dataLen = sock->sendMessageLength;
@@ -270,7 +270,7 @@ qboolean Datagram_CanSendUnreliableMessage(qsocket_t* sock) {
 }
 
 
-int Datagram_SendUnreliableMessage(qsocket_t* sock, sizebuf_t* data) {
+i32 Datagram_SendUnreliableMessage(qsocket_t* sock, sizebuf_t* data) {
 #ifdef PARANOID
     if (data->cursize == 0) {
         Sys_Error("Datagram_SendUnreliableMessage: zero length message\n");
@@ -280,7 +280,7 @@ int Datagram_SendUnreliableMessage(qsocket_t* sock, sizebuf_t* data) {
     }
 #endif
 
-    const int packetLen = NET_HEADERSIZE + data->cursize;
+    const i32 packetLen = NET_HEADERSIZE + data->cursize;
 
     packetBuffer.length = BigLong(packetLen | NETFLAG_UNRELIABLE);
     packetBuffer.sequence = BigLong(sock->unreliableSendSequence++);
@@ -295,13 +295,13 @@ int Datagram_SendUnreliableMessage(qsocket_t* sock, sizebuf_t* data) {
 }
 
 
-int Datagram_GetMessage(qsocket_t* sock) {
-    unsigned int length;
-    unsigned int flags;
-    int ret = 0;
+i32 Datagram_GetMessage(qsocket_t* sock) {
+    u32 length;
+    u32 flags;
+    i32 ret = 0;
     IPaddress readaddr;
-    unsigned int sequence;
-    unsigned int count;
+    u32 sequence;
+    u32 count;
 
     if (!sock->canSend && (net_time - sock->lastSendTime) > 1.0) {
         ReSendMessage(sock);
@@ -441,7 +441,7 @@ static void NET_Stats_f(void) {
 
 
 static qboolean testInProgress = false;
-static int testPollCount;
+static i32 testPollCount;
 static UDPsocket testSocket;
 
 static void Test_Poll(void);
@@ -449,25 +449,25 @@ poll_procedure_t testPollProcedure = {NULL, 0.0, &Test_Poll};
 
 static void Test_Poll(void) {
     IPaddress clientaddr;
-    int control;
-    int len;
+    i32 control;
+    i32 len;
     char name[32];
     char address[64];
-    int colors;
-    int frags;
-    int connectTime;
+    i32 colors;
+    i32 frags;
+    i32 connectTime;
     byte playerNumber;
 
     while (true) {
         len = UDP_Read(testSocket, net_message.data, net_message.maxsize, &clientaddr);
-        if (len < sizeof(int)) {
+        if (len < sizeof(i32)) {
             break;
         }
 
         net_message.cursize = len;
 
         MSG_BeginReading();
-        control = BigLong(*((int*) net_message.data));
+        control = BigLong(*((i32*) net_message.data));
         MSG_ReadLong();
         if (control == -1) {
             break;
@@ -506,8 +506,8 @@ static void Test_Poll(void) {
 
 static void Test_f(void) {
     char* host;
-    int n;
-    int max = MAX_SCOREBOARD;
+    i32 n;
+    i32 max = MAX_SCOREBOARD;
     IPaddress sendaddr;
 
     if (testInProgress) {
@@ -556,7 +556,7 @@ JustDoIt:
         MSG_WriteLong(&net_message, 0);
         MSG_WriteByte(&net_message, CCREQ_PLAYER_INFO);
         MSG_WriteByte(&net_message, n);
-        *((int*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
+        *((i32*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
         UDP_Write(testSocket, net_message.data, net_message.cursize, &sendaddr);
     }
     SZ_Clear(&net_message);
@@ -572,22 +572,22 @@ poll_procedure_t test2PollProcedure = {NULL, 0.0, &Test2_Poll};
 
 static void Test2_Poll(void) {
     IPaddress clientaddr;
-    int control;
-    int len;
+    i32 control;
+    i32 len;
     char name[256];
     char value[256];
 
     name[0] = 0;
 
     len = UDP_Read(test2Socket, net_message.data, net_message.maxsize, &clientaddr);
-    if (len < sizeof(int)) {
+    if (len < sizeof(i32)) {
         goto Reschedule;
     }
 
     net_message.cursize = len;
 
     MSG_BeginReading();
-    control = BigLong(*((int*) net_message.data));
+    control = BigLong(*((i32*) net_message.data));
     MSG_ReadLong();
     if (control == -1) {
         goto Error;
@@ -615,7 +615,7 @@ static void Test2_Poll(void) {
     MSG_WriteLong(&net_message, 0);
     MSG_WriteByte(&net_message, CCREQ_RULE_INFO);
     MSG_WriteString(&net_message, name);
-    *((int*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
+    *((i32*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
     UDP_Write(test2Socket, net_message.data, net_message.cursize, &clientaddr);
     SZ_Clear(&net_message);
 
@@ -632,7 +632,7 @@ Done:
 
 static void Test2_f(void) {
     char* host;
-    int n;
+    i32 n;
     IPaddress sendaddr;
 
     if (test2InProgress)
@@ -677,14 +677,14 @@ JustDoIt:
     MSG_WriteLong(&net_message, 0);
     MSG_WriteByte(&net_message, CCREQ_RULE_INFO);
     MSG_WriteString(&net_message, "");
-    *((int*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
+    *((i32*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
     UDP_Write(test2Socket, net_message.data, net_message.cursize, &sendaddr);
     SZ_Clear(&net_message);
     NET_SchedulePollProcedure(&test2PollProcedure, 0.05);
 }
 
 
-int Datagram_Init(void) {
+i32 Datagram_Init(void) {
     myDriverLevel = net_driverlevel;
     Cmd_AddCommand("net_stats", NET_Stats_f);
 
@@ -726,14 +726,14 @@ static qboolean NET_IsBanned(IPaddress* addr) {
     if (addr->sa_family != AF_INET) {
         return false;
     }
-    unsigned long testAddr = ((struct sockaddr_in*) addr)->sin_addr.s_addr;
+    u32 testAddr = ((struct sockaddr_in*) addr)->sin_addr.s_addr;
     return (testAddr & banMask) == banAddr;
 }
 #endif
 
-static client_t* NET_FindActiveClient(const int client_num) {
-    int active_num = -1;
-    for (int i = 0; i < svs.maxclients; i++) {
+static client_t* NET_FindActiveClient(const i32 client_num) {
+    i32 active_num = -1;
+    for (i32 i = 0; i < svs.maxclients; i++) {
         client_t* client = &svs.clients[i];
         if (!client->active) {
             continue;
@@ -782,7 +782,7 @@ static void NET_REP_Reject(
     MSG_WriteLong(&net_message, 0);
     MSG_WriteByte(&net_message, CCREP_REJECT);
     MSG_WriteString(&net_message, reason);
-    *((int*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
+    *((i32*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
 
     UDP_Write(acceptsock, net_message.data, net_message.cursize, addr);
 
@@ -803,7 +803,7 @@ static void NET_REP_Accept(
     MSG_WriteByte(&net_message, CCREP_ACCEPT);
     MSG_WriteLong(&net_message, UDP_GetSocketPort(&newaddr));
     // Write header.
-    *((int*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
+    *((i32*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
 
     UDP_Write(acceptsock, net_message.data, net_message.cursize, addr);
 
@@ -848,7 +848,7 @@ static qboolean NET_IsAlreadyConnected(
         if (s->driver != net_driverlevel) {
             continue;
         }
-        const int ret = UDP_AddrCompare(addr, &s->addr);
+        const i32 ret = UDP_AddrCompare(addr, &s->addr);
         if (ret != 0) {
             continue;
         }
@@ -904,7 +904,7 @@ static void NET_REP_RuleInfo(UDPsocket acceptsock, const IPaddress* addr) {
         MSG_WriteString(&net_message, var->string);
     }
     // Write header.
-    *((int*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
+    *((i32*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
 
     UDP_Write(acceptsock, net_message.data, net_message.cursize, addr);
 
@@ -912,7 +912,7 @@ static void NET_REP_RuleInfo(UDPsocket acceptsock, const IPaddress* addr) {
 }
 
 static void NET_REP_PlayerInfo(UDPsocket acceptsock, const IPaddress* addr) {
-    const int playerNumber = MSG_ReadByte();
+    const i32 playerNumber = MSG_ReadByte();
 
     client_t* client = NET_FindActiveClient(playerNumber);
     if (!client) {
@@ -927,11 +927,11 @@ static void NET_REP_PlayerInfo(UDPsocket acceptsock, const IPaddress* addr) {
     MSG_WriteByte(&net_message, playerNumber);
     MSG_WriteString(&net_message, client->name);
     MSG_WriteLong(&net_message, client->colors);
-    MSG_WriteLong(&net_message, (int) client->edict->v.frags);
-    MSG_WriteLong(&net_message, (int) (net_time - client->netconnection->connecttime));
+    MSG_WriteLong(&net_message, (i32) client->edict->v.frags);
+    MSG_WriteLong(&net_message, (i32) (net_time - client->netconnection->connecttime));
     MSG_WriteString(&net_message, client->netconnection->address);
     // Write header.
-    *((int*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
+    *((i32*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
 
     UDP_Write(acceptsock, net_message.data, net_message.cursize, addr);
 
@@ -955,7 +955,7 @@ static void NET_REP_ServerInfo(UDPsocket acceptsock, const IPaddress* addr) {
     MSG_WriteByte(&net_message, svs.maxclients);
     MSG_WriteByte(&net_message, NET_PROTOCOL_VERSION);
     // Write header.
-    *((int*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
+    *((i32*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
 
     UDP_Write(acceptsock, net_message.data, net_message.cursize, addr);
 
@@ -966,7 +966,7 @@ static qsocket_t* NET_ControlResponse(
     UDPsocket acceptsock,
     const IPaddress* addr
 ) {
-    const int command = MSG_ReadByte();
+    const i32 command = MSG_ReadByte();
     switch (command) {
         case CCREQ_SERVER_INFO:
             NET_REP_ServerInfo(acceptsock, addr);
@@ -984,8 +984,8 @@ static qsocket_t* NET_ControlResponse(
     }
 }
 
-static qboolean NET_CheckControlHeader(const int len) {
-    const int control = BigLong(*((int*) net_message.data));
+static qboolean NET_CheckControlHeader(const i32 len) {
+    const i32 control = BigLong(*((i32*) net_message.data));
     MSG_ReadLong();
     if (control == -1) {
         return false;
@@ -1012,8 +1012,8 @@ qsocket_t* Datagram_CheckNewConnections(void) {
     SZ_Clear(&net_message);
 
     IPaddress clientaddr;
-    const int len = UDP_Read(acceptsock, net_message.data, net_message.maxsize, &clientaddr);
-    if (len < sizeof(int)) {
+    const i32 len = UDP_Read(acceptsock, net_message.data, net_message.maxsize, &clientaddr);
+    if (len < sizeof(i32)) {
         return NULL;
     }
     net_message.cursize = len;
@@ -1037,7 +1037,7 @@ static void NET_REQ_ServerInfo(void) {
     MSG_WriteString(&net_message, "QUAKE");
     MSG_WriteByte(&net_message, NET_PROTOCOL_VERSION);
     // Write header.
-    *((int*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
+    *((i32*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
 
     UDP_Broadcast(control_sock, net_message.data, net_message.cursize);
 
@@ -1045,14 +1045,14 @@ static void NET_REQ_ServerInfo(void) {
 }
 
 static void NET_ResolveNameConflict(hostcache_t* host) {
-    for (int i = 0; i < hostCacheCount; i++) {
+    for (i32 i = 0; i < hostCacheCount; i++) {
         if (&hostcache[i] == host) {
             continue;
         }
         if (Q_strcasecmp(host->name, hostcache[i].name) != 0) {
             continue;
         }
-        i = Q_strlen(host->name);
+        i = (i32) Q_strlen(host->name);
         if (i < 15 && host->name[i - 1] > '8') {
             host->name[i] = '0';
             host->name[i + 1] = 0;
@@ -1085,7 +1085,7 @@ static hostcache_t* NET_CacheNewHost(IPaddress* addr) {
 }
 
 static qboolean NET_IsHostCached(const IPaddress* addr) {
-    for (int n = 0; n < hostCacheCount; n++) {
+    for (i32 n = 0; n < hostCacheCount; n++) {
         if (UDP_AddrCompare(addr, &hostcache[n].addr) == 0) {
             return true;
         }
@@ -1103,14 +1103,14 @@ static void NET_CacheServerHost(const IPaddress* client_addr) {
 }
 
 static void NET_ReadServerInfo(void) {
-    int ret;
+    i32 ret;
     IPaddress readaddr;
 
     UDPsocket control_sock = UDP_GetControlSocket();
     IPaddress my_addr = UDP_GetSocketAddr(control_sock);
 
     while ((ret = UDP_Read(control_sock, net_message.data, net_message.maxsize, &readaddr)) > 0) {
-        if (ret < sizeof(int)) {
+        if (ret < sizeof(i32)) {
             continue;
         }
         net_message.cursize = ret;
@@ -1154,7 +1154,7 @@ static void NET_REQ_Connect(UDPsocket sock, const IPaddress* addr) {
     MSG_WriteString(&net_message, "QUAKE");
     MSG_WriteByte(&net_message, NET_PROTOCOL_VERSION);
     // Write header.
-    *((int*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
+    *((i32*) net_message.data) = BigLong(NETFLAG_CTL | (net_message.cursize & NETFLAG_LENGTH_MASK));
 
     UDP_Write(sock, net_message.data, net_message.cursize, addr);
 
@@ -1183,7 +1183,7 @@ static qsocket_t* NET_HandleConnectResponse(
     qsocket_t* sock,
     IPaddress* sendaddr
 ) {
-    const int command = MSG_ReadByte();
+    const i32 command = MSG_ReadByte();
     switch (command) {
         case CCREP_REJECT:
             NET_ReportConnectError(sock, MSG_ReadString());
@@ -1202,13 +1202,13 @@ static qsocket_t* NET_HandleConnectResponse(
     }
 }
 
-static int NET_WaitConnectResponse(
+static i32 NET_WaitConnectResponse(
     double start_time,
     UDPsocket newsock,
     IPaddress* readaddr,
     const IPaddress* sendaddr
 ) {
-    int ret;
+    i32 ret;
 
     do {
         ret = UDP_Read(newsock, net_message.data, net_message.maxsize, readaddr);
@@ -1227,7 +1227,7 @@ static int NET_WaitConnectResponse(
             ret = 0;
             continue;
         }
-        if (ret < sizeof(int)) {
+        if (ret < sizeof(i32)) {
             ret = 0;
             continue;
         }
@@ -1241,7 +1241,7 @@ static int NET_WaitConnectResponse(
     return ret;
 }
 
-static int NET_TryConnectServer(
+static i32 NET_TryConnectServer(
     UDPsocket newsock,
     IPaddress* readaddr,
     const IPaddress* sendaddr
@@ -1250,9 +1250,9 @@ static int NET_TryConnectServer(
     SCR_UpdateScreen();
 
     double start_time = net_time;
-    int ret = 0;
+    i32 ret = 0;
 
-    for (int reps = 0; reps < 3; reps++) {
+    for (i32 reps = 0; reps < 3; reps++) {
         NET_REQ_Connect(newsock, sendaddr);
         ret = NET_WaitConnectResponse(start_time, newsock, readaddr, sendaddr);
         if (ret) {
@@ -1291,7 +1291,7 @@ qsocket_t* Datagram_Connect(char* host) {
     sock->socket = newsock;
 
     IPaddress readaddr;
-    const int ret = NET_TryConnectServer(newsock, &readaddr, &sendaddr);
+    const i32 ret = NET_TryConnectServer(newsock, &readaddr, &sendaddr);
     if (ret == 0) {
         NET_ReportConnectError(sock, "No Response\n");
         return NULL;

@@ -26,13 +26,13 @@
 
 
 typedef struct snd_info_s {
-    int rate;
-    int bits, width;
-    int channels;
-    int samples;
-    int blocksize;
-    int size;
-    int dataofs;
+    i32 rate;
+    i32 bits, width;
+    i32 channels;
+    i32 samples;
+    i32 blocksize;
+    i32 size;
+    i32 dataofs;
 } snd_info_t;
 
 typedef enum {
@@ -61,7 +61,7 @@ void S_CodecShutdown(void);
 /* Callers of the following S_CodecOpenStream* functions
  * are reponsible for attaching any path to the filename */
 
-snd_stream_t* S_CodecOpenStreamType(const char* filename, unsigned int type,
+snd_stream_t* S_CodecOpenStreamType(const char* filename, u32 type,
                                     qboolean loop);
 /* Decides according to the required type. */
 
@@ -74,9 +74,9 @@ snd_stream_t* S_CodecOpenStreamExt(const char* filename, qboolean loop);
 	 * MUST have an extension. */
 
 void S_CodecCloseStream(snd_stream_t* stream);
-int S_CodecReadStream(snd_stream_t* stream, int bytes, void* buffer);
-int S_CodecRewindStream(snd_stream_t* stream);
-int S_CodecJumpToOrder(snd_stream_t* stream, int to);
+i32 S_CodecReadStream(snd_stream_t* stream, i32 bytes, void* buffer);
+i32 S_CodecRewindStream(snd_stream_t* stream);
+i32 S_CodecJumpToOrder(snd_stream_t* stream, i32 to);
 
 snd_stream_t* S_CodecUtilOpen(const char* filename, snd_codec_t* codec,
                               qboolean loop);
@@ -96,7 +96,7 @@ void S_CodecUtilClose(snd_stream_t** stream);
 #define CODECTYPE_WAVE CODECTYPE_WAV
 #define CODECTYPE_MIDI CODECTYPE_MID
 
-int S_CodecIsAvailable(unsigned int type);
+i32 S_CodecIsAvailable(u32 type);
 /* return 1 if available, 0 if codec failed init
 	 * or -1 if no such codec is present. */
 
@@ -105,13 +105,13 @@ int S_CodecIsAvailable(unsigned int type);
 typedef qboolean (*CODEC_INIT)(void);
 typedef void (*CODEC_SHUTDOWN)(void);
 typedef qboolean (*CODEC_OPEN)(snd_stream_t* stream);
-typedef int (*CODEC_READ)(snd_stream_t* stream, int bytes, void* buffer);
-typedef int (*CODEC_REWIND)(snd_stream_t* stream);
-typedef int (*CODEC_JUMP)(snd_stream_t* stream, int order);
+typedef i32 (*CODEC_READ)(snd_stream_t* stream, i32 bytes, void* buffer);
+typedef i32 (*CODEC_REWIND)(snd_stream_t* stream);
+typedef i32 (*CODEC_JUMP)(snd_stream_t* stream, i32 order);
 typedef void (*CODEC_CLOSE)(snd_stream_t* stream);
 
 struct snd_codec_s {
-    unsigned int type;    /* handled data type. (1U << n) */
+    u32 type;    /* handled data type. (1U << n) */
     qboolean initialized; /* init succeedded */
     const char* ext;      /* expected extension */
     CODEC_INIT initialize;

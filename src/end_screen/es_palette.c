@@ -45,7 +45,7 @@ static const SDL_Color ega_colors[PAL_COLOR_NUM] = {
 
 void ES_SetPalette(const SDL_Surface* buffer) {
     SDL_Palette* palette = buffer->format->palette;
-    const int first_color = PAL_COLOR_BLACK;
-    const int num_colors = PAL_COLOR_NUM;
+    const i32 first_color = PAL_COLOR_BLACK;
+    const i32 num_colors = PAL_COLOR_NUM;
     SDL_SetPaletteColors(palette, ega_colors, first_color, num_colors);
 }

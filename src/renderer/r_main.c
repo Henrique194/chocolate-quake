@@ -36,25 +36,25 @@ void* colormap;
 vec3_t viewlightvec;
 alight_t r_viewlighting = {128, 192, viewlightvec};
 float r_time1;
-int r_numallocatededges;
+i32 r_numallocatededges;
 qboolean r_drawpolys;
 qboolean r_drawculledpolys;
 qboolean r_worldpolysbacktofront;
 qboolean r_recursiveaffinetriangles = true;
 float r_aliasuvscale = 1.0;
-int r_outofsurfaces;
-int r_outofedges;
+i32 r_outofsurfaces;
+i32 r_outofedges;
 
 qboolean r_dowarp, r_dowarpold, r_viewchanged;
 
-int numbtofpolys;
+i32 numbtofpolys;
 btofpoly_t* pbtofpolys;
 mvertex_t* r_pcurrentvertbase;
 
-int c_surf;
-int r_maxsurfsseen, r_maxedgesseen, r_cnumsurfs;
+i32 c_surf;
+i32 r_maxsurfsseen, r_maxedgesseen, r_cnumsurfs;
 qboolean r_surfsonstack;
-int r_clipflags;
+i32 r_clipflags;
 
 byte* r_warpbuffer;
 
@@ -80,7 +80,7 @@ float xscaleinv, yscaleinv;
 float xscaleshrink, yscaleshrink;
 float aliasxscale, aliasyscale, aliasxcenter, aliasycenter;
 
-int screenwidth;
+i32 screenwidth;
 
 float pixelAspect;
 float screenAspect;
@@ -92,21 +92,21 @@ mplane_t screenedge[4];
 //
 // refresh flags
 //
-int r_framecount = 1; // so frame counts initialized to 0 don't match
-int r_visframecount;
-int d_spanpixcount;
-int r_polycount;
-int r_drawnpolycount;
-int r_wholepolycount;
+i32 r_framecount = 1; // so frame counts initialized to 0 don't match
+i32 r_visframecount;
+i32 d_spanpixcount;
+i32 r_polycount;
+i32 r_drawnpolycount;
+i32 r_wholepolycount;
 
 #define VIEWMODNAME_LENGTH 256
 char viewmodname[VIEWMODNAME_LENGTH + 1];
-int modcount;
+i32 modcount;
 
-int* pfrustum_indexes[4];
-int r_frustum_indexes[4 * 6];
+i32* pfrustum_indexes[4];
+i32 r_frustum_indexes[4 * 6];
 
-int reinit_surfcache = 1; // if 1, surface cache is currently empty and
+i32 reinit_surfcache = 1; // if 1, surface cache is currently empty and
                           // must be reinitialized for current cache size
 
 mleaf_t *r_viewleaf, *r_oldviewleaf;
@@ -115,7 +115,7 @@ texture_t* r_notexture_mip;
 
 float r_aliastransition, r_resfudge;
 
-int d_lightstylevalue[256]; // 8.8 fraction of base light value
+i32 d_lightstylevalue[256]; // 8.8 fraction of base light value
 
 float dp_time1, dp_time2, db_time1, db_time2, rw_time1, rw_time2;
 float se_time1, se_time2, de_time1, de_time2, dv_time1, dv_time2;
@@ -155,7 +155,7 @@ R_InitTextures
 ==================
 */
 void R_InitTextures(void) {
-    int x, y, m;
+    i32 x, y, m;
     byte* dest;
 
     // create a simple checkerboard texture for the default
@@ -186,7 +186,7 @@ R_Init
 ===============
 */
 void R_Init(void) {
-    int dummy;
+    i32 dummy;
 
     // get stack position so we can guess if we are going to overflow
     r_stack_start = (byte*) &dummy;
@@ -242,7 +242,7 @@ R_NewMap
 ===============
 */
 void R_NewMap(void) {
-    int i;
+    i32 i;
 
     // clear out efrags in case the level hasn't been reloaded
     // FIXME: is this one short?
@@ -298,8 +298,8 @@ void R_NewMap(void) {
 R_SetVrect
 ===============
 */
-void R_SetVrect(vrect_t* pvrectin, vrect_t* pvrect, int lineadj) {
-    int h;
+void R_SetVrect(vrect_t* pvrectin, vrect_t* pvrect, i32 lineadj) {
+    i32 h;
     float size;
 
     size = scr_viewsize.value > 100 ? 100 : scr_viewsize.value;
@@ -342,8 +342,8 @@ Called every time the vid structure or r_refdef changes.
 Guaranteed to be called before the first refresh
 ===============
 */
-void R_ViewChanged(vrect_t* pvrect, int lineadj, float aspect) {
-    int i;
+void R_ViewChanged(vrect_t* pvrect, i32 lineadj, float aspect) {
+    i32 i;
     float res_scale;
 
     r_viewchanged = true;
@@ -366,10 +366,10 @@ void R_ViewChanged(vrect_t* pvrect, int lineadj, float aspect) {
     r_refdef.fvrectbottom = (float) r_refdef.vrectbottom;
     r_refdef.fvrectbottom_adj = (float) r_refdef.vrectbottom - 0.5;
 
-    r_refdef.aliasvrect.x = (int) (r_refdef.vrect.x * r_aliasuvscale);
-    r_refdef.aliasvrect.y = (int) (r_refdef.vrect.y * r_aliasuvscale);
-    r_refdef.aliasvrect.width = (int) (r_refdef.vrect.width * r_aliasuvscale);
-    r_refdef.aliasvrect.height = (int) (r_refdef.vrect.height * r_aliasuvscale);
+    r_refdef.aliasvrect.x = (i32) (r_refdef.vrect.x * r_aliasuvscale);
+    r_refdef.aliasvrect.y = (i32) (r_refdef.vrect.y * r_aliasuvscale);
+    r_refdef.aliasvrect.width = (i32) (r_refdef.vrect.width * r_aliasuvscale);
+    r_refdef.aliasvrect.height = (i32) (r_refdef.vrect.height * r_aliasuvscale);
     r_refdef.aliasvrectright =
         r_refdef.aliasvrect.x + r_refdef.aliasvrect.width;
     r_refdef.aliasvrectbottom =
@@ -459,7 +459,7 @@ R_MarkLeaves
 void R_MarkLeaves(void) {
     byte* vis;
     mnode_t* node;
-    int i;
+    i32 i;
 
     if (r_oldviewleaf == r_viewleaf)
         return;
@@ -489,8 +489,8 @@ R_DrawEntitiesOnList
 =============
 */
 void R_DrawEntitiesOnList(void) {
-    int i, j;
-    int lnum;
+    i32 i, j;
+    i32 lnum;
     alight_t lighting;
     // FIXME: remove and do real lighting
     float lightvec[3] = {-1, 0, 0};
@@ -563,8 +563,8 @@ R_DrawViewModel
 void R_DrawViewModel(void) {
     // FIXME: remove and do real lighting
     float lightvec[3] = {-1, 0, 0};
-    int j;
-    int lnum;
+    i32 j;
+    i32 lnum;
     vec3_t dist;
     float add;
     dlight_t* dl;
@@ -628,8 +628,8 @@ void R_DrawViewModel(void) {
 R_BmodelCheckBBox
 =============
 */
-int R_BmodelCheckBBox(model_t* clmodel, float* minmaxs) {
-    int i, *pindex, clipflags;
+i32 R_BmodelCheckBBox(model_t* clmodel, float* minmaxs) {
+    i32 i, *pindex, clipflags;
     vec3_t acceptpt, rejectpt;
     double d;
 
@@ -687,7 +687,7 @@ R_DrawBEntitiesOnList
 =============
 */
 void R_DrawBEntitiesOnList(void) {
-    int i, j, k, clipflags;
+    i32 i, j, k, clipflags;
     vec3_t oldorigin;
     model_t* clmodel;
     float minmaxs[6];
@@ -959,8 +959,8 @@ void R_RenderView_(void) {
 }
 
 void R_RenderView(void) {
-    int dummy;
-    int delta;
+    i32 dummy;
+    i32 delta;
 
     delta = (byte*) &dummy - r_stack_start;
     if (delta < -10000 || delta > 10000)
@@ -984,7 +984,7 @@ R_InitTurb
 ================
 */
 void R_InitTurb(void) {
-    int i;
+    i32 i;
 
     for (i = 0; i < (SIN_BUFFER_SIZE); i++) {
         sintable[i] = AMP + sin(i * 3.14159 * 2 / CYCLE) * AMP;

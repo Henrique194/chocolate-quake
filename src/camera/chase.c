@@ -24,7 +24,6 @@
 #include "client.h"
 #include "world.h"
 #include <math.h>
-#include <string.h>
 
 
 cvar_t chase_back = {"chase_back", "100"};
@@ -54,14 +53,14 @@ void Chase_Reset(void) {
 void TraceLine(vec3_t start, vec3_t end, vec3_t impact) {
     trace_t trace;
 
-    memset(&trace, 0, sizeof(trace));
+    Q_memset(&trace, 0, sizeof(trace));
     SV_RecursiveHullCheck(cl.worldmodel->hulls, 0, 0, 1, start, end, &trace);
 
     VectorCopy(trace.endpos, impact);
 }
 
 void Chase_Update(void) {
-    int i;
+    i32 i;
     float dist;
     vec3_t forward, up, right;
     vec3_t dest, stop;

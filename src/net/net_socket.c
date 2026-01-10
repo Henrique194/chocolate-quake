@@ -208,7 +208,7 @@ static qboolean NET_HasTimedOut(const qsocket_t* sock) {
     return lag > net_messagetimeout.value;
 }
 
-static void NET_UpdateConnection(qsocket_t* sock, const int ret) {
+static void NET_UpdateConnection(qsocket_t* sock, const i32 ret) {
     if (ret == 0 && NET_HasTimedOut(sock)) {
         NET_Close(sock);
         return;
@@ -224,13 +224,13 @@ static void NET_UpdateConnection(qsocket_t* sock, const int ret) {
     }
 }
 
-int NET_GetSocketMessage(qsocket_t* sock) {
+i32 NET_GetSocketMessage(qsocket_t* sock) {
     if (sock->disconnected) {
         Con_Printf("NET_GetSocketMessage: disconnected socket\n");
         return -1;
     }
     const net_driver_t* driver = NET_GetDriver(sock);
-    const int ret = driver->QGetMessage(sock);
+    const i32 ret = driver->QGetMessage(sock);
     NET_UpdateConnection(sock, ret);
     return ret;
 }
@@ -243,26 +243,26 @@ qboolean NET_CanSocketSendMessage(qsocket_t* sock) {
     return driver->CanSendMessage(sock);
 }
 
-int NET_SendSocketMessage(qsocket_t* sock, sizebuf_t* data) {
+i32 NET_SendSocketMessage(qsocket_t* sock, sizebuf_t* data) {
     if (sock->disconnected) {
         Con_Printf("NET_SendSocketMessage: disconnected socket\n");
         return -1;
     }
     const net_driver_t* driver = NET_GetDriver(sock);
-    const int ret = driver->QSendMessage(sock, data);
+    const i32 ret = driver->QSendMessage(sock, data);
     if (ret == 1 && sock->driver) {
         messagesSent++;
     }
     return ret;
 }
 
-int NET_SendSocketUnreliableMessage(qsocket_t* sock, sizebuf_t* data) {
+i32 NET_SendSocketUnreliableMessage(qsocket_t* sock, sizebuf_t* data) {
     if (sock->disconnected) {
         Con_Printf("NET_SendSocketUnreliableMessage: disconnected socket\n");
         return -1;
     }
     const net_driver_t* driver = NET_GetDriver(sock);
-    const int ret = driver->SendUnreliableMessage(sock, data);
+    const i32 ret = driver->SendUnreliableMessage(sock, data);
     if (ret == 1 && sock->driver) {
         unreliableMessagesSent++;
     }
@@ -293,12 +293,12 @@ INITIALIZATION AND SHUTDOWN
 */
 
 void NET_InitSockets(void) {
-    int num_sockets = svs.maxclientslimit;
+    i32 num_sockets = svs.maxclientslimit;
     if (cls.state != ca_dedicated) {
         // One more socket for local client.
         num_sockets++;
     }
-    for (int i = 0; i < num_sockets; i++) {
+    for (i32 i = 0; i < num_sockets; i++) {
         qsocket_t* sock = Hunk_AllocName(sizeof(*sock), "qsocket");
         sock->disconnected = true;
         NET_AddToList(&net_freeSockets, sock);

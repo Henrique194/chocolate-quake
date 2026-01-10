@@ -1,3 +1,5 @@
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 cmake_minimum_required(VERSION 3.21.0)
 project("Chocolate Quake" VERSION 2.0.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 99)
@@ -17,7 +19,7 @@ if(MATH)
     link_libraries(${MATH})
 endif()
 
-find_package(SDL2 2.26.5 REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2_net CONFIG REQUIRED)
 if(UNIX AND NOT APPLE)
 	find_library(VORBIS_LIBRARY vorbis REQUIRED)

@@ -71,13 +71,13 @@ typedef enum { ST_SYNC = 0, ST_RAND } synctype_t;
 
 // TODO: shorten these?
 typedef struct {
-    int ident;
-    int version;
-    int type;
+    i32 ident;
+    i32 version;
+    i32 type;
     float boundingradius;
-    int width;
-    int height;
-    int numframes;
+    i32 width;
+    i32 height;
+    i32 numframes;
     float beamlength;
     synctype_t synctype;
 } dsprite_t;
@@ -89,13 +89,13 @@ typedef struct {
 #define SPR_VP_PARALLEL_ORIENTED 4
 
 typedef struct {
-    int origin[2];
-    int width;
-    int height;
+    i32 origin[2];
+    i32 width;
+    i32 height;
 } dspriteframe_t;
 
 typedef struct {
-    int numframes;
+    i32 numframes;
 } dspritegroup_t;
 
 typedef struct {

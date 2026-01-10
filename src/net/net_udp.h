@@ -32,17 +32,17 @@ UDPsocket UDP_GetAcceptSocket(void);
 void UDP_Init(void);
 void UDP_Shutdown(void);
 void UDP_Listen(qboolean state);
-UDPsocket UDP_OpenSocket(int port);
+UDPsocket UDP_OpenSocket(i32 port);
 void UDP_CloseSocket(UDPsocket socket);
-int UDP_Read(UDPsocket socket, byte* buf, int len, IPaddress* addr);
-int UDP_Write(UDPsocket socket, byte* buf, int len, const IPaddress* addr);
-int UDP_Broadcast(UDPsocket socket, byte* buf, int len);
+i32 UDP_Read(UDPsocket socket, byte* buf, i32 len, IPaddress* addr);
+i32 UDP_Write(UDPsocket socket, byte* buf, i32 len, const IPaddress* addr);
+i32 UDP_Broadcast(UDPsocket socket, byte* buf, i32 len);
 char* UDP_AddrToString(const IPaddress* addr);
 IPaddress UDP_GetSocketAddr(UDPsocket socket);
 void UDP_GetNameFromAddr(const IPaddress* addr, char* name);
-int UDP_GetAddrFromName(char* name, IPaddress* addr);
-int UDP_AddrCompare(const IPaddress* addr1, const IPaddress* addr2);
-int UDP_GetSocketPort(const IPaddress* addr);
-void UDP_SetSocketPort(IPaddress* addr, int port);
+i32 UDP_GetAddrFromName(char* name, IPaddress* addr);
+i32 UDP_AddrCompare(const IPaddress* addr1, const IPaddress* addr2);
+i32 UDP_GetSocketPort(const IPaddress* addr);
+void UDP_SetSocketPort(IPaddress* addr, i32 port);
 
 #endif

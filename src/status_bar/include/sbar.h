@@ -28,7 +28,7 @@
 
 #define SBAR_HEIGHT 24
 
-extern int sb_lines; // scan lines to draw
+extern i32 sb_lines; // scan lines to draw
 
 void Sbar_Init(void);
 

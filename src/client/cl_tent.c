@@ -30,7 +30,7 @@
 #include <string.h>
 
 
-int num_temp_entities;
+i32 num_temp_entities;
 entity_t cl_temp_entities[MAX_TEMP_ENTITIES];
 beam_t cl_beams[MAX_BEAMS];
 
@@ -63,10 +63,10 @@ CL_ParseBeam
 =================
 */
 void CL_ParseBeam(model_t* m) {
-    int ent;
+    i32 ent;
     vec3_t start, end;
     beam_t* b;
-    int i;
+    i32 i;
 
     ent = MSG_ReadShort();
 
@@ -109,11 +109,11 @@ CL_ParseTEnt
 =================
 */
 void CL_ParseTEnt(void) {
-    int type;
+    i32 type;
     vec3_t pos;
     dlight_t* dl;
-    int rnd;
-    int colorStart, colorLength;
+    i32 rnd;
+    i32 colorStart, colorLength;
 
     type = MSG_ReadByte();
     switch (type) {
@@ -264,7 +264,7 @@ entity_t* CL_NewTempEntity(void) {
     if (num_temp_entities == MAX_TEMP_ENTITIES)
         return NULL;
     ent = &cl_temp_entities[num_temp_entities];
-    memset(ent, 0, sizeof(*ent));
+    Q_memset(ent, 0, sizeof(*ent));
     num_temp_entities++;
     cl_visedicts[cl_numvisedicts] = ent;
     cl_numvisedicts++;
@@ -280,7 +280,7 @@ CL_UpdateTEnts
 =================
 */
 void CL_UpdateTEnts(void) {
-    int i, j;
+    i32 i, j;
     beam_t* b;
     vec3_t dist, org;
     float d;
@@ -310,12 +310,12 @@ void CL_UpdateTEnts(void) {
             else
                 pitch = 270;
         } else {
-            yaw = (int) (atan2(dist[1], dist[0]) * 180 / M_PI);
+            yaw = (i32) (atan2(dist[1], dist[0]) * 180 / M_PI);
             if (yaw < 0)
                 yaw += 360;
 
             forward = sqrt(dist[0] * dist[0] + dist[1] * dist[1]);
-            pitch = (int) (atan2(dist[2], forward) * 180 / M_PI);
+            pitch = (i32) (atan2(dist[2], forward) * 180 / M_PI);
             if (pitch < 0)
                 pitch += 360;
         }

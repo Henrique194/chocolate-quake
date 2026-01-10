@@ -20,8 +20,8 @@
 
 // this file is shared by quake and qcc
 
-typedef int func_t;
-typedef int string_t;
+typedef i32 func_t;
+typedef i32 string_t;
 
 typedef enum {
     ev_void,
@@ -128,57 +128,57 @@ enum {
 
 
 typedef struct statement_s {
-    unsigned short op;
-    short a, b, c;
+    u16 op;
+    i16 a, b, c;
 } dstatement_t;
 
 typedef struct {
-    unsigned short type; // if DEF_SAVEGLOBGAL bit is set
+    u16 type; // if DEF_SAVEGLOBGAL bit is set
                          // the variable needs to be saved in savegames
-    unsigned short ofs;
-    int s_name;
+    u16 ofs;
+    i32 s_name;
 } ddef_t;
 #define DEF_SAVEGLOBAL (1 << 15)
 
 #define MAX_PARMS 8
 
 typedef struct {
-    int first_statement; // negative numbers are builtins
-    int parm_start;
-    int locals; // total ints of parms + locals
+    i32 first_statement; // negative numbers are builtins
+    i32 parm_start;
+    i32 locals; // total ints of parms + locals
 
-    int profile; // runtime
+    i32 profile; // runtime
 
-    int s_name;
-    int s_file; // source file defined in
+    i32 s_name;
+    i32 s_file; // source file defined in
 
-    int numparms;
+    i32 numparms;
     byte parm_size[MAX_PARMS];
 } dfunction_t;
 
 
 #define PROG_VERSION 6
 typedef struct {
-    int version;
-    int crc; // check of header file
+    i32 version;
+    i32 crc; // check of header file
 
-    int ofs_statements;
-    int numstatements; // statement 0 is an error
+    i32 ofs_statements;
+    i32 numstatements; // statement 0 is an error
 
-    int ofs_globaldefs;
-    int numglobaldefs;
+    i32 ofs_globaldefs;
+    i32 numglobaldefs;
 
-    int ofs_fielddefs;
-    int numfielddefs;
+    i32 ofs_fielddefs;
+    i32 numfielddefs;
 
-    int ofs_functions;
-    int numfunctions; // function 0 is an empty
+    i32 ofs_functions;
+    i32 numfunctions; // function 0 is an empty
 
-    int ofs_strings;
-    int numstrings; // first string is a null string
+    i32 ofs_strings;
+    i32 numstrings; // first string is a null string
 
-    int ofs_globals;
-    int numglobals;
+    i32 ofs_globals;
+    i32 numglobals;
 
-    int entityfields;
+    i32 entityfields;
 } dprograms_t;

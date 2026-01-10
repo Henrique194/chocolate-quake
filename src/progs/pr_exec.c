@@ -29,25 +29,25 @@
 
 
 typedef struct {
-    int s;
+    i32 s;
     dfunction_t* f;
 } prstack_t;
 
 #define MAX_STACK_DEPTH 32
 prstack_t pr_stack[MAX_STACK_DEPTH];
-int pr_depth;
+i32 pr_depth;
 
 #define LOCALSTACK_SIZE 2048
-int localstack[LOCALSTACK_SIZE];
-int localstack_used;
+i32 localstack[LOCALSTACK_SIZE];
+i32 localstack_used;
 
 
 qboolean pr_trace;
 dfunction_t* pr_xfunction;
-int pr_xstatement;
+i32 pr_xstatement;
 
 
-int pr_argc;
+i32 pr_argc;
 
 char* pr_opnames[] = {
     "DONE",
@@ -136,8 +136,8 @@ char* pr_opnames[] = {
     "BITOR"
 };
 
-char* PR_GlobalString(int ofs);
-char* PR_GlobalStringNoContents(int ofs);
+char* PR_GlobalString(i32 ofs);
+char* PR_GlobalStringNoContents(i32 ofs);
 
 
 //=============================================================================
@@ -148,11 +148,11 @@ PR_PrintStatement
 =================
 */
 void PR_PrintStatement(dstatement_t* s) {
-    int i;
+    i32 i;
 
-    if ((unsigned) s->op < sizeof(pr_opnames) / sizeof(pr_opnames[0])) {
+    if ((u32) s->op < sizeof(pr_opnames) / sizeof(pr_opnames[0])) {
         Con_Printf("%s ", pr_opnames[s->op]);
-        i = strlen(pr_opnames[s->op]);
+        i = Q_strlen(pr_opnames[s->op]);
         for (; i < 10; i++)
             Con_Printf(" ");
     }
@@ -161,7 +161,7 @@ void PR_PrintStatement(dstatement_t* s) {
         Con_Printf("%sbranch %i", PR_GlobalString(s->a), s->b);
     else if (s->op == OP_GOTO) {
         Con_Printf("branch %i", s->a);
-    } else if ((unsigned) (s->op - OP_STORE_F) < 6) {
+    } else if ((u32) (s->op - OP_STORE_F) < 6) {
         Con_Printf("%s", PR_GlobalString(s->a));
         Con_Printf("%s", PR_GlobalStringNoContents(s->b));
     } else {
@@ -182,7 +182,7 @@ PR_StackTrace
 */
 void PR_StackTrace(void) {
     dfunction_t* f;
-    int i;
+    i32 i;
 
     if (pr_depth == 0) {
         Con_Printf("<NO STACK>\n");
@@ -210,9 +210,9 @@ PR_Profile_f
 */
 void PR_Profile_f(void) {
     dfunction_t *f, *best;
-    int max;
-    int num;
-    int i;
+    i32 max;
+    i32 num;
+    i32 i;
 
     num = 0;
     do {
@@ -275,8 +275,8 @@ PR_EnterFunction
 Returns the new program statement counter
 ====================
 */
-int PR_EnterFunction(dfunction_t* f) {
-    int i, j, c, o;
+i32 PR_EnterFunction(dfunction_t* f) {
+    i32 i, j, c, o;
 
     pr_stack[pr_depth].s = pr_xstatement;
     pr_stack[pr_depth].f = pr_xfunction;
@@ -291,14 +291,14 @@ int PR_EnterFunction(dfunction_t* f) {
 
     for (i = 0; i < c; i++)
         localstack[localstack_used + i] =
-            ((int*) pr_globals)[f->parm_start + i];
+            ((i32*) pr_globals)[f->parm_start + i];
     localstack_used += c;
 
     // copy parameters
     o = f->parm_start;
     for (i = 0; i < f->numparms; i++) {
         for (j = 0; j < f->parm_size[i]; j++) {
-            ((int*) pr_globals)[o] = ((int*) pr_globals)[OFS_PARM0 + i * 3 + j];
+            ((i32*) pr_globals)[o] = ((i32*) pr_globals)[OFS_PARM0 + i * 3 + j];
             o++;
         }
     }
@@ -312,8 +312,8 @@ int PR_EnterFunction(dfunction_t* f) {
 PR_LeaveFunction
 ====================
 */
-int PR_LeaveFunction(void) {
-    int i, c;
+i32 PR_LeaveFunction(void) {
+    i32 i, c;
 
     if (pr_depth <= 0)
         Sys_Error("prog stack underflow");
@@ -325,7 +325,7 @@ int PR_LeaveFunction(void) {
         PR_RunError("PR_ExecuteProgram: locals stack underflow\n");
 
     for (i = 0; i < c; i++)
-        ((int*) pr_globals)[pr_xfunction->parm_start + i] =
+        ((i32*) pr_globals)[pr_xfunction->parm_start + i] =
             localstack[localstack_used + i];
 
     // up stack
@@ -342,13 +342,13 @@ PR_ExecuteProgram
 */
 void PR_ExecuteProgram(func_t fnum) {
     eval_t *a, *b, *c;
-    int s;
+    i32 s;
     dstatement_t* st;
     dfunction_t *f, *newf;
-    int runaway;
-    int i;
+    i32 runaway;
+    i32 i;
     edict_t* ed;
-    int exitdepth;
+    i32 exitdepth;
     eval_t* ptr;
 
     if (!fnum || fnum >= progs->numfunctions) {
@@ -427,11 +427,11 @@ void PR_ExecuteProgram(func_t fnum) {
                 break;
 
             case OP_BITAND:
-                c->_float = (int) a->_float & (int) b->_float;
+                c->_float = (i32) a->_float & (i32) b->_float;
                 break;
 
             case OP_BITOR:
-                c->_float = (int) a->_float | (int) b->_float;
+                c->_float = (i32) a->_float | (i32) b->_float;
                 break;
 
 
@@ -480,7 +480,7 @@ void PR_ExecuteProgram(func_t fnum) {
                 break;
             case OP_EQ_S:
                 c->_float =
-                    !strcmp(PR_GetString(a->string), PR_GetString(b->string));
+                    !Q_strcmp(PR_GetString(a->string), PR_GetString(b->string));
                 break;
             case OP_EQ_E:
                 c->_float = a->_int == b->_int;
@@ -500,7 +500,7 @@ void PR_ExecuteProgram(func_t fnum) {
                 break;
             case OP_NE_S:
                 c->_float =
-                    strcmp(PR_GetString(a->string), PR_GetString(b->string));
+                    Q_strcmp(PR_GetString(a->string), PR_GetString(b->string));
                 break;
             case OP_NE_E:
                 c->_float = a->_int != b->_int;
@@ -557,7 +557,7 @@ void PR_ExecuteProgram(func_t fnum) {
 #ifdef PARANOID
                 NUM_FOR_EDICT(ed); // make sure it's in range
 #endif
-                a = (eval_t*) ((int*) &ed->v + b->_int);
+                a = (eval_t*) ((i32*) &ed->v + b->_int);
                 c->_int = a->_int;
                 break;
 
@@ -566,7 +566,7 @@ void PR_ExecuteProgram(func_t fnum) {
 #ifdef PARANOID
                 NUM_FOR_EDICT(ed); // make sure it's in range
 #endif
-                a = (eval_t*) ((int*) &ed->v + b->_int);
+                a = (eval_t*) ((i32*) &ed->v + b->_int);
                 c->vector[0] = a->vector[0];
                 c->vector[1] = a->vector[1];
                 c->vector[2] = a->vector[2];

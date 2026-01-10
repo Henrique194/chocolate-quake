@@ -25,7 +25,7 @@
 #include <string.h>
 
 
-int wad_numlumps;
+i32 wad_numlumps;
 lumpinfo_t* wad_lumps;
 byte* wad_base;
 
@@ -43,8 +43,8 @@ Can safely be performed in place.
 ==================
 */
 void W_CleanupName(char* in, char* out) {
-    int i;
-    int c;
+    i32 i;
+    i32 c;
 
     for (i = 0; i < 16; i++) {
         c = in[i];
@@ -69,8 +69,8 @@ W_LoadWadFile
 void W_LoadWadFile(char* filename) {
     lumpinfo_t* lump_p;
     wadinfo_t* header;
-    unsigned i;
-    int infotableofs;
+    u32 i;
+    i32 infotableofs;
 
     wad_base = COM_LoadHunkFile(filename);
     if (!wad_base)
@@ -102,14 +102,14 @@ W_GetLumpinfo
 =============
 */
 lumpinfo_t* W_GetLumpinfo(char* name) {
-    int i;
+    i32 i;
     lumpinfo_t* lump_p;
     char clean[16];
 
     W_CleanupName(name, clean);
 
     for (lump_p = wad_lumps, i = 0; i < wad_numlumps; i++, lump_p++) {
-        if (!strcmp(clean, lump_p->name))
+        if (!Q_strcmp(clean, lump_p->name))
             return lump_p;
     }
 
@@ -125,7 +125,7 @@ void* W_GetLumpName(char* name) {
     return (void*) (wad_base + lump->filepos);
 }
 
-void* W_GetLumpNum(int num) {
+void* W_GetLumpNum(i32 num) {
     lumpinfo_t* lump;
 
     if (num < 0 || num > wad_numlumps)

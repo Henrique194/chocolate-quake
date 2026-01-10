@@ -45,7 +45,7 @@ static void Slist_Send(void);
 static void Slist_Poll(void);
 
 static double slistStartTime;
-static int slistLastShown;
+static i32 slistLastShown;
 
 static poll_procedure_t* pollProcedureList = NULL;
 static poll_procedure_t slistSendProcedure = {NULL, 0.0, Slist_Send};
@@ -96,14 +96,14 @@ SERVER LIST
 */
 
 static void NET_PrintServers(void) {
-    int n;
+    i32 n;
 
     for (n = slistLastShown; n < hostCacheCount; n++) {
         const hostcache_t* host = &hostcache[n];
         const char* name = host->name;
         const char* map = host->map;
-        const int users = host->users;
-        const int max_users = host->maxusers;
+        const i32 users = host->users;
+        const i32 max_users = host->maxusers;
         if (max_users == 0) {
             Con_Printf("%-15.15s %-15.15s\n", name, map);
             continue;
@@ -210,9 +210,9 @@ void NET_Poll(void) {
     if (!configRestored) {
         if (serialAvailable) {
             qboolean useModem = (config_com_modem.value == 1.0);
-            SetComPortConfig(0, (int) config_com_port.value,
-                             (int) config_com_irq.value,
-                             (int) config_com_baud.value, useModem);
+            SetComPortConfig(0, (i32) config_com_port.value,
+                             (i32) config_com_irq.value,
+                             (i32) config_com_baud.value, useModem);
             SetModemConfig(0, config_modem_dialtype.string,
                            config_modem_clear.string, config_modem_init.string,
                            config_modem_hangup.string);

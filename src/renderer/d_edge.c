@@ -24,12 +24,12 @@
 #include "client.h"
 
 
-static int miplevel;
+static i32 miplevel;
 
 float scale_for_mip;
-extern int screenwidth;
-int ubasestep, errorterm, erroradjustup, erroradjustdown;
-int vstartscan;
+extern i32 screenwidth;
+i32 ubasestep, errorterm, erroradjustup, erroradjustdown;
+i32 vstartscan;
 
 // FIXME: should go away
 extern void R_RotateBmodel(void);
@@ -54,8 +54,8 @@ void D_DrawPoly(void) {
 D_MipLevelForScale
 =============
 */
-int D_MipLevelForScale(float scale) {
-    int lmiplevel;
+i32 D_MipLevelForScale(float scale) {
+    i32 lmiplevel;
 
     if (scale >= d_scalemip[0])
         lmiplevel = 0;
@@ -81,10 +81,10 @@ D_DrawSolidSurface
 
 // FIXME: clean this up
 
-void D_DrawSolidSurface(surf_t* surf, int color) {
+void D_DrawSolidSurface(surf_t* surf, i32 color) {
     espan_t* span;
     byte* pdest;
-    int u, u2, pix;
+    i32 u, u2, pix;
 
     pix = (color << 24) | (color << 16) | (color << 8) | color;
     for (span = surf->spans; span; span = span->pnext) {
@@ -102,7 +102,7 @@ void D_DrawSolidSurface(surf_t* surf, int color) {
 
             u2 -= 4;
             for (; u <= u2; u += 4)
-                *(int*) ((byte*) pdest + u) = pix;
+                *(i32*) ((byte*) pdest + u) = pix;
             u2 += 4;
             for (; u <= u2; u++)
                 ((byte*) pdest)[u] = pix;
@@ -215,7 +215,7 @@ void D_DrawSurfaces(void) {
                 d_zistepv = 0;
                 d_ziorigin = -0.9;
 
-                D_DrawSolidSurface(s, (int) r_clearcolor.value & 0xFF);
+                D_DrawSolidSurface(s, (i32) r_clearcolor.value & 0xFF);
                 D_DrawZSpans(s->spans);
             } else if (s->flags & SURF_DRAWTURB) {
                 pface = s->data;

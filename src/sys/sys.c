@@ -34,6 +34,7 @@
 #include <errno.h>
 #include <stdarg.h>
 #include <string.h>
+
 #ifdef HAVE_SIGNAL_H
 #include <signal.h>
 #endif
@@ -52,8 +53,8 @@ FILE IO
 #define MAX_HANDLES 10
 FILE* sys_handles[MAX_HANDLES];
 
-int findhandle(void) {
-    int i;
+i32 findhandle(void) {
+    i32 i;
 
     for (i = 1; i < MAX_HANDLES; i++)
         if (!sys_handles[i])
@@ -67,9 +68,9 @@ int findhandle(void) {
 filelength
 ================
 */
-int filelength(FILE* f) {
-    int pos;
-    int end;
+i32 filelength(FILE* f) {
+    i32 pos;
+    i32 end;
 
     pos = ftell(f);
     fseek(f, 0, SEEK_END);
@@ -79,9 +80,9 @@ int filelength(FILE* f) {
     return end;
 }
 
-int Sys_FileOpenRead(char* path, int* hndl) {
+i32 Sys_FileOpenRead(char* path, i32* hndl) {
     FILE* f;
-    int i;
+    i32 i;
 
     i = findhandle();
 
@@ -96,9 +97,9 @@ int Sys_FileOpenRead(char* path, int* hndl) {
     return filelength(f);
 }
 
-int Sys_FileOpenWrite(char* path) {
+i32 Sys_FileOpenWrite(char* path) {
     FILE* f;
-    int i;
+    i32 i;
 
     i = findhandle();
 
@@ -110,24 +111,24 @@ int Sys_FileOpenWrite(char* path) {
     return i;
 }
 
-void Sys_FileClose(int handle) {
+void Sys_FileClose(i32 handle) {
     fclose(sys_handles[handle]);
     sys_handles[handle] = NULL;
 }
 
-void Sys_FileSeek(int handle, int position) {
+void Sys_FileSeek(i32 handle, i32 position) {
     fseek(sys_handles[handle], position, SEEK_SET);
 }
 
-int Sys_FileRead(int handle, void* dest, int count) {
+i32 Sys_FileRead(i32 handle, void* dest, i32 count) {
     return fread(dest, 1, count, sys_handles[handle]);
 }
 
-int Sys_FileWrite(int handle, void* data, int count) {
+i32 Sys_FileWrite(i32 handle, void* data, i32 count) {
     return fwrite(data, 1, count, sys_handles[handle]);
 }
 
-int Sys_FileTime(char* path) {
+i32 Sys_FileTime(char* path) {
     FILE* f;
 
     f = fopen(path, "rb");
@@ -180,14 +181,14 @@ void Sys_Quit(void) {
 
 double Sys_FloatTime() {
     static double frequency = 0.0;
-    static Uint64 start_time = 0;
+    static u64 start_time = 0;
 
     if (start_time == 0) {
         frequency = (double) SDL_GetPerformanceFrequency();
         start_time = SDL_GetPerformanceCounter();
         return (double) start_time / frequency;
     }
-    Uint64 now = SDL_GetPerformanceCounter();
+    u64 now = SDL_GetPerformanceCounter();
     double time_diff = (double) (now - start_time);
     return time_diff / frequency;
 }
@@ -265,21 +266,21 @@ SIGNAL HANDLING
 */
 
 #ifdef HAVE_SIGNAL_H
-static void Sys_SigHandler(int sig) {
+static void Sys_SigHandler(i32 sig) {
     CL_Disconnect();
     Host_ShutdownServer(false);
     Sys_Quit();
 }
 
 #ifdef HAVE_SIGACTION
-static void Sys_SigHook(int sig) {
+static void Sys_SigHook(i32 sig) {
     struct sigaction action;
     sigaction(sig, NULL, &action);
     action.sa_handler = Sys_SigHandler;
     sigaction(sig, &action, NULL);
 }
 #else
-static void Sys_SigHook(int sig) {
+static void Sys_SigHook(i32 sig) {
     signal(sig, Sys_SigHandler);
 }
 #endif
@@ -297,11 +298,11 @@ static void Sys_SigInit(void) {
 
 #define DEFAULT_MEMORY (256 * 1024 * 1024)
 
-static quakeparms_t* Sys_InitParms(int argc, char** argv) {
+static quakeparms_t* Sys_InitParms(i32 argc, char** argv) {
     static quakeparms_t parms;
 
     parms.memsize = DEFAULT_MEMORY;
-    parms.membase = malloc(parms.memsize);
+    parms.membase = Q_malloc(parms.memsize);
     parms.basedir = ".";
 
     COM_InitArgv(argc, argv);
@@ -311,7 +312,7 @@ static quakeparms_t* Sys_InitParms(int argc, char** argv) {
     return &parms;
 }
 
-quakeparms_t* Sys_Init(int argc, char* argv[]) {
+quakeparms_t* Sys_Init(i32 argc, char* argv[]) {
 #ifdef HAVE_SIGNAL_H
     Sys_SigInit();
 #endif

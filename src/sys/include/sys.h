@@ -40,19 +40,19 @@ extern qboolean isDedicated;
 // returns the file size
 // return -1 if file is not present
 // the file should be in BINARY mode for stupid OSs that care
-int Sys_FileOpenRead(char* path, int* hndl);
+i32 Sys_FileOpenRead(char* path, i32* hndl);
 
-int Sys_FileOpenWrite(char* path);
+i32 Sys_FileOpenWrite(char* path);
 
-void Sys_FileClose(int handle);
+void Sys_FileClose(i32 handle);
 
-void Sys_FileSeek(int handle, int position);
+void Sys_FileSeek(i32 handle, i32 position);
 
-int Sys_FileRead(int handle, void* dest, int count);
+i32 Sys_FileRead(i32 handle, void* dest, i32 count);
 
-int Sys_FileWrite(int handle, void* data, int count);
+i32 Sys_FileWrite(i32 handle, void* data, i32 count);
 
-int Sys_FileTime(char* path);
+i32 Sys_FileTime(char* path);
 
 void Sys_mkdir(char* path);
 
@@ -81,6 +81,6 @@ void Sys_LowFPPrecision(void);
 
 void Sys_HighFPPrecision(void);
 
-quakeparms_t* Sys_Init(int argc, char* argv[]);
+quakeparms_t* Sys_Init(i32 argc, char* argv[]);
 
 #endif

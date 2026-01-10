@@ -25,6 +25,6 @@
 
 void VID_MenuDraw(void);
 
-void VID_MenuKey(int key);
+void VID_MenuKey(i32 key);
 
 #endif

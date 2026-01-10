@@ -43,30 +43,30 @@ MENU DRAWING
 */
 
 void M_Menu_Options_f(void);
-void M_DrawPic(int x, int y, qpic_t* pic);
-void M_Print(int cx, int cy, char* str);
-void M_PrintWhite(int cx, int cy, char* str);
-void M_DrawCharacter(int cx, int line, int num);
+void M_DrawPic(i32 x, i32 y, qpic_t* pic);
+void M_Print(i32 cx, i32 cy, char* str);
+void M_PrintWhite(i32 cx, i32 cy, char* str);
+void M_DrawCharacter(i32 cx, i32 line, i32 num);
 
-static int vid_line;
+static i32 vid_line;
 
 
 static void M_DrawCursor() {
-    int x = 8 + (vid_line % VID_ROW_SIZE) * 13 * 8;
-    int y = 36 + 2 * 8 + (vid_line / VID_ROW_SIZE) * 8;
+    i32 x = 8 + (vid_line % VID_ROW_SIZE) * 13 * 8;
+    i32 y = 36 + 2 * 8 + (vid_line / VID_ROW_SIZE) * 8;
     if (vid_line >= 3) {
         y += 3 * 8;
     }
     // Blink cursor every 0.25 sec.
-    int cursor = 12 + ((int) (realtime * 4) & 1);
+    i32 cursor = 12 + ((i32) (realtime * 4) & 1);
     M_DrawCharacter(x, y, cursor);
 }
 
 static void VID_MenuDrawFooter(void) {
     static char temp[64];
 
-    int x = (9 * 8);
-    int y = 36 + (MODE_AREA_HEIGHT * 8) + 8;
+    i32 x = (9 * 8);
+    i32 y = 36 + (MODE_AREA_HEIGHT * 8) + 8;
     M_Print(x, y, "Press Enter to set mode");
 
     x -= (3 * 8);
@@ -96,8 +96,8 @@ static void VID_MenuDrawTestingMode(void) {
 
     const vid_mode_t* mode = VID_GetMode(vid_line);
     sprintf(temp, "TESTING %s", mode->description);
-    int x = (13 * 8);
-    int y = 36 + (MODE_AREA_HEIGHT * 8) + (8 * 4);
+    i32 x = (13 * 8);
+    i32 y = 36 + (MODE_AREA_HEIGHT * 8) + (8 * 4);
     M_Print(x, y, temp);
 
     x -= (4 * 8);
@@ -109,12 +109,12 @@ static void VID_MenuDrawTestingMode(void) {
 static void VID_MenuDrawFullScreenModes(void) {
     M_Print(12 * 8, 36 + (4 * 8), "Fullscreen Modes");
 
-    int column = 16;
-    int row = 36 + 6 * 8;
+    i32 column = 16;
+    i32 row = 36 + 6 * 8;
 
     const vid_mode_t* cur_mode = VID_GetCurrentMode();
 
-    for (int i = NUM_WINDOWED_MODES; i < NUM_MODES; i++) {
+    for (i32 i = NUM_WINDOWED_MODES; i < NUM_MODES; i++) {
         const vid_mode_t* mode = VID_GetMode(i);
         if (mode == cur_mode) {
             M_PrintWhite(column, row, mode->description);
@@ -132,11 +132,11 @@ static void VID_MenuDrawFullScreenModes(void) {
 static void VID_MenuDrawWindowedModes(void) {
     M_Print(13 * 8, 36, "Windowed Modes");
 
-    int column = 16;
-    int row = 36 + (2 * 8);
+    i32 column = 16;
+    i32 row = 36 + (2 * 8);
     const vid_mode_t* cur_mode = VID_GetCurrentMode();
 
-    for (int i = 0; i < NUM_WINDOWED_MODES; i++) {
+    for (i32 i = 0; i < NUM_WINDOWED_MODES; i++) {
         const vid_mode_t* mode = VID_GetMode(i);
         if (mode == cur_mode) {
             M_PrintWhite(column, row, mode->description);
@@ -149,8 +149,8 @@ static void VID_MenuDrawWindowedModes(void) {
 
 static void VID_MenuDrawTitle(void) {
     qpic_t* p = Draw_CachePic("gfx/vidmodes.lmp");
-    int x = (320 - p->width) / 2;
-    int y = 4;
+    i32 x = (320 - p->width) / 2;
+    i32 y = 4;
     M_DrawPic(x, y, p);
 }
 
@@ -227,7 +227,7 @@ static void VID_MenuEscape(void) {
     M_Menu_Options_f();
 }
 
-void VID_MenuKey(int key) {
+void VID_MenuKey(i32 key) {
     if (VID_IsInTestMode()) {
         return;
     }

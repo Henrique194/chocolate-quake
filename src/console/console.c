@@ -32,6 +32,7 @@
 #include <fcntl.h>
 #include <stdarg.h>
 #include <string.h>
+
 #ifdef NeXT
 #include <libc.h>
 #endif
@@ -42,7 +43,7 @@
 #endif
 
 
-int con_linewidth;
+i32 con_linewidth;
 
 float con_cursorspeed = 4;
 
@@ -50,10 +51,10 @@ float con_cursorspeed = 4;
 
 qboolean con_forcedup; // because no entities to refresh
 
-int con_totallines; // total lines in console scrollback
-int con_backscroll; // lines up from bottom to display
-int con_current;    // where next message will be printed
-int con_x;          // offset in current line for next print
+i32 con_totallines; // total lines in console scrollback
+i32 con_backscroll; // lines up from bottom to display
+i32 con_current;    // where next message will be printed
+i32 con_x;          // offset in current line for next print
 char* con_text = 0;
 
 cvar_t con_notifytime = {"con_notifytime", "3"}; //seconds
@@ -62,19 +63,19 @@ cvar_t con_notifytime = {"con_notifytime", "3"}; //seconds
 float con_times[NUM_CON_TIMES]; // realtime time the line was generated
                                 // for transparent notify lines
 
-int con_vislines;
+i32 con_vislines;
 
 qboolean con_debuglog;
 
 #define MAXCMDLINE 256
 extern char key_lines[32][MAXCMDLINE];
-extern int edit_line;
-extern int key_linepos;
+extern i32 edit_line;
+extern i32 key_linepos;
 
 
 qboolean con_initialized;
 
-int con_notifylines; // scan lines to clear for notify lines
+i32 con_notifylines; // scan lines to clear for notify lines
 
 extern void M_Menu_Main_f(void);
 
@@ -97,7 +98,7 @@ void Con_ToggleConsole_f(void) {
         key_dest = key_console;
 
     SCR_EndLoadingPlaque();
-    memset(con_times, 0, sizeof(con_times));
+    Q_memset(con_times, 0, sizeof(con_times));
 }
 
 /*
@@ -117,7 +118,7 @@ Con_ClearNotify
 ================
 */
 void Con_ClearNotify(void) {
-    int i;
+    i32 i;
 
     for (i = 0; i < NUM_CON_TIMES; i++)
         con_times[i] = 0;
@@ -156,7 +157,7 @@ If the line width has changed, reformat the buffer.
 ================
 */
 void Con_CheckResize(void) {
-    int i, j, width, oldwidth, oldtotallines, numlines, numchars;
+    i32 i, j, width, oldwidth, oldtotallines, numlines, numchars;
     char tbuf[CON_TEXTSIZE];
 
     width = (vid.width >> 3) - 2;
@@ -218,7 +219,7 @@ void Con_Init(void) {
     con_debuglog = COM_CheckParm("-condebug");
 
     if (con_debuglog) {
-        if (strlen(com_gamedir) < (MAXGAMEDIRLEN - strlen(t2))) {
+        if (Q_strlen(com_gamedir) < (MAXGAMEDIRLEN - Q_strlen(t2))) {
             sprintf(temp, "%s%s", com_gamedir, t2);
             unlink(temp);
         }
@@ -266,10 +267,10 @@ If no console is visible, the notify window will pop up.
 ================
 */
 void Con_Print(char* txt) {
-    int y;
-    int c, l;
-    static int cr;
-    int mask;
+    i32 y;
+    i32 c, l;
+    static i32 cr;
+    i32 mask;
 
     con_backscroll = 0;
 
@@ -340,13 +341,13 @@ Con_DebugLog
 void Con_DebugLog(char* file, char* fmt, ...) {
     va_list argptr;
     static char data[1024];
-    int fd;
+    i32 fd;
 
     va_start(argptr, fmt);
     vsprintf(data, fmt, argptr);
     va_end(argptr);
     fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
-    write(fd, data, strlen(data));
+    write(fd, data, Q_strlen(data));
     close(fd);
 }
 
@@ -429,7 +430,7 @@ Okay to call even when the screen can't be updated
 void Con_SafePrintf(char* fmt, ...) {
     va_list argptr;
     char msg[1024];
-    int temp;
+    i32 temp;
 
     va_start(argptr, fmt);
     vsprintf(msg, fmt, argptr);
@@ -459,8 +460,8 @@ The input line scrolls horizontally if typing goes beyond the right edge
 ================
 */
 void Con_DrawInput(void) {
-    int y;
-    int i;
+    i32 y;
+    i32 i;
     char* text;
 
     if (key_dest != key_console && !con_forcedup)
@@ -469,7 +470,7 @@ void Con_DrawInput(void) {
     text = key_lines[edit_line];
 
     // add the cursor frame
-    text[key_linepos] = 10 + ((int) (realtime * con_cursorspeed) & 1);
+    text[key_linepos] = 10 + ((i32) (realtime * con_cursorspeed) & 1);
 
     // fill out remainder with spaces
     for (i = key_linepos + 1; i < con_linewidth; i++)
@@ -498,9 +499,9 @@ Draws the last few lines of output transparently over the game top
 ================
 */
 void Con_DrawNotify(void) {
-    int x, v;
+    i32 x, v;
     char* text;
-    int i;
+    i32 i;
     float time;
     extern char chat_buffer[];
 
@@ -538,7 +539,7 @@ void Con_DrawNotify(void) {
             x++;
         }
         Draw_Character((x + 5) << 3, v,
-                       10 + ((int) (realtime * con_cursorspeed) & 1));
+                       10 + ((i32) (realtime * con_cursorspeed) & 1));
         v += 8;
     }
 
@@ -554,11 +555,11 @@ Draws the console with the solid background
 The typing input line at the bottom should only be drawn if typing is allowed
 ================
 */
-void Con_DrawConsole(int lines, qboolean drawinput) {
-    int i, x, y;
-    int rows;
+void Con_DrawConsole(i32 lines, qboolean drawinput) {
+    i32 i, x, y;
+    i32 rows;
     char* text;
-    int j;
+    i32 j;
 
     if (lines <= 0)
         return;

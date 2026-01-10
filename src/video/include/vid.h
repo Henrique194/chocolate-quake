@@ -31,20 +31,20 @@
 typedef byte pixel_t;
 
 typedef struct vrect_s {
-    int x;
-    int y;
-    int width;
-    int height;
+    i32 x;
+    i32 y;
+    i32 width;
+    i32 height;
 } vrect_t;
 
 typedef struct {
     pixel_t* buffer;   // invisible buffer
     pixel_t* colormap; // 256 * VID_GRADES size
-    unsigned width;
-    unsigned height;
+    u32 width;
+    u32 height;
     float aspect; // width / height -- < 0 is taller than wide
-    int numpages;
-    int recalc_refdef; // if true, recalc vid-based stuff
+    i32 numpages;
+    i32 recalc_refdef; // if true, recalc vid-based stuff
 } viddef_t;
 
 extern viddef_t vid; // global video state
@@ -70,7 +70,7 @@ void VID_Shutdown(void);
 void VID_Update(vrect_t* rects);
 // flushes the given rectangles from the view buffer to the screen
 
-void VID_SetMode(int modenum);
+void VID_SetMode(i32 modenum);
 // sets the mode; only used by the Quake engine for resetting to mode 0 (the
 // base mode) on memory allocation failures
 
@@ -79,7 +79,7 @@ void VID_HandlePause(qboolean pause);
 
 void VID_MenuDraw(void);
 
-void VID_MenuKey(int key);
+void VID_MenuKey(i32 key);
 
 qboolean VID_IsFullscreenMode(void);
 

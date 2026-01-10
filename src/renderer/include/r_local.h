@@ -39,8 +39,8 @@
 // viewmodel lighting
 
 typedef struct {
-    int ambientlight;
-    int shadelight;
+    i32 ambientlight;
+    i32 shadelight;
     float* plightvec;
 } alight_t;
 
@@ -116,11 +116,11 @@ extern float screenAspect;
 extern float verticalFieldOfView;
 extern float xOrigin, yOrigin;
 
-extern int r_visframecount;
+extern i32 r_visframecount;
 
 //=============================================================================
 
-extern int vstartscan;
+extern i32 vstartscan;
 
 
 void R_ClearPolyList(void);
@@ -134,8 +134,8 @@ extern vec3_t r_worldmodelorg;
 
 
 void R_DrawSprite(void);
-void R_RenderFace(msurface_t* fa, int clipflags);
-void R_RenderPoly(msurface_t* fa, int clipflags);
+void R_RenderFace(msurface_t* fa, i32 clipflags);
+void R_RenderPoly(msurface_t* fa, i32 clipflags);
 void R_RenderBmodelFace(bedge_t* pedges, msurface_t* psurf);
 void R_TransformPlane(mplane_t* p, float* normal, float* dist);
 void R_TransformFrustum(void);
@@ -148,10 +148,10 @@ void R_GenSkyTile(void* pdest);
 void R_GenSkyTile16(void* pdest);
 void R_Surf8Patch(void);
 void R_Surf16Patch(void);
-void R_DrawSubmodelPolygons(model_t* pmodel, int clipflags);
+void R_DrawSubmodelPolygons(model_t* pmodel, i32 clipflags);
 void R_DrawSolidClippedSubmodelPolygons(model_t* pmodel);
 
-void R_AddPolygonEdges(emitpoint_t* pverts, int numverts, int miplevel);
+void R_AddPolygonEdges(emitpoint_t* pverts, i32 numverts, i32 miplevel);
 surf_t* R_GetSurf(void);
 void R_AliasDrawModel(alight_t* plighting);
 void R_BeginEdgeFrame(void);
@@ -170,19 +170,19 @@ extern void R_EdgeCodeEnd(void);
 
 extern void R_RotateBmodel(void);
 
-extern int c_faceclip;
-extern int r_polycount;
-extern int r_wholepolycount;
+extern i32 c_faceclip;
+extern i32 r_polycount;
+extern i32 r_wholepolycount;
 
 extern model_t* cl_worldmodel;
 
-extern int* pfrustum_indexes[4];
+extern i32* pfrustum_indexes[4];
 
 // !!! if this is changed, it must be changed in asm_draw.h too !!!
 #define NEAR_CLIP 0.01
 
-extern int ubasestep, errorterm, erroradjustup, erroradjustdown;
-extern int vstartscan;
+extern i32 ubasestep, errorterm, erroradjustup, erroradjustdown;
+extern i32 vstartscan;
 
 extern fixed16_t sadjust, tadjust;
 extern fixed16_t bbextents, bbextentt;
@@ -195,19 +195,19 @@ extern mvertex_t *r_ptverts, *r_ptvertsmax;
 extern vec3_t sbaseaxis[3], tbaseaxis[3];
 extern float entity_rotation[3][3];
 
-extern int reinit_surfcache;
+extern i32 reinit_surfcache;
 
-extern int r_currentkey;
-extern int r_currentbkey;
+extern i32 r_currentkey;
+extern i32 r_currentbkey;
 
 typedef struct btofpoly_s {
-    int clipflags;
+    i32 clipflags;
     msurface_t* psurf;
 } btofpoly_t;
 
 #define MAX_BTOFPOLYS 5000 // FIXME: tune this
 
-extern int numbtofpolys;
+extern i32 numbtofpolys;
 extern btofpoly_t* pbtofpolys;
 
 void R_InitTurb(void);
@@ -220,14 +220,14 @@ void R_ZDrawSubmodelPolys(model_t* clmodel);
 #define MAXALIASVERTS      2000 // TODO: tune this
 #define ALIAS_Z_CLIP_PLANE 5
 
-extern int numverts;
-extern int a_skinwidth;
+extern i32 numverts;
+extern i32 a_skinwidth;
 extern mtriangle_t* ptriangles;
-extern int numtriangles;
+extern i32 numtriangles;
 extern aliashdr_t* paliashdr;
 extern mdl_t* pmdl;
 extern float leftclip, topclip, rightclip, bottomclip;
-extern int r_acliptype;
+extern i32 r_acliptype;
 extern finalvert_t* pfinalverts;
 extern auxvert_t* pauxverts;
 
@@ -249,39 +249,39 @@ void R_ClearParticles(void);
 void R_ReadPointFile_f(void);
 void R_SurfacePatch(void);
 
-extern int r_amodels_drawn;
+extern i32 r_amodels_drawn;
 extern edge_t* auxedges;
-extern int r_numallocatededges;
+extern i32 r_numallocatededges;
 extern edge_t *r_edges, *edge_p, *edge_max;
 
 extern edge_t* newedges[MAXHEIGHT];
 extern edge_t* removeedges[MAXHEIGHT];
 
-extern int screenwidth;
+extern i32 screenwidth;
 
 // FIXME: make stack vars when debugging done
 extern edge_t edge_head;
 extern edge_t edge_tail;
 extern edge_t edge_aftertail;
-extern int r_bmodelactive;
+extern i32 r_bmodelactive;
 extern vrect_t* pconupdate;
 
 extern float aliasxscale, aliasyscale, aliasxcenter, aliasycenter;
 extern float r_aliastransition, r_resfudge;
 
-extern int r_outofsurfaces;
-extern int r_outofedges;
+extern i32 r_outofsurfaces;
+extern i32 r_outofedges;
 
 extern mvertex_t* r_pcurrentvertbase;
-extern int r_maxvalidedgeoffset;
+extern i32 r_maxvalidedgeoffset;
 
 void R_AliasClipTriangle(mtriangle_t* ptri);
 
 extern float r_time1;
 extern float dp_time1, dp_time2, db_time1, db_time2, rw_time1, rw_time2;
 extern float se_time1, se_time2, de_time1, de_time2, dv_time1, dv_time2;
-extern int r_frustum_indexes[4 * 6];
-extern int r_maxsurfsseen, r_maxedgesseen, r_cnumsurfs;
+extern i32 r_frustum_indexes[4 * 6];
+extern i32 r_maxsurfsseen, r_maxedgesseen, r_cnumsurfs;
 extern qboolean r_surfsonstack;
 extern cshift_t cshift_water;
 extern qboolean r_dowarpold, r_viewchanged;
@@ -290,8 +290,8 @@ extern mleaf_t *r_viewleaf, *r_oldviewleaf;
 
 extern vec3_t r_emins, r_emaxs;
 extern mnode_t* r_pefragtopnode;
-extern int r_clipflags;
-extern int r_dlightframecount;
+extern i32 r_clipflags;
+extern i32 r_dlightframecount;
 extern qboolean r_fov_greater_than_90;
 
 void R_StoreEfrags(efrag_t** ppefrag);
@@ -301,12 +301,12 @@ void R_PrintAliasStats(void);
 void R_PrintTimes(void);
 void R_PrintDSpeeds(void);
 void R_AnimateLight(void);
-int R_LightPoint(vec3_t p);
+i32 R_LightPoint(vec3_t p);
 void R_SetupFrame(void);
 void R_cshift_f(void);
 void R_EmitEdge(mvertex_t* pv0, mvertex_t* pv1);
 void R_ClipEdge(mvertex_t* pv0, mvertex_t* pv1, clipplane_t* clip);
 void R_SplitEntityOnNode2(mnode_t* node);
-void R_MarkLights(dlight_t* light, int bit, mnode_t* node);
+void R_MarkLights(dlight_t* light, i32 bit, mnode_t* node);
 
 #endif

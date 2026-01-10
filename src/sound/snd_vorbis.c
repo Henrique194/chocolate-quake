@@ -35,19 +35,19 @@
 
 /* CALLBACK FUNCTIONS: */
 
-static int ovc_fclose(void* f) {
+static i32 ovc_fclose(void* f) {
     return 0; /* we fclose() elsewhere. */
 }
 
-static int ovc_fseek(void* f, ogg_int64_t off, int whence) {
+static i32 ovc_fseek(void* f, ogg_int64_t off, i32 whence) {
     if (f == NULL)
         return (-1);
-    return Q_fseek((fshandle_t*) f, (long) off, whence);
+    return Q_fseek(f, off, whence);
 }
 
 static ov_callbacks ovc_qfs = {
     (size_t(*)(void*, size_t, size_t, void*)) Q_fread,
-    (int (*)(void*, ogg_int64_t, int)) ovc_fseek, (int (*)(void*)) ovc_fclose,
+    (i32 (*)(void*, ogg_int64_t, int)) ovc_fseek, (i32 (*)(void*)) ovc_fclose,
     (long (*)(void*)) Q_ftell};
 
 static qboolean S_VORBIS_CodecInitialize(void) {
@@ -60,8 +60,8 @@ static void S_VORBIS_CodecShutdown(void) {
 static qboolean S_VORBIS_CodecOpenStream(snd_stream_t* stream) {
     OggVorbis_File* ovFile;
     vorbis_info* ovf_info;
-    long numstreams;
-    int res;
+    i64 numstreams;
+    i32 res;
 
     ovFile = (OggVorbis_File*) Z_Malloc(sizeof(OggVorbis_File));
     stream->priv = ovFile;
@@ -110,10 +110,10 @@ _fail:
     return false;
 }
 
-static int S_VORBIS_CodecReadStream(snd_stream_t* stream, int bytes,
+static i32 S_VORBIS_CodecReadStream(snd_stream_t* stream, i32 bytes,
                                     void* buffer) {
-    int section; /* FIXME: handle section changes */
-    int cnt, res, rem;
+    i32 section; /* FIXME: handle section changes */
+    i32 cnt, res, rem;
     char* ptr;
 
     cnt = 0;
@@ -156,7 +156,7 @@ static void S_VORBIS_CodecCloseStream(snd_stream_t* stream) {
     S_CodecUtilClose(&stream);
 }
 
-static int S_VORBIS_CodecRewindStream(snd_stream_t* stream) {
+static i32 S_VORBIS_CodecRewindStream(snd_stream_t* stream) {
     /*
      * For libvorbisfile, the ov_time_seek() position argument
      * is seconds as doubles, whereas for Tremor libvorbisidec

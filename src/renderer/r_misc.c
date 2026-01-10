@@ -68,9 +68,9 @@ For program optimization
 ====================
 */
 void R_TimeRefresh_f(void) {
-    int i;
+    i32 i;
     float start, stop, time;
-    int startangle;
+    i32 startangle;
     vrect_t vr;
 
     startangle = r_refdef.viewangles[1];
@@ -106,10 +106,10 @@ R_LineGraph
 Only called by R_DisplayTime
 ================
 */
-void R_LineGraph(int x, int y, int h) {
-    int i;
+void R_LineGraph(i32 x, i32 y, i32 h) {
+    i32 i;
     byte* dest;
-    int s;
+    i32 s;
 
     // FIXME: should be disabled on no-buffer adapters, or should be in the driver
 
@@ -143,19 +143,19 @@ Performance monitoring tool
 #define MAX_TIMINGS 100
 extern float mouse_x, mouse_y;
 void R_TimeGraph(void) {
-    static int timex;
-    int a;
+    static i32 timex;
+    i32 a;
     float r_time2;
     static byte r_timings[MAX_TIMINGS];
-    int x;
+    i32 x;
 
     r_time2 = Sys_FloatTime();
 
     a = (r_time2 - r_time1) / 0.01;
     //a = fabs(mouse_y * 0.05);
-    //a = (int)((r_refdef.vieworg[2] + 1024)/1)%(int)r_graphheight.value;
+    //a = (i32)((r_refdef.vieworg[2] + 1024)/1)%(i32)r_graphheight.value;
     //a = fabs(velocity[0])/20;
-    //a = ((int)fabs(origin[0])/8)%20;
+    //a = ((i32)fabs(origin[0])/8)%20;
     //a = (cl.idealpitch + 30)/5;
     r_timings[timex] = a;
     a = timex;
@@ -215,8 +215,8 @@ void R_PrintDSpeeds(void) {
     dv_time = (dv_time2 - dv_time1) * 1000;
     ms = (r_time2 - r_time1) * 1000;
 
-    Con_Printf("%3i %4.1fp %3iw %4.1fb %3is %4.1fe %4.1fv\n", (int) ms, dp_time,
-               (int) rw_time, db_time, (int) se_time, de_time, dv_time);
+    Con_Printf("%3i %4.1fp %3iw %4.1fb %3is %4.1fe %4.1fv\n", (i32) ms, dp_time,
+               (i32) rw_time, db_time, (i32) se_time, de_time, dv_time);
 }
 
 
@@ -231,9 +231,9 @@ void R_PrintAliasStats(void) {
 
 
 void WarpPalette(void) {
-    int i, j;
+    i32 i, j;
     byte newpalette[768];
-    int basecolor[3];
+    i32 basecolor[3];
 
     basecolor[0] = 130;
     basecolor[1] = 80;
@@ -257,7 +257,7 @@ R_TransformFrustum
 ===================
 */
 void R_TransformFrustum(void) {
-    int i;
+    i32 i;
     vec3_t v, v2;
 
     for (i = 0; i < 4; i++) {
@@ -307,7 +307,7 @@ R_SetUpFrustumIndexes
 ===============
 */
 void R_SetUpFrustumIndexes(void) {
-    int i, j, *pindex;
+    i32 i, j, *pindex;
 
     pindex = r_frustum_indexes;
 
@@ -335,7 +335,7 @@ R_SetupFrame
 ===============
 */
 void R_SetupFrame(void) {
-    int edgecount;
+    i32 edgecount;
     vrect_t vrect;
     float w, h;
 
@@ -381,14 +381,14 @@ void R_SetupFrame(void) {
 
     numbtofpolys = 0;
 
-// debugging
 #if 0
-r_refdef.vieworg[0]=  80;
-r_refdef.vieworg[1]=      64;
-r_refdef.vieworg[2]=      40;
-r_refdef.viewangles[0]=    0;
-r_refdef.viewangles[1]=    46.763641357;
-r_refdef.viewangles[2]=    0;
+    // debugging
+    r_refdef.vieworg[0] = 80;
+    r_refdef.vieworg[1] = 64;
+    r_refdef.vieworg[2] = 40;
+    r_refdef.viewangles[0] = 0;
+    r_refdef.viewangles[1] = 46.763641357;
+    r_refdef.viewangles[2] = 0;
 #endif
 
     // build the transformation matrix for the given view angles
@@ -430,11 +430,11 @@ r_refdef.viewangles[2]=    0;
 
                 vrect.x = 0;
                 vrect.y = 0;
-                vrect.width = (int) w;
-                vrect.height = (int) h;
+                vrect.width = (i32) w;
+                vrect.height = (i32) h;
 
                 R_ViewChanged(
-                    &vrect, (int) ((float) sb_lines * (h / (float) vid.height)),
+                    &vrect, (i32) ((float) sb_lines * (h / (float) vid.height)),
                     vid.aspect * (h / w) *
                         ((float) vid.width / (float) vid.height));
             }

@@ -38,15 +38,15 @@ void SCR_CenterPrint(char* str);
 void SCR_BeginLoadingPlaque(void);
 void SCR_EndLoadingPlaque(void);
 
-int SCR_ModalMessage(char* text);
+i32 SCR_ModalMessage(char* text);
 
 extern float scr_con_current;
 extern float scr_conlines; // lines of console to display
 
-extern int scr_fullupdate; // set to 0 to force full redraw
-extern int sb_lines;
+extern i32 scr_fullupdate; // set to 0 to force full redraw
+extern i32 sb_lines;
 
-extern int clearnotify; // set to 0 whenever notify text is drawn
+extern i32 clearnotify; // set to 0 whenever notify text is drawn
 extern qboolean scr_disabled_for_loading;
 extern qboolean scr_skipupdate;
 
@@ -55,8 +55,8 @@ extern cvar_t scr_viewsize;
 extern cvar_t scr_viewsize;
 
 // only the refresh window will be updated unless these variables are flagged
-extern int scr_copytop;
-extern int scr_copyeverything;
+extern i32 scr_copytop;
+extern i32 scr_copyeverything;
 
 extern qboolean block_drawing;
 

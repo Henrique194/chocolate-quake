@@ -32,7 +32,7 @@
 #define NET_NAMELEN 64
 
 #define NET_MAXMESSAGE   8192
-#define NET_HEADERSIZE   (2 * sizeof(unsigned int))
+#define NET_HEADERSIZE   (2 * sizeof(u32))
 #define NET_DATAGRAMSIZE (MAX_DATAGRAM + NET_HEADERSIZE)
 
 // NetHeader flags
@@ -126,36 +126,36 @@ typedef struct qsocket_s qsocket_t;
 typedef struct {
     char* name;
     qboolean initialized;
-    int (*Init)(void);
+    i32 (*Init)(void);
     void (*Listen)(qboolean state);
     void (*SearchForHosts)(qboolean xmit);
     qsocket_t* (*Connect)(char* host);
     qsocket_t* (*CheckNewConnections)(void);
-    int (*QGetMessage)(qsocket_t* sock);
-    int (*QSendMessage)(qsocket_t* sock, sizebuf_t* data);
-    int (*SendUnreliableMessage)(qsocket_t* sock, sizebuf_t* data);
+    i32 (*QGetMessage)(qsocket_t* sock);
+    i32 (*QSendMessage)(qsocket_t* sock, sizebuf_t* data);
+    i32 (*SendUnreliableMessage)(qsocket_t* sock, sizebuf_t* data);
     qboolean (*CanSendMessage)(qsocket_t* sock);
     qboolean (*CanSendUnreliableMessage)(qsocket_t* sock);
     void (*Close)(qsocket_t* sock);
     void (*Shutdown)(void);
-    int controlSock;
+    i32 controlSock;
 } net_driver_t;
 
-extern int net_numdrivers;
+extern i32 net_numdrivers;
 extern net_driver_t net_drivers[MAX_NET_DRIVERS];
 
-extern int DEFAULTnet_hostport;
-extern int net_hostport;
+extern i32 DEFAULTnet_hostport;
+extern i32 net_hostport;
 
-extern int net_driverlevel;
+extern i32 net_driverlevel;
 extern cvar_t hostname;
 extern char playername[];
-extern int playercolor;
+extern i32 playercolor;
 
-extern int messagesSent;
-extern int messagesReceived;
-extern int unreliableMessagesSent;
-extern int unreliableMessagesReceived;
+extern i32 messagesSent;
+extern i32 messagesReceived;
+extern i32 unreliableMessagesSent;
+extern i32 unreliableMessagesReceived;
 
 double SetNetTime(void);
 
@@ -166,14 +166,14 @@ typedef struct {
     char name[16];
     char map[16];
     char cname[32];
-    int users;
-    int maxusers;
-    int driver;
-    int ldriver;
+    i32 users;
+    i32 maxusers;
+    i32 driver;
+    i32 ldriver;
     IPaddress addr;
 } hostcache_t;
 
-extern int hostCacheCount;
+extern i32 hostCacheCount;
 extern hostcache_t hostcache[HOSTCACHESIZE];
 
 //============================================================================
@@ -184,7 +184,7 @@ extern hostcache_t hostcache[HOSTCACHESIZE];
 
 extern double net_time;
 extern sizebuf_t net_message;
-extern int net_activeconnections;
+extern i32 net_activeconnections;
 
 void NET_Init(void);
 void NET_Shutdown(void);
@@ -199,21 +199,21 @@ qboolean NET_CanSendMessage(qsocket_t* sock);
 // Returns true or false if the given qsocket can currently accept a
 // message to be transmitted.
 
-int NET_GetMessage(qsocket_t* sock);
+i32 NET_GetMessage(qsocket_t* sock);
 // returns data in net_message sizebuf
 // returns 0 if no data is waiting
 // returns 1 if a message was received
 // returns 2 if an unreliable message was received
 // returns -1 if the connection died
 
-int NET_SendMessage(qsocket_t* sock, sizebuf_t* data);
-int NET_SendUnreliableMessage(qsocket_t* sock, sizebuf_t* data);
+i32 NET_SendMessage(qsocket_t* sock, sizebuf_t* data);
+i32 NET_SendUnreliableMessage(qsocket_t* sock, sizebuf_t* data);
 // returns 0 if the message connot be delivered reliably, but the connection
 //		is still considered valid
 // returns 1 if the message was sent properly
 // returns -1 if the connection died
 
-int NET_SendToAll(sizebuf_t* data, int blocktime);
+i32 NET_SendToAll(sizebuf_t* data, i32 blocktime);
 // This is a reliable *blocking* send to all attached clients.
 
 
@@ -238,13 +238,13 @@ extern qboolean ipxAvailable;
 extern qboolean tcpipAvailable;
 extern char my_ipx_address[NET_NAMELEN];
 extern char my_tcpip_address[NET_NAMELEN];
-extern void (*GetComPortConfig)(int portNumber, int* port, int* irq, int* baud,
+extern void (*GetComPortConfig)(i32 portNumber, i32* port, i32* irq, i32* baud,
                                 qboolean* useModem);
-extern void (*SetComPortConfig)(int portNumber, int port, int irq, int baud,
+extern void (*SetComPortConfig)(i32 portNumber, i32 port, i32 irq, i32 baud,
                                 qboolean useModem);
-extern void (*GetModemConfig)(int portNumber, char* dialType, char* clear,
+extern void (*GetModemConfig)(i32 portNumber, char* dialType, char* clear,
                               char* init, char* hangup);
-extern void (*SetModemConfig)(int portNumber, char* dialType, char* clear,
+extern void (*SetModemConfig)(i32 portNumber, char* dialType, char* clear,
                               char* init, char* hangup);
 
 extern qboolean slistInProgress;

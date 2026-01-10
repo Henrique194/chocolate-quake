@@ -72,8 +72,8 @@ Dumps the current net message, prefixed by the length and view angles
 ====================
 */
 void CL_WriteDemoMessage(void) {
-    int len;
-    int i;
+    i32 len;
+    i32 i;
     float f;
 
     len = LittleLong(net_message.cursize);
@@ -93,8 +93,8 @@ CL_GetMessage
 Handles recording and playback of demos, on top of NET_ code
 ====================
 */
-int CL_GetMessage(void) {
-    int r, i;
+i32 CL_GetMessage(void) {
+    i32 r, i;
     float f;
 
     if (cls.demoplayback) {
@@ -190,9 +190,9 @@ record <demoname> <map> [cd track]
 ====================
 */
 void CL_Record_f(void) {
-    int c;
+    i32 c;
     char name[MAX_OSPATH];
-    int track;
+    i32 track;
 
     if (cmd_source != src_command)
         return;
@@ -203,7 +203,7 @@ void CL_Record_f(void) {
         return;
     }
 
-    if (strstr(Cmd_Argv(1), "..")) {
+    if (Q_strstr(Cmd_Argv(1), "..")) {
         Con_Printf("Relative pathnames are not allowed.\n");
         return;
     }
@@ -257,7 +257,7 @@ play [demoname]
 */
 void CL_PlayDemo_f(void) {
     char name[256];
-    int c;
+    i32 c;
     qboolean neg = false;
 
     if (cmd_source != src_command)
@@ -276,7 +276,7 @@ void CL_PlayDemo_f(void) {
     //
     // open the demo file
     //
-    strcpy(name, Cmd_Argv(1));
+    Q_strcpy(name, Cmd_Argv(1));
     COM_DefaultExtension(name, ".dem");
 
     Con_Printf("Playing demo from %s.\n", name);
@@ -310,7 +310,7 @@ CL_FinishTimeDemo
 ====================
 */
 void CL_FinishTimeDemo(void) {
-    int frames;
+    i32 frames;
     float time;
 
     cls.timedemo = false;

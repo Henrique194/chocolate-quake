@@ -44,7 +44,7 @@ static mad_timer_t const mad_timer_zero_stub = {0, 0};
 
 // Private data
 typedef struct {
-    unsigned char mp3_buffer[MP3_BUFFER_SIZE];
+    byte mp3_buffer[MP3_BUFFER_SIZE];
     struct mad_stream stream;
     struct mad_frame frame;
     struct mad_synth synth;
@@ -59,7 +59,7 @@ typedef struct {
 // If any data still exists in the buffer then they are
 // first shifted to be front of the stream buffer.
 //
-static int MP3_InputData(snd_stream_t* stream) {
+static i32 MP3_InputData(snd_stream_t* stream) {
     mp3_priv_t* p = stream->priv;
     size_t bytes_read;
     size_t remaining;
@@ -74,7 +74,7 @@ static int MP3_InputData(snd_stream_t* stream) {
     // must be large enough to hold a complete frame at the
     // highest observable bit-rate (currently 448 kb/s).
     // Is 2016 bytes the size of the largest frame? (448000*(1152/32000))/8
-    memmove(p->mp3_buffer, p->stream.next_frame, remaining);
+    Q_memmove(p->mp3_buffer, p->stream.next_frame, remaining);
 
     bytes_read = Q_fread(p->mp3_buffer + remaining, 1,
                           MP3_BUFFER_SIZE - remaining, &stream->fh);
@@ -87,7 +87,7 @@ static int MP3_InputData(snd_stream_t* stream) {
     return 0;
 }
 
-static int MP3_StartRead(snd_stream_t* stream) {
+static i32 MP3_StartRead(snd_stream_t* stream) {
     mp3_priv_t* p = stream->priv;
     size_t ReadSize;
 
@@ -157,11 +157,11 @@ static int MP3_StartRead(snd_stream_t* stream) {
 // Read up to len samples from p->Synth
 // If needed, read some more MP3 data, decode them and synth them Place in buf[].
 // Return number of samples read.
-static int MP3_Decode(snd_stream_t* stream, byte* buf, int len) {
+static i32 MP3_Decode(snd_stream_t* stream, byte* buf, i32 len) {
     mp3_priv_t* p = stream->priv;
-    int donow, i, done = 0;
+    i32 donow, i, done = 0;
     mad_fixed_t sample;
-    int chan, x;
+    i32 chan, x;
 
     do {
         x = (p->synth.pcm.length - p->cur_samp) * stream->info.channels;
@@ -230,13 +230,13 @@ static void MP3_StopRead(snd_stream_t* stream) {
     mad_stream_finish(&p->stream);
 }
 
-static int MP3_MadSeek(snd_stream_t* stream, unsigned long offset) {
+static i32 MP3_MadSeek(snd_stream_t* stream, u64 offset) {
     mp3_priv_t* p = stream->priv;
     size_t initial_bitrate = p->frame.header.bitrate;
     size_t consumed = 0;
-    int vbr = 0; // Variable Bit Rate
+    i32 vbr = 0; // Variable Bit Rate
     qboolean depadded = false;
-    unsigned long to_skip_samples = 0;
+    u64 to_skip_samples = 0;
 
     // Reset all.
     Q_rewind(&stream->fh);
@@ -258,10 +258,10 @@ static int MP3_MadSeek(snd_stream_t* stream, unsigned long offset) {
     // Read data from the MP3 file.
     while (1)
     {
-        int bytes_read, padding = 0;
+        i32 bytes_read, padding = 0;
         size_t leftover = p->stream.bufend - p->stream.next_frame;
 
-        memcpy(p->mp3_buffer, p->stream.this_frame, leftover);
+        Q_memcpy(p->mp3_buffer, p->stream.this_frame, leftover);
         bytes_read = Q_fread(p->mp3_buffer + leftover, (size_t) 1,
                               MP3_BUFFER_SIZE - leftover, &stream->fh);
         if (bytes_read <= 0) {
@@ -280,7 +280,7 @@ static int MP3_MadSeek(snd_stream_t* stream, unsigned long offset) {
         // Decode frame headers.
         while (1)
         {
-            static unsigned short samples;
+            static u16 samples;
             p->stream.error = MAD_ERROR_NONE;
 
             // Not an audio frame.
@@ -350,12 +350,12 @@ static qboolean S_MP3_CodecOpenStream(snd_stream_t* stream) {
         return false;
     }
 
-    stream->priv = calloc(1, sizeof(mp3_priv_t));
+    stream->priv = Q_calloc(1, sizeof(mp3_priv_t));
     if (!stream->priv) {
         Con_Printf("Insufficient memory for MP3 audio\n");
         return false;
     }
-    const int err = MP3_StartRead(stream);
+    const i32 err = MP3_StartRead(stream);
     if (err != 0) {
         Con_Printf("%s is not a valid mp3 file\n", stream->name);
     } else if (stream->info.channels != 1 && stream->info.channels != 2) {
@@ -364,27 +364,27 @@ static qboolean S_MP3_CodecOpenStream(snd_stream_t* stream) {
     } else {
         return true;
     }
-    free(stream->priv);
+    Q_free(stream->priv);
     return false;
 }
 
-static int S_MP3_CodecReadStream(
+static i32 S_MP3_CodecReadStream(
     snd_stream_t* stream,
-    int bytes,
+    i32 bytes,
     void* buffer
 ) {
-    const int len = bytes / stream->info.width;
-    const int res = MP3_Decode(stream, buffer, len);
+    const i32 len = bytes / stream->info.width;
+    const i32 res = MP3_Decode(stream, buffer, len);
     return res * stream->info.width;
 }
 
 static void S_MP3_CodecCloseStream(snd_stream_t* stream) {
     MP3_StopRead(stream);
-    free(stream->priv);
+    Q_free(stream->priv);
     S_CodecUtilClose(&stream);
 }
 
-static int S_MP3_CodecRewindStream(snd_stream_t* stream) {
+static i32 S_MP3_CodecRewindStream(snd_stream_t* stream) {
     return MP3_MadSeek(stream, 0);
 }
 

@@ -66,10 +66,10 @@ void SV_SetIdealPitch(void) {
     trace_t tr;
     vec3_t top, bottom;
     float z[MAX_FORWARD];
-    int i, j;
-    int step, dir, steps;
+    i32 i, j;
+    i32 step, dir, steps;
 
-    if (!((int) sv_player->v.flags & FL_ONGROUND))
+    if (!((i32) sv_player->v.flags & FL_ONGROUND))
         return;
 
     angleval = sv_player->v.angles[YAW] * M_PI * 2 / 360;
@@ -173,28 +173,27 @@ SV_Accelerate
 cvar_t sv_maxspeed = {"sv_maxspeed", "320", false, true};
 cvar_t sv_accelerate = {"sv_accelerate", "10"};
 #if 0
-void SV_Accelerate (vec3_t wishvel)
-{
-	int			i;
-	float		addspeed, accelspeed;
-	vec3_t		pushvec;
+void SV_Accelerate(vec3_t wishvel) {
+    i32 i;
+    float addspeed, accelspeed;
+    vec3_t pushvec;
 
-	if (wishspeed == 0)
-		return;
+    if (wishspeed == 0)
+        return;
 
-	VectorSubtract (wishvel, velocity, pushvec);
-	addspeed = VectorNormalize (pushvec);
+    VectorSubtract(wishvel, velocity, pushvec);
+    addspeed = VectorNormalize(pushvec);
 
-	accelspeed = sv_accelerate.value*host_frametime*addspeed;
-	if (accelspeed > addspeed)
-		accelspeed = addspeed;
-	
-	for (i=0 ; i<3 ; i++)
-		velocity[i] += accelspeed*pushvec[i];	
+    accelspeed = sv_accelerate.value * host_frametime * addspeed;
+    if (accelspeed > addspeed)
+        accelspeed = addspeed;
+
+    for (i = 0; i < 3; i++)
+        velocity[i] += accelspeed * pushvec[i];
 }
 #endif
 void SV_Accelerate(void) {
-    int i;
+    i32 i;
     float addspeed, accelspeed, currentspeed;
 
     currentspeed = DotProduct(velocity, wishdir);
@@ -210,7 +209,7 @@ void SV_Accelerate(void) {
 }
 
 void SV_AirAccelerate(vec3_t wishveloc) {
-    int i;
+    i32 i;
     float addspeed, wishspd, accelspeed, currentspeed;
 
     wishspd = VectorNormalize(wishveloc);
@@ -248,7 +247,7 @@ SV_WaterMove
 ===================
 */
 void SV_WaterMove(void) {
-    int i;
+    i32 i;
     vec3_t wishvel;
     float speed, newspeed, wishspeed, addspeed, accelspeed;
 
@@ -305,7 +304,7 @@ void SV_WaterMove(void) {
 
 void SV_WaterJump(void) {
     if (sv.time > sv_player->v.teleport_time || !sv_player->v.waterlevel) {
-        sv_player->v.flags = (int) sv_player->v.flags & ~FL_WATERJUMP;
+        sv_player->v.flags = (i32) sv_player->v.flags & ~FL_WATERJUMP;
         sv_player->v.teleport_time = 0;
     }
     sv_player->v.velocity[0] = sv_player->v.movedir[0];
@@ -320,7 +319,7 @@ SV_AirMove
 ===================
 */
 void SV_AirMove(void) {
-    int i;
+    i32 i;
     vec3_t wishvel;
     float fmove, smove;
 
@@ -336,7 +335,7 @@ void SV_AirMove(void) {
     for (i = 0; i < 3; i++)
         wishvel[i] = forward[i] * fmove + right[i] * smove;
 
-    if ((int) sv_player->v.movetype != MOVETYPE_WALK)
+    if ((i32) sv_player->v.movetype != MOVETYPE_WALK)
         wishvel[2] = cmd.upmove;
     else
         wishvel[2] = 0;
@@ -372,7 +371,7 @@ void SV_ClientThink(void) {
     if (sv_player->v.movetype == MOVETYPE_NONE)
         return;
 
-    onground = (int) sv_player->v.flags & FL_ONGROUND;
+    onground = (i32) sv_player->v.flags & FL_ONGROUND;
 
     origin = sv_player->v.origin;
     velocity = sv_player->v.velocity;
@@ -398,7 +397,7 @@ void SV_ClientThink(void) {
         angles[YAW] = v_angle[YAW];
     }
 
-    if ((int) sv_player->v.flags & FL_WATERJUMP) {
+    if ((i32) sv_player->v.flags & FL_WATERJUMP) {
         SV_WaterJump();
         return;
     }
@@ -421,9 +420,9 @@ SV_ReadClientMove
 ===================
 */
 void SV_ReadClientMove(usercmd_t* move) {
-    int i;
+    i32 i;
     vec3_t angle;
-    int bits;
+    i32 bits;
 
     // read ping time
     host_client->ping_times[host_client->num_pings % NUM_PING_TIMES] =
@@ -459,8 +458,8 @@ Returns false if the client should be killed
 ===================
 */
 qboolean SV_ReadClientMessage(void) {
-    int ret;
-    int cmd;
+    i32 ret;
+    i32 cmd;
     char* s;
 
     do {
@@ -566,7 +565,7 @@ SV_RunClients
 ==================
 */
 void SV_RunClients(void) {
-    int i;
+    i32 i;
 
     for (i = 0, host_client = svs.clients; i < svs.maxclients;
          i++, host_client++) {
@@ -582,7 +581,7 @@ void SV_RunClients(void) {
 
         if (!host_client->spawned) {
             // clear client movement until a new packet is received
-            memset(&host_client->cmd, 0, sizeof(host_client->cmd));
+            Q_memset(&host_client->cmd, 0, sizeof(host_client->cmd));
             continue;
         }
 

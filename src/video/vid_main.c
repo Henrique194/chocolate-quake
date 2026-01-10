@@ -35,7 +35,7 @@ static qboolean vid_initialized = false;
 
 static byte backingbuf[48 * 24];
 
-const Uint32 pixel_format = SDL_PIXELFORMAT_ARGB8888;
+const u32 pixel_format = SDL_PIXELFORMAT_ARGB8888;
 
 
 void VID_Init(const byte* palette) {
@@ -63,28 +63,28 @@ void VID_Update(vrect_t* rects) {
     VID_UpdateModes();
 }
 
-void D_BeginDirectRect(int x, int y, byte* pbitmap, int width, int height) {
+void D_BeginDirectRect(i32 x, i32 y, byte* pbitmap, i32 width, i32 height) {
     if (!vid_initialized) {
         return;
     }
 
-    int repshift = (vid.aspect > 1.5f) ? 1 : 0;
-    int reps = 1 << repshift;
+    i32 repshift = (vid.aspect > 1.5f) ? 1 : 0;
+    i32 reps = 1 << repshift;
 
     VID_LockBuffer();
-    for (int i = 0; i < (height << repshift); i += reps) {
-        for (int j = 0; j < reps; j++) {
-            int spot_y = (y << repshift) + i + j;
-            unsigned int spot = x + (spot_y * vid.width);
+    for (i32 i = 0; i < (height << repshift); i += reps) {
+        for (i32 j = 0; j < reps; j++) {
+            i32 spot_y = (y << repshift) + i + j;
+            u32 spot = x + (spot_y * vid.width);
 
             // Save so later we can restore it.
             byte* dst = &backingbuf[(i + j) * 24];
             const byte* src = &vid.buffer[spot];
-            memcpy(dst, src, width);
+            Q_memcpy(dst, src, width);
 
             dst = &vid.buffer[spot];
             src = &pbitmap[(i >> repshift) * width];
-            memcpy(dst, src, width);
+            Q_memcpy(dst, src, width);
         }
     }
     VID_UnlockBuffer();
@@ -98,25 +98,25 @@ void D_BeginDirectRect(int x, int y, byte* pbitmap, int width, int height) {
     VID_Update(&rect);
 }
 
-void D_EndDirectRect(int x, int y, int width, int height) {
+void D_EndDirectRect(i32 x, i32 y, i32 width, i32 height) {
     if (!vid_initialized) {
         return;
     }
 
-    int repshift = (vid.aspect > 1.5f) ? 1 : 0;
-    int reps = 1 << repshift;
+    i32 repshift = (vid.aspect > 1.5f) ? 1 : 0;
+    i32 reps = 1 << repshift;
 
     VID_LockBuffer();
-    for (int i = 0; i < (height << repshift); i += reps) {
-        for (int j = 0; j < reps; j++) {
-            int spot_y = (y << repshift) + i + j;
-            unsigned int spot = x + (spot_y * vid.width);
+    for (i32 i = 0; i < (height << repshift); i += reps) {
+        for (i32 j = 0; j < reps; j++) {
+            i32 spot_y = (y << repshift) + i + j;
+            u32 spot = x + (spot_y * vid.width);
 
             // Restore from backup buffer.
             byte* dst = &vid.buffer[spot];
             const byte* src = &backingbuf[(i + j) * 24];
 
-            memcpy(dst, src, width);
+            Q_memcpy(dst, src, width);
         }
     }
     VID_UnlockBuffer();

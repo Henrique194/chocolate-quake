@@ -33,9 +33,9 @@ Parse a token out of a string
 ==============
 */
 char* COM_Parse(char* data) {
-    int c;
+    i32 c;
 
-    int len = 0;
+    i32 len = 0;
     com_token[0] = 0;
 
     if (!data) {

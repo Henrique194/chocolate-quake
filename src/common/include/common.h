@@ -23,8 +23,7 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
-#include <stdio.h>
-#include <stdint.h>
+#include <SDL_stdinc.h>
 
 
 #ifndef NULL
@@ -32,22 +31,29 @@
 #endif
 
 #define Q_MAXCHAR  ((char) 0x7f)
-#define Q_MAXSHORT ((short) 0x7fff)
-#define Q_MAXINT   ((int) 0x7fffffff)
-#define Q_MAXLONG  ((int) 0x7fffffff)
-#define Q_MAXFLOAT ((int) 0x7fffffff)
+#define Q_MAXSHORT ((i16) 0x7fff)
+#define Q_MAXINT   ((i32) 0x7fffffff)
+#define Q_MAXLONG  ((i32) 0x7fffffff)
+#define Q_MAXFLOAT ((i32) 0x7fffffff)
 
 #define Q_MINCHAR  ((char) 0x80)
-#define Q_MINSHORT ((short) 0x8000)
-#define Q_MININT   ((int) 0x80000000)
-#define Q_MINLONG  ((int) 0x80000000)
-#define Q_MINFLOAT ((int) 0x7fffffff)
+#define Q_MINSHORT ((i16) 0x8000)
+#define Q_MININT   ((i32) 0x80000000)
+#define Q_MINLONG  ((i32) 0x80000000)
+#define Q_MINFLOAT ((i32) 0x7fffffff)
 
 
-#if !defined BYTE_DEFINED
-typedef unsigned char byte;
-#define BYTE_DEFINED 1
-#endif
+typedef Uint8 byte;
+
+typedef Uint8 u8;
+typedef Uint16 u16;
+typedef Uint32 u32;
+typedef Uint64 u64;
+
+typedef Sint8 i8;
+typedef Sint16 i16;
+typedef Sint32 i32;
+typedef Sint64 i64;
 
 #undef true
 #undef false
@@ -68,12 +74,12 @@ COMMAND LINE
 
 #define CMDLINE_LENGTH 256
 
-extern int com_argc;
+extern i32 com_argc;
 extern char** com_argv;
 extern char com_cmdline[CMDLINE_LENGTH];
 
-void COM_InitArgv(int argc, char** argv);
-int COM_CheckParm(const char* parm);
+void COM_InitArgv(i32 argc, char** argv);
+i32 COM_CheckParm(const char* parm);
 
 //==============================================================================
 
@@ -88,10 +94,10 @@ BYTE ORDER FUNCTIONS
 
 extern qboolean bigendien;
 
-extern short (*BigShort)(short l);
-extern short (*LittleShort)(short l);
-extern int (*BigLong)(int l);
-extern int (*LittleLong)(int l);
+extern i16 (*BigShort)(i16 l);
+extern i16 (*LittleShort)(i16 l);
+extern i32 (*BigLong)(i32 l);
+extern i32 (*LittleLong)(i32 l);
 extern float (*BigFloat)(float l);
 extern float (*LittleFloat)(float l);
 
@@ -126,7 +132,7 @@ struct cache_user_s;
 
 extern qboolean com_modified; // set true if using non-id files
 
-extern int com_filesize;
+extern i32 com_filesize;
 extern char com_gamedir[MAX_OSPATH];
 
 extern qboolean standard_quake;
@@ -134,16 +140,16 @@ extern qboolean rogue;
 extern qboolean hipnotic;
 
 void COM_Path_f(void);
-void COM_WriteFile(char* filename, void* data, int len);
+void COM_WriteFile(char* filename, void* data, i32 len);
 
-int COM_OpenFile(char* filename, int* hndl);
-int COM_FOpenFile(char* filename, FILE** file);
-void COM_CloseFile(int h);
+i32 COM_OpenFile(char* filename, i32* hndl);
+i32 COM_FOpenFile(char* filename, FILE** file);
+void COM_CloseFile(i32 h);
 
-int COM_FindMusicTrack(const char* track_file, FILE** file);
+i32 COM_FindMusicTrack(const char* track_file, FILE** file);
 qboolean COM_MusicTrackExists(const char* track_file);
 
-byte* COM_LoadStackFile(char* path, void* buffer, int bufsize);
+byte* COM_LoadStackFile(char* path, void* buffer, i32 bufsize);
 byte* COM_LoadTempFile(char* path);
 byte* COM_LoadHunkFile(char* path);
 void COM_LoadCacheFile(char* path, struct cache_user_s* cu);
@@ -163,7 +169,7 @@ COMMON INITIALIZATION
 
 extern struct cvar_s registered;
 // only for startup check, then set
-extern int static_registered;
+extern i32 static_registered;
 
 void COM_Init(char* path);
 
@@ -208,15 +214,15 @@ typedef struct {
     qboolean allowoverflow; // if false, do a Sys_Error
     qboolean overflowed;    // set to true if the buffer size failed
     byte* data;
-    int maxsize;
-    int cursize;
+    i32 maxsize;
+    i32 cursize;
 } sizebuf_t;
 
-void SZ_Alloc(sizebuf_t* buf, int startsize);
+void SZ_Alloc(sizebuf_t* buf, i32 startsize);
 void SZ_Free(sizebuf_t* buf);
 void SZ_Clear(sizebuf_t* buf);
-void* SZ_GetSpace(sizebuf_t* buf, int length);
-void SZ_Write(sizebuf_t* buf, void* data, int length);
+void* SZ_GetSpace(sizebuf_t* buf, i32 length);
+void SZ_Write(sizebuf_t* buf, void* data, i32 length);
 void SZ_Print(sizebuf_t* buf, char* data); // strcats onto the sizebuf
 
 //=============================================================================
@@ -230,23 +236,23 @@ MESSAGE IO FUNCTIONS
 ================================================================================
 */
 
-extern int msg_readcount;
+extern i32 msg_readcount;
 extern qboolean msg_badread; // set if a read goes beyond end of message
 
-void MSG_WriteChar(sizebuf_t* sb, int c);
-void MSG_WriteByte(sizebuf_t* sb, int c);
-void MSG_WriteShort(sizebuf_t* sb, int c);
-void MSG_WriteLong(sizebuf_t* sb, int c);
+void MSG_WriteChar(sizebuf_t* sb, i32 c);
+void MSG_WriteByte(sizebuf_t* sb, i32 c);
+void MSG_WriteShort(sizebuf_t* sb, i32 c);
+void MSG_WriteLong(sizebuf_t* sb, i32 c);
 void MSG_WriteFloat(sizebuf_t* sb, float f);
 void MSG_WriteString(sizebuf_t* sb, char* s);
 void MSG_WriteCoord(sizebuf_t* sb, float f);
 void MSG_WriteAngle(sizebuf_t* sb, float f);
 
 void MSG_BeginReading(void);
-int MSG_ReadChar(void);
-int MSG_ReadByte(void);
-int MSG_ReadShort(void);
-int MSG_ReadLong(void);
+i32 MSG_ReadChar(void);
+i32 MSG_ReadByte(void);
+i32 MSG_ReadShort(void);
+i32 MSG_ReadLong(void);
 float MSG_ReadFloat(void);
 char* MSG_ReadString(void);
 float MSG_ReadCoord(void);
@@ -265,21 +271,38 @@ STDIO REPLACEMENT FUNCTIONS
 
 typedef struct {
     FILE* file;
-    long start;  // file or data start position
-    long length; // file or data size
-    long pos;    // current position relative to start
+    i64 start;  // file or data start position
+    i64 length; // file or data size
+    i64 pos;    // current position relative to start
 } fshandle_t;
 
 size_t Q_fread(void* ptr, size_t size, size_t nmemb, fshandle_t* fh);
-int Q_fseek(fshandle_t* fh, long offset, int whence);
-long Q_ftell(const fshandle_t* fh);
+i32 Q_fseek(fshandle_t* fh, i64 offset, i32 whence);
+i64 Q_ftell(const fshandle_t* fh);
 void Q_rewind(fshandle_t* fh);
-long Q_filelength(const fshandle_t* fh);
-int Q_feof(const fshandle_t *fh);
-int Q_ferror(fshandle_t* fh);
+i64 Q_filelength(const fshandle_t* fh);
+i32 Q_feof(const fshandle_t *fh);
+i32 Q_ferror(fshandle_t* fh);
 
 //==============================================================================
 
+
+/*
+================================================================================
+
+STANDARD LIB REPLACEMENT FUNCTIONS
+
+================================================================================
+*/
+
+//==============================================================================
+
+void* Q_malloc(size_t size);
+void* Q_calloc(size_t num, size_t size);
+void Q_free(void* ptr);
+i64 Q_strtol(const char* str, char** str_end, i32 base);
+i32 Q_atoi(const char* str);
+float Q_atof(const char* str);
 
 /*
 ================================================================================
@@ -289,20 +312,21 @@ STRING LIB REPLACEMENT FUNCTIONS
 ================================================================================
 */
 
-void Q_memset(void* dest, int fill, int count);
-void Q_memcpy(void* dest, void* src, int count);
-int Q_memcmp(void* m1, void* m2, int count);
+void* Q_memmove(void* dest, const void* src, size_t count);
+void Q_memset(void* dest, i32 fill, size_t count);
+void Q_memcpy(void* dest, void* src, size_t count);
+i32 Q_memcmp(void* m1, void* m2, size_t count);
 void Q_strcpy(char* dest, const char* src);
-void Q_strncpy(char* dest, const char* src, int count);
-int Q_strlen(const char* str);
-char* Q_strrchr(char* s, char c);
+void Q_strncpy(char* dest, const char* src, size_t count);
+size_t Q_strlen(const char* str);
+char* Q_strrchr(const char* s, char c);
 void Q_strcat(char* dest, const char* src);
-int Q_strcmp(const char* s1, const char* s2);
-int Q_strncmp(const char* s1, const char* s2, int count);
-int Q_strcasecmp(const char* s1, const char* s2);
-int Q_strncasecmp(const char* s1, const char* s2, int n);
-int Q_atoi(const char* str);
-float Q_atof(const char* str);
+i32 Q_strcmp(const char* s1, const char* s2);
+i32 Q_strncmp(const char* s1, const char* s2, size_t count);
+i32 Q_strcasecmp(const char* s1, const char* s2);
+i32 Q_strncasecmp(const char* s1, const char* s2, size_t n);
+char* Q_strchr(const char* str, i32 c);
+char* Q_strstr(const char* str, const char* substr);
 
 //==============================================================================
 

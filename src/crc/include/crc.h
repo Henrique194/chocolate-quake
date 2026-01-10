@@ -25,8 +25,8 @@
 
 #include "quakedef.h"
 
-void CRC_Init(unsigned short* crcvalue);
-void CRC_ProcessByte(unsigned short* crcvalue, byte data);
-unsigned short CRC_Value(unsigned short crcvalue);
+void CRC_Init(u16* crcvalue);
+void CRC_ProcessByte(u16* crcvalue, byte data);
+u16 CRC_Value(u16 crcvalue);
 
 #endif

@@ -41,7 +41,7 @@ float entity_rotation[3][3];
 
 vec3_t r_worldmodelorg;
 
-int r_currentbkey;
+i32 r_currentbkey;
 
 typedef enum { touchessolid, drawnode, nodrawnode } solidstate_t;
 
@@ -50,7 +50,7 @@ typedef enum { touchessolid, drawnode, nodrawnode } solidstate_t;
 
 static mvertex_t* pbverts;
 static bedge_t* pbedges;
-static int numbverts, numbedges;
+static i32 numbverts, numbedges;
 
 static mvertex_t *pfrontenter, *pfrontexit;
 
@@ -159,7 +159,7 @@ R_RecursiveClipBPoly
 */
 void R_RecursiveClipBPoly(bedge_t* pedges, mnode_t* pnode, msurface_t* psurf) {
     bedge_t *psideedges[2], *pnextedge, *ptedge;
-    int i, side, lastside;
+    i32 i, side, lastside;
     float dist, frac, lastdist;
     mplane_t *splitplane, tplane;
     mvertex_t *pvert, *plastvert, *ptvert;
@@ -309,10 +309,10 @@ R_DrawSolidClippedSubmodelPolygons
 ================
 */
 void R_DrawSolidClippedSubmodelPolygons(model_t* pmodel) {
-    int i, j, lindex;
+    i32 i, j, lindex;
     vec_t dot;
     msurface_t* psurf;
-    int numsurfaces;
+    i32 numsurfaces;
     mplane_t* pplane;
     mvertex_t bverts[MAX_BMODEL_VERTS];
     bedge_t bedges[MAX_BMODEL_EDGES], *pbedge;
@@ -380,11 +380,11 @@ void R_DrawSolidClippedSubmodelPolygons(model_t* pmodel) {
 R_DrawSubmodelPolygons
 ================
 */
-void R_DrawSubmodelPolygons(model_t* pmodel, int clipflags) {
-    int i;
+void R_DrawSubmodelPolygons(model_t* pmodel, i32 clipflags) {
+    i32 i;
     vec_t dot;
     msurface_t* psurf;
-    int numsurfaces;
+    i32 numsurfaces;
     mplane_t* pplane;
 
     // FIXME: use bounding-box-based frustum clipping info?
@@ -415,8 +415,8 @@ void R_DrawSubmodelPolygons(model_t* pmodel, int clipflags) {
 R_RecursiveWorldNode
 ================
 */
-void R_RecursiveWorldNode(mnode_t* node, int clipflags) {
-    int i, c, side, *pindex;
+void R_RecursiveWorldNode(mnode_t* node, i32 clipflags) {
+    i32 i, c, side, *pindex;
     vec3_t acceptpt, rejectpt;
     mplane_t* plane;
     msurface_t *surf, **mark;
@@ -583,7 +583,7 @@ R_RenderWorld
 ================
 */
 void R_RenderWorld(void) {
-    int i;
+    i32 i;
     model_t* clmodel;
     btofpoly_t btofpolys[MAX_BTOFPOLYS];
 

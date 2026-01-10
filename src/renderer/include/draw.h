@@ -30,18 +30,18 @@
 extern qpic_t* draw_disc; // also used on sbar
 
 void Draw_Init(void);
-void Draw_Character(int x, int y, int num);
+void Draw_Character(i32 x, i32 y, i32 num);
 void Draw_DebugChar(char num);
-void Draw_Pic(int x, int y, qpic_t* pic);
-void Draw_TransPic(int x, int y, qpic_t* pic);
-void Draw_TransPicTranslate(int x, int y, qpic_t* pic, byte* translation);
-void Draw_ConsoleBackground(int lines);
+void Draw_Pic(i32 x, i32 y, qpic_t* pic);
+void Draw_TransPic(i32 x, i32 y, qpic_t* pic);
+void Draw_TransPicTranslate(i32 x, i32 y, qpic_t* pic, byte* translation);
+void Draw_ConsoleBackground(i32 lines);
 void Draw_BeginDisc(void);
 void Draw_EndDisc(void);
-void Draw_TileClear(int x, int y, int w, int h);
-void Draw_Fill(int x, int y, int w, int h, int c);
+void Draw_TileClear(i32 x, i32 y, i32 w, i32 h);
+void Draw_Fill(i32 x, i32 y, i32 w, i32 h, i32 c);
 void Draw_FadeScreen(void);
-void Draw_String(int x, int y, char* str);
+void Draw_String(i32 x, i32 y, char* str);
 qpic_t* Draw_PicFromWad(char* name);
 qpic_t* Draw_CachePic(char* path);
 

@@ -27,18 +27,18 @@
 
 drawsurf_t r_drawsurf;
 
-int lightleft, sourcesstep, blocksize, sourcetstep;
-int lightdelta, lightdeltastep;
-int lightright, lightleftstep, lightrightstep, blockdivshift;
-unsigned blockdivmask;
+i32 lightleft, sourcesstep, blocksize, sourcetstep;
+i32 lightdelta, lightdeltastep;
+i32 lightright, lightleftstep, lightrightstep, blockdivshift;
+u32 blockdivmask;
 void* prowdestbase;
-unsigned char* pbasesource;
-int surfrowbytes; // used by ASM files
-unsigned* r_lightptr;
-int r_stepback;
-int r_lightwidth;
-int r_numhblocks, r_numvblocks;
-unsigned char *r_source, *r_sourcemax;
+byte* pbasesource;
+i32 surfrowbytes; // used by ASM files
+u32* r_lightptr;
+i32 r_stepback;
+i32 r_lightwidth;
+i32 r_numhblocks, r_numvblocks;
+byte *r_source, *r_sourcemax;
 
 void R_DrawSurfaceBlock8_mip0(void);
 void R_DrawSurfaceBlock8_mip1(void);
@@ -52,7 +52,7 @@ static void (*surfmiptable[4])(void) = {
     R_DrawSurfaceBlock8_mip3
 };
 
-unsigned blocklights[18 * 18];
+u32 blocklights[18 * 18];
 
 
 /*
@@ -62,13 +62,13 @@ R_AddDynamicLights
 */
 void R_AddDynamicLights(void) {
     msurface_t* surf;
-    int lnum;
-    int sd, td;
+    i32 lnum;
+    i32 sd, td;
     float dist, rad, minlight;
     vec3_t impact, local;
-    int s, t;
-    int i;
-    int smax, tmax;
+    i32 s, t;
+    i32 i;
+    i32 smax, tmax;
     mtexinfo_t* tex;
 
     surf = r_drawsurf.surf;
@@ -127,12 +127,12 @@ Combine and scale multiple lightmaps into the 8.8 format in blocklights
 ===============
 */
 void R_BuildLightMap(void) {
-    int smax, tmax;
-    int t;
-    int i, size;
+    i32 smax, tmax;
+    i32 t;
+    i32 i, size;
     byte* lightmap;
-    unsigned scale;
-    int maps;
+    u32 scale;
+    i32 maps;
     msurface_t* surf;
 
     surf = r_drawsurf.surf;
@@ -169,7 +169,7 @@ void R_BuildLightMap(void) {
 
     // bound, invert, and shift
     for (i = 0; i < size; i++) {
-        t = (255 * 256 - (int) blocklights[i]) >> (8 - VID_CBITS);
+        t = (255 * 256 - (i32) blocklights[i]) >> (8 - VID_CBITS);
 
         if (t < (1 << 6))
             t = (1 << 6);
@@ -187,8 +187,8 @@ Returns the proper texture for a given time and base texture
 ===============
 */
 texture_t* R_TextureAnimation(texture_t* base) {
-    int reletive;
-    int count;
+    i32 reletive;
+    i32 count;
 
     if (currententity->frame) {
         if (base->alternate_anims)
@@ -198,7 +198,7 @@ texture_t* R_TextureAnimation(texture_t* base) {
     if (!base->anim_total)
         return base;
 
-    reletive = (int) (cl.time * 10) % base->anim_total;
+    reletive = (i32) (cl.time * 10) % base->anim_total;
 
     count = 0;
     while (base->anim_min > reletive || base->anim_max <= reletive) {
@@ -219,12 +219,12 @@ R_DrawSurface
 ===============
 */
 void R_DrawSurface(void) {
-    unsigned char* basetptr;
-    int smax, tmax, twidth;
-    int u;
-    int soffset, basetoffset, texwidth;
-    int horzblockstep;
-    unsigned char* pcolumndest;
+    byte* basetptr;
+    i32 smax, tmax, twidth;
+    i32 u;
+    i32 soffset, basetoffset, texwidth;
+    i32 horzblockstep;
+    byte* pcolumndest;
     void (*pblockdrawer)(void);
     texture_t* mt;
 
@@ -301,8 +301,8 @@ R_DrawSurfaceBlock8_mip0
 ================
 */
 void R_DrawSurfaceBlock8_mip0(void) {
-    int v, i, b, lightstep, lighttemp, light;
-    unsigned char pix, *psource, *prowdest;
+    i32 v, i, b, lightstep, lighttemp, light;
+    byte pix, *psource, *prowdest;
 
     psource = pbasesource;
     prowdest = prowdestbase;
@@ -324,8 +324,7 @@ void R_DrawSurfaceBlock8_mip0(void) {
 
             for (b = 15; b >= 0; b--) {
                 pix = psource[b];
-                prowdest[b] =
-                    ((unsigned char*) vid.colormap)[(light & 0xFF00) + pix];
+                prowdest[b] = ((byte*) vid.colormap)[(light & 0xFF00) + pix];
                 light += lightstep;
             }
 
@@ -347,8 +346,8 @@ R_DrawSurfaceBlock8_mip1
 ================
 */
 void R_DrawSurfaceBlock8_mip1(void) {
-    int v, i, b, lightstep, lighttemp, light;
-    unsigned char pix, *psource, *prowdest;
+    i32 v, i, b, lightstep, lighttemp, light;
+    byte pix, *psource, *prowdest;
 
     psource = pbasesource;
     prowdest = prowdestbase;
@@ -370,8 +369,7 @@ void R_DrawSurfaceBlock8_mip1(void) {
 
             for (b = 7; b >= 0; b--) {
                 pix = psource[b];
-                prowdest[b] =
-                    ((unsigned char*) vid.colormap)[(light & 0xFF00) + pix];
+                prowdest[b] = ((byte*) vid.colormap)[(light & 0xFF00) + pix];
                 light += lightstep;
             }
 
@@ -393,8 +391,8 @@ R_DrawSurfaceBlock8_mip2
 ================
 */
 void R_DrawSurfaceBlock8_mip2(void) {
-    int v, i, b, lightstep, lighttemp, light;
-    unsigned char pix, *psource, *prowdest;
+    i32 v, i, b, lightstep, lighttemp, light;
+    byte pix, *psource, *prowdest;
 
     psource = pbasesource;
     prowdest = prowdestbase;
@@ -416,8 +414,7 @@ void R_DrawSurfaceBlock8_mip2(void) {
 
             for (b = 3; b >= 0; b--) {
                 pix = psource[b];
-                prowdest[b] =
-                    ((unsigned char*) vid.colormap)[(light & 0xFF00) + pix];
+                prowdest[b] = ((byte*) vid.colormap)[(light & 0xFF00) + pix];
                 light += lightstep;
             }
 
@@ -439,8 +436,8 @@ R_DrawSurfaceBlock8_mip3
 ================
 */
 void R_DrawSurfaceBlock8_mip3(void) {
-    int v, i, b, lightstep, lighttemp, light;
-    unsigned char pix, *psource, *prowdest;
+    i32 v, i, b, lightstep, lighttemp, light;
+    byte pix, *psource, *prowdest;
 
     psource = pbasesource;
     prowdest = prowdestbase;
@@ -462,8 +459,7 @@ void R_DrawSurfaceBlock8_mip3(void) {
 
             for (b = 1; b >= 0; b--) {
                 pix = psource[b];
-                prowdest[b] =
-                    ((unsigned char*) vid.colormap)[(light & 0xFF00) + pix];
+                prowdest[b] = ((byte*) vid.colormap)[(light & 0xFF00) + pix];
                 light += lightstep;
             }
 
@@ -486,11 +482,11 @@ R_GenTurbTile
 ================
 */
 void R_GenTurbTile(pixel_t* pbasetex, void* pdest) {
-    int* turb;
-    int i, j, s, t;
+    i32* turb;
+    i32 i, j, s, t;
     byte* pd;
 
-    turb = sintable + ((int) (cl.time * SPEED) & (CYCLE - 1));
+    turb = sintable + ((i32) (cl.time * SPEED) & (CYCLE - 1));
     pd = (byte*) pdest;
 
     for (i = 0; i < TILE_SIZE; i++) {

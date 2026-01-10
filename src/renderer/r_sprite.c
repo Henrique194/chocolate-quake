@@ -26,9 +26,9 @@
 #include <math.h>
 
 
-static int clip_current;
+static i32 clip_current;
 static vec5_t clip_verts[2][MAXWORKINGVERTS];
-static int sprite_width, sprite_height;
+static i32 sprite_width, sprite_height;
 
 spritedesc_t r_spritedesc;
 
@@ -58,8 +58,8 @@ Clips the winding at clip_verts[clip_current] and changes clip_current
 Throws out the back side
 ==============
 */
-int R_ClipSpriteFace(int nump, clipplane_t* pclipplane) {
-    int i, outcount;
+i32 R_ClipSpriteFace(i32 nump, clipplane_t* pclipplane) {
+    i32 i, outcount;
     float dists[MAXWORKINGVERTS + 1];
     float frac, clipdist, *pclipnormal;
     float *in, *instep, *outstep, *vert2;
@@ -130,7 +130,7 @@ R_SetupAndDrawSprite
 ================
 */
 void R_SetupAndDrawSprite() {
-    int i, nump;
+    i32 i, nump;
     float dot, scale, *pv;
     vec5_t* pverts;
     vec3_t left, up, right, down, transformed, local;
@@ -229,7 +229,7 @@ R_GetSpriteframe
 mspriteframe_t* R_GetSpriteframe(msprite_t* psprite) {
     mspritegroup_t* pspritegroup;
     mspriteframe_t* pspriteframe;
-    int i, numframes, frame;
+    i32 i, numframes, frame;
     float *pintervals, fullinterval, targettime, time;
 
     frame = currententity->frame;
@@ -251,7 +251,7 @@ mspriteframe_t* R_GetSpriteframe(msprite_t* psprite) {
 
         // when loading in Mod_LoadSpriteGroup, we guaranteed all interval values
         // are positive, so we don't have to worry about division by 0
-        targettime = time - ((int) (time / fullinterval)) * fullinterval;
+        targettime = time - ((i32) (time / fullinterval)) * fullinterval;
 
         for (i = 0; i < (numframes - 1); i++) {
             if (pintervals[i] > targettime)
@@ -271,7 +271,7 @@ R_DrawSprite
 ================
 */
 void R_DrawSprite(void) {
-    int i;
+    i32 i;
     msprite_t* psprite;
     vec3_t tvec;
     float dot, angle, sr, cr;

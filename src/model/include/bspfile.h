@@ -60,7 +60,7 @@
 #define TOOLVERSION 2
 
 typedef struct {
-    int fileofs, filelen;
+    i32 fileofs, filelen;
 } lump_t;
 
 #define LUMP_ENTITIES     0
@@ -84,26 +84,26 @@ typedef struct {
 typedef struct {
     float mins[3], maxs[3];
     float origin[3];
-    int headnode[MAX_MAP_HULLS];
-    int visleafs; // not including the solid leaf 0
-    int firstface, numfaces;
+    i32 headnode[MAX_MAP_HULLS];
+    i32 visleafs; // not including the solid leaf 0
+    i32 firstface, numfaces;
 } dmodel_t;
 
 typedef struct {
-    int version;
+    i32 version;
     lump_t lumps[HEADER_LUMPS];
 } dheader_t;
 
 typedef struct {
-    int nummiptex;
-    int dataofs[4]; // [nummiptex]
+    i32 nummiptex;
+    i32 dataofs[4]; // [nummiptex]
 } dmiptexlump_t;
 
 #define MIPLEVELS 4
 typedef struct miptex_s {
     char name[16];
-    unsigned width, height;
-    unsigned offsets[MIPLEVELS]; // four mip maps stored
+    u32 width, height;
+    u32 offsets[MIPLEVELS]; // four mip maps stored
 } miptex_t;
 
 
@@ -125,7 +125,7 @@ typedef struct {
 typedef struct {
     float normal[3];
     float dist;
-    int type; // PLANE_X - PLANE_ANYZ ?remove? trivial to regenerate
+    i32 type; // PLANE_X - PLANE_ANYZ ?remove? trivial to regenerate
 } dplane_t;
 
 
@@ -148,45 +148,45 @@ typedef struct {
 
 // !!! if this is changed, it must be changed in asm_i386.h too !!!
 typedef struct {
-    int planenum;
-    short children[2]; // negative numbers are -(leafs+1), not nodes
-    short mins[3];     // for sphere culling
-    short maxs[3];
-    unsigned short firstface;
-    unsigned short numfaces; // counting both sides
+    i32 planenum;
+    i16 children[2]; // negative numbers are -(leafs+1), not nodes
+    i16 mins[3];     // for sphere culling
+    i16 maxs[3];
+    u16 firstface;
+    u16 numfaces; // counting both sides
 } dnode_t;
 
 typedef struct {
-    int planenum;
-    short children[2]; // negative numbers are contents
+    i32 planenum;
+    i16 children[2]; // negative numbers are contents
 } dclipnode_t;
 
 
 typedef struct texinfo_s {
     float vecs[2][4]; // [s/t][xyz offset]
-    int miptex;
-    int flags;
+    i32 miptex;
+    i32 flags;
 } texinfo_t;
 #define TEX_SPECIAL 1 // sky or slime, no lightmap or 256 subdivision
 
 // note that edge 0 is never used, because negative edge nums are used for
 // counterclockwise use of the edge in a face
 typedef struct {
-    unsigned short v[2]; // vertex numbers
+    u16 v[2]; // vertex numbers
 } dedge_t;
 
 #define MAXLIGHTMAPS 4
 typedef struct {
-    short planenum;
-    short side;
+    i16 planenum;
+    i16 side;
 
-    int firstedge; // we must support > 64k edges
-    short numedges;
-    short texinfo;
+    i32 firstedge; // we must support > 64k edges
+    i16 numedges;
+    i16 texinfo;
 
     // lighting info
     byte styles[MAXLIGHTMAPS];
-    int lightofs; // start of [numstyles*surfsize] samples
+    i32 lightofs; // start of [numstyles*surfsize] samples
 } dface_t;
 
 
@@ -200,14 +200,14 @@ typedef struct {
 // leaf 0 is the generic CONTENTS_SOLID leaf, used for all solid areas
 // all other leafs need visibility info
 typedef struct {
-    int contents;
-    int visofs; // -1 = no visibility info
+    i32 contents;
+    i32 visofs; // -1 = no visibility info
 
-    short mins[3]; // for frustum culling
-    short maxs[3];
+    i16 mins[3]; // for frustum culling
+    i16 maxs[3];
 
-    unsigned short firstmarksurface;
-    unsigned short nummarksurfaces;
+    u16 firstmarksurface;
+    u16 nummarksurfaces;
 
     byte ambient_level[NUM_AMBIENTS];
 } dleaf_t;
@@ -223,54 +223,54 @@ typedef struct {
 
 // the utilities get to be lazy and just use large static arrays
 
-extern int nummodels;
+extern i32 nummodels;
 extern dmodel_t dmodels[MAX_MAP_MODELS];
 
-extern int visdatasize;
+extern i32 visdatasize;
 extern byte dvisdata[MAX_MAP_VISIBILITY];
 
-extern int lightdatasize;
+extern i32 lightdatasize;
 extern byte dlightdata[MAX_MAP_LIGHTING];
 
-extern int texdatasize;
+extern i32 texdatasize;
 extern byte dtexdata[MAX_MAP_MIPTEX]; // (dmiptexlump_t)
 
-extern int entdatasize;
+extern i32 entdatasize;
 extern char dentdata[MAX_MAP_ENTSTRING];
 
-extern int numleafs;
+extern i32 numleafs;
 extern dleaf_t dleafs[MAX_MAP_LEAFS];
 
-extern int numplanes;
+extern i32 numplanes;
 extern dplane_t dplanes[MAX_MAP_PLANES];
 
-extern int numvertexes;
+extern i32 numvertexes;
 extern dvertex_t dvertexes[MAX_MAP_VERTS];
 
-extern int numnodes;
+extern i32 numnodes;
 extern dnode_t dnodes[MAX_MAP_NODES];
 
-extern int numtexinfo;
+extern i32 numtexinfo;
 extern texinfo_t texinfo[MAX_MAP_TEXINFO];
 
-extern int numfaces;
+extern i32 numfaces;
 extern dface_t dfaces[MAX_MAP_FACES];
 
-extern int numclipnodes;
+extern i32 numclipnodes;
 extern dclipnode_t dclipnodes[MAX_MAP_CLIPNODES];
 
-extern int numedges;
+extern i32 numedges;
 extern dedge_t dedges[MAX_MAP_EDGES];
 
-extern int nummarksurfaces;
-extern unsigned short dmarksurfaces[MAX_MAP_MARKSURFACES];
+extern i32 nummarksurfaces;
+extern u16 dmarksurfaces[MAX_MAP_MARKSURFACES];
 
-extern int numsurfedges;
-extern int dsurfedges[MAX_MAP_SURFEDGES];
+extern i32 numsurfedges;
+extern i32 dsurfedges[MAX_MAP_SURFEDGES];
 
 
 void DecompressVis(byte* in, byte* decompressed);
-int CompressVis(byte* vis, byte* dest);
+i32 CompressVis(byte* vis, byte* dest);
 
 void LoadBSPFile(char* filename);
 void WriteBSPFile(char* filename);
@@ -287,12 +287,12 @@ typedef struct epair_s {
 
 typedef struct {
     vec3_t origin;
-    int firstbrush;
-    int numbrushes;
+    i32 firstbrush;
+    i32 numbrushes;
     epair_t* epairs;
 } entity_t;
 
-extern int num_entities;
+extern i32 num_entities;
 extern entity_t entities[MAX_MAP_ENTITIES];
 
 void ParseEntities(void);

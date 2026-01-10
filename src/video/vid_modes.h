@@ -35,8 +35,8 @@ typedef enum {
 } vid_mode_type_t;
 
 typedef struct {
-    const int width;
-    const int height;
+    const i32 width;
+    const i32 height;
     const vid_mode_type_t type;
     const char* description;
     const char* full_description;
@@ -44,7 +44,7 @@ typedef struct {
 
 void VID_InitModes(void);
 
-const vid_mode_t* VID_GetMode(int mode);
+const vid_mode_t* VID_GetMode(i32 mode);
 
 const vid_mode_t* VID_GetCurrentMode(void);
 
@@ -56,11 +56,11 @@ qboolean VID_IsWindowedMode(void);
 
 qboolean VID_IsInTestMode(void);
 
-void VID_SetMode(int mode_num);
+void VID_SetMode(i32 mode_num);
 
 void VID_SetCurrentModeAsDefault(void);
 
-void VID_TestMode(int mode_num);
+void VID_TestMode(i32 mode_num);
 
 void VID_UpdateModes(void);
 

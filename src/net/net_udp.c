@@ -56,15 +56,15 @@ static qboolean UDP_IsLocalAddr(const IPaddress* addr) {
 
 static void UDP_FindLocalAddr(void) {
     IPaddress addrs[10] = {0};
-    const int count = SDL_arraysize(addrs);
+    const i32 count = SDL_arraysize(addrs);
     SDLNet_GetLocalAddresses(addrs, count);
-    for (int i = 0; i < count; i++) {
+    for (i32 i = 0; i < count; i++) {
         if (!UDP_IsLocalAddr(&addrs[i])) {
             my_addr = addrs[i];
             return;
         }
     }
-    Sys_Error("UDP_FindLocalAddr: Could determine local address.");
+    Sys_Error("UDP_FindLocalAddr: Couldn't determine local address.");
 }
 
 qboolean UDP_IsInitialized(void) {
@@ -149,8 +149,8 @@ void UDP_Listen(qboolean state) {
     UDP_DisableListening();
 }
 
-UDPsocket UDP_OpenSocket(int port) {
-    return SDLNet_UDP_Open((Uint16) port);
+UDPsocket UDP_OpenSocket(i32 port) {
+    return SDLNet_UDP_Open((u16) port);
 }
 
 void UDP_CloseSocket(UDPsocket socket) {
@@ -160,11 +160,11 @@ void UDP_CloseSocket(UDPsocket socket) {
     SDLNet_UDP_Close(socket);
 }
 
-int UDP_Read(UDPsocket socket, byte* buf, int len, IPaddress* addr) {
+i32 UDP_Read(UDPsocket socket, byte* buf, i32 len, IPaddress* addr) {
     UDPpacket packet = {0};
     packet.data = buf;
     packet.maxlen = len;
-    const int ret = SDLNet_UDP_Recv(socket, &packet);
+    const i32 ret = SDLNet_UDP_Recv(socket, &packet);
     if (ret == -1 && (errno == EWOULDBLOCK || errno == ECONNREFUSED)) {
         return 0;
     }
@@ -176,7 +176,7 @@ int UDP_Read(UDPsocket socket, byte* buf, int len, IPaddress* addr) {
     return packet.len;
 }
 
-static int UDP_MakeSocketBroadcastCapable(UDPsocket socket) {
+static i32 UDP_MakeSocketBroadcastCapable(UDPsocket socket) {
     if (broadcast_sock != NULL) {
         Sys_Error("Attempted to use multiple broadcasts sockets\n");
     }
@@ -184,14 +184,14 @@ static int UDP_MakeSocketBroadcastCapable(UDPsocket socket) {
     return 0;
 }
 
-int UDP_Broadcast(UDPsocket socket, byte* buf, int len) {
+i32 UDP_Broadcast(UDPsocket socket, byte* buf, i32 len) {
     if (socket != broadcast_sock) {
         UDP_MakeSocketBroadcastCapable(socket);
     }
     return UDP_Write(socket, buf, len, &broadcast_addr);
 }
 
-int UDP_Write(UDPsocket socket, byte* buf, int len, const IPaddress* addr) {
+i32 UDP_Write(UDPsocket socket, byte* buf, i32 len, const IPaddress* addr) {
     UDPpacket packet;
     packet.data = buf;
     packet.len = len;
@@ -204,8 +204,8 @@ int UDP_Write(UDPsocket socket, byte* buf, int len, const IPaddress* addr) {
 
 char* UDP_AddrToString(const IPaddress* addr) {
     static char buffer[22];
-    const Uint32 host = SDLNet_Read32(&addr->host);
-    const Uint16 port = SDLNet_Read16(&addr->port);
+    const u32 host = SDLNet_Read32(&addr->host);
+    const u16 port = SDLNet_Read16(&addr->port);
     sprintf(buffer, "%d.%d.%d.%d:%d",
         (host >> 24) & 0xff,
         (host >> 16) & 0xff,
@@ -236,24 +236,24 @@ void UDP_GetNameFromAddr(const IPaddress* addr, char* name) {
     Q_strcpy(name, UDP_AddrToString(addr));
 }
 
-int UDP_GetAddrFromName(char* name, IPaddress* addr) {
+i32 UDP_GetAddrFromName(char* name, IPaddress* addr) {
     static char host[NET_NAMELEN];
     if (!name || *name == 0) {
         return -1;
     }
     Q_strncpy(host, name, NET_NAMELEN - 1);
     char* colon = Q_strrchr(host, ':');
-    Uint16 port;
+    u16 port;
     if (colon) {
         *colon = 0;
-        port = (Uint16) Q_atoi(colon + 1);
+        port = (u16) Q_atoi(colon + 1);
     } else {
-        port = (Uint16) net_hostport;
+        port = (u16) net_hostport;
     }
     return SDLNet_ResolveHost(addr, host, port);
 }
 
-int UDP_AddrCompare(const IPaddress* addr1, const IPaddress* addr2) {
+i32 UDP_AddrCompare(const IPaddress* addr1, const IPaddress* addr2) {
     if (addr1->host != addr2->host) {
         return -1;
     }
@@ -263,11 +263,11 @@ int UDP_AddrCompare(const IPaddress* addr1, const IPaddress* addr2) {
     return 1;
 }
 
-int UDP_GetSocketPort(const IPaddress* addr) {
+i32 UDP_GetSocketPort(const IPaddress* addr) {
     return SDLNet_Read16(&addr->port);
 }
 
 
-void UDP_SetSocketPort(IPaddress* addr, int port) {
+void UDP_SetSocketPort(IPaddress* addr, i32 port) {
     SDLNet_Write16(port, &addr->port);
 }

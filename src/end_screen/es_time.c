@@ -33,14 +33,14 @@ void ES_Sleep(void) {
 
     // There are blinking characters on the screen,
     // so we must time out after a while.
-    const Uint32 time_to_next_blink = BLINK_PERIOD - (SDL_GetTicks() % BLINK_PERIOD);
+    const u32 time_to_next_blink = BLINK_PERIOD - (SDL_GetTicks() % BLINK_PERIOD);
     // Add one so it is always positive.
-    const Uint32 timeout = time_to_next_blink + 1;
+    const u32 timeout = time_to_next_blink + 1;
 
     // Sit in a busy loop until the timeout expires,
     // or we have to redraw the blinking screen.
-    const Uint32 start_time = SDL_GetTicks();
-    const Uint32 end_time = start_time + timeout;
+    const u32 start_time = SDL_GetTicks();
+    const u32 end_time = start_time + timeout;
     while (SDL_GetTicks() < end_time) {
         if (SDL_PollEvent(NULL)) {
             // Received an event, so stop waiting.

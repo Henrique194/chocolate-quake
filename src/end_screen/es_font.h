@@ -34,8 +34,8 @@ typedef enum {
 
 typedef struct {
     const byte* data;
-    unsigned int w;
-    unsigned int h;
+    u32 w;
+    u32 h;
 } font_t;
 
 void ES_ChooseFont(void);

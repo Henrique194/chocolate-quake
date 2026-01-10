@@ -90,7 +90,7 @@ CL_EntityNum
 This error checks and tracks the total number of entities
 ===============
 */
-entity_t* CL_EntityNum(int num) {
+entity_t* CL_EntityNum(i32 num) {
     if (num >= cl.num_entities) {
         if (num >= MAX_EDICTS)
             Host_Error("CL_EntityNum: %i is an invalid number", num);
@@ -111,12 +111,12 @@ CL_ParseStartSoundPacket
 */
 void CL_ParseStartSoundPacket(void) {
     vec3_t pos;
-    int channel, ent;
-    int sound_num;
-    int volume;
-    int field_mask;
+    i32 channel, ent;
+    i32 sound_num;
+    i32 volume;
+    i32 field_mask;
     float attenuation;
-    int i;
+    i32 i;
 
     field_mask = MSG_ReadByte();
 
@@ -157,7 +157,7 @@ so the server doesn't disconnect.
 void CL_KeepaliveMessage(void) {
     float time;
     static float lastmsg;
-    int ret;
+    i32 ret;
     sizebuf_t old;
     byte olddata[8192];
 
@@ -168,7 +168,7 @@ void CL_KeepaliveMessage(void) {
 
     // read messages from server, should just be nops
     old = net_message;
-    memcpy(olddata, net_message.data, net_message.cursize);
+    Q_memcpy(olddata, net_message.data, net_message.cursize);
 
     do {
         ret = CL_GetMessage();
@@ -188,7 +188,7 @@ void CL_KeepaliveMessage(void) {
     } while (ret);
 
     net_message = old;
-    memcpy(net_message.data, olddata, net_message.cursize);
+    Q_memcpy(net_message.data, olddata, net_message.cursize);
 
     // check time
     time = Sys_FloatTime();
@@ -211,8 +211,8 @@ CL_ParseServerInfo
 */
 void CL_ParseServerInfo(void) {
     char* str;
-    int i;
-    int nummodels, numsounds;
+    i32 i;
+    i32 nummodels, numsounds;
     char model_precache[MAX_MODELS][MAX_QPATH];
     char sound_precache[MAX_SOUNDS][MAX_QPATH];
 
@@ -242,7 +242,7 @@ void CL_ParseServerInfo(void) {
 
     // parse signon message
     str = MSG_ReadString();
-    strncpy(cl.levelname, str, sizeof(cl.levelname) - 1);
+    Q_strncpy(cl.levelname, str, sizeof(cl.levelname) - 1);
 
     // seperate the printfs so the server message can have a color
     Con_Printf("\n\n\35\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36"
@@ -256,7 +256,7 @@ void CL_ParseServerInfo(void) {
     //
 
     // precache models
-    memset(cl.model_precache, 0, sizeof(cl.model_precache));
+    Q_memset(cl.model_precache, 0, sizeof(cl.model_precache));
     for (nummodels = 1;; nummodels++) {
         str = MSG_ReadString();
         if (!str[0])
@@ -265,12 +265,12 @@ void CL_ParseServerInfo(void) {
             Con_Printf("Server sent too many model precaches\n");
             return;
         }
-        strcpy(model_precache[nummodels], str);
+        Q_strcpy(model_precache[nummodels], str);
         Mod_TouchModel(str);
     }
 
     // precache sounds
-    memset(cl.sound_precache, 0, sizeof(cl.sound_precache));
+    Q_memset(cl.sound_precache, 0, sizeof(cl.sound_precache));
     for (numsounds = 1;; numsounds++) {
         str = MSG_ReadString();
         if (!str[0])
@@ -279,7 +279,7 @@ void CL_ParseServerInfo(void) {
             Con_Printf("Server sent too many sound precaches\n");
             return;
         }
-        strcpy(sound_precache[numsounds], str);
+        Q_strcpy(sound_precache[numsounds], str);
         S_TouchSound(str);
     }
 
@@ -324,16 +324,16 @@ If an entities model or origin changes from frame to frame, it must be
 relinked.  Other attributes can change without relinking.
 ==================
 */
-int bitcounts[16];
+i32 bitcounts[16];
 
-void CL_ParseUpdate(int bits) {
-    int i;
+void CL_ParseUpdate(i32 bits) {
+    i32 i;
     model_t* model;
-    int modnum;
+    i32 modnum;
     qboolean forcelink;
     entity_t* ent;
-    int num;
-    int skin;
+    i32 num;
+    i32 skin;
 
     if (cls.signon == SIGNONS - 1) { // first update is the final signon stage
         cls.signon = SIGNONS;
@@ -460,7 +460,7 @@ CL_ParseBaseline
 ==================
 */
 void CL_ParseBaseline(entity_t* ent) {
-    int i;
+    i32 i;
 
     ent->baseline.modelindex = MSG_ReadByte();
     ent->baseline.frame = MSG_ReadByte();
@@ -480,8 +480,8 @@ CL_ParseClientdata
 Server information pertaining to this client only
 ==================
 */
-void CL_ParseClientdata(int bits) {
-    int i, j;
+void CL_ParseClientdata(i32 bits) {
+    i32 i, j;
 
     if (bits & SU_VIEWHEIGHT)
         cl.viewheight = MSG_ReadChar();
@@ -582,28 +582,28 @@ void CL_ParseClientdata(int bits) {
 CL_NewTranslation
 =====================
 */
-void CL_NewTranslation(int slot) {
-    int i, j;
-    int top, bottom;
+void CL_NewTranslation(i32 slot) {
+    i32 i, j;
+    i32 top, bottom;
     byte *dest, *source;
 
     if (slot > cl.maxclients)
         Sys_Error("CL_NewTranslation: slot > cl.maxclients");
     dest = cl.scores[slot].translations;
     source = vid.colormap;
-    memcpy(dest, vid.colormap, sizeof(cl.scores[slot].translations));
+    Q_memcpy(dest, vid.colormap, sizeof(cl.scores[slot].translations));
     top = cl.scores[slot].colors & 0xf0;
     bottom = (cl.scores[slot].colors & 15) << 4;
 
     for (i = 0; i < VID_GRADES; i++, dest += 256, source += 256) {
         if (top < 128) // the artists made some backwards ranges.  sigh.
-            memcpy(dest + TOP_RANGE, source + top, 16);
+            Q_memcpy(dest + TOP_RANGE, source + top, 16);
         else
             for (j = 0; j < 16; j++)
                 dest[TOP_RANGE + j] = source[top + 15 - j];
 
         if (bottom < 128)
-            memcpy(dest + BOTTOM_RANGE, source + bottom, 16);
+            Q_memcpy(dest + BOTTOM_RANGE, source + bottom, 16);
         else
             for (j = 0; j < 16; j++)
                 dest[BOTTOM_RANGE + j] = source[bottom + 15 - j];
@@ -617,7 +617,7 @@ CL_ParseStatic
 */
 void CL_ParseStatic(void) {
     entity_t* ent;
-    int i;
+    i32 i;
 
     i = cl.num_statics;
     if (i >= MAX_STATIC_ENTITIES)
@@ -645,8 +645,8 @@ CL_ParseStaticSound
 */
 void CL_ParseStaticSound(void) {
     vec3_t org;
-    int sound_num, vol, atten;
-    int i;
+    i32 sound_num, vol, atten;
+    i32 i;
 
     for (i = 0; i < 3; i++)
         org[i] = MSG_ReadCoord();
@@ -668,8 +668,8 @@ CL_ParseServerMessage
 =====================
 */
 void CL_ParseServerMessage(void) {
-    int cmd;
-    int i;
+    i32 cmd;
+    i32 i;
 
     //
     // if recording demos, copy the message out
@@ -771,7 +771,7 @@ void CL_ParseServerMessage(void) {
                 if (i >= MAX_LIGHTSTYLES)
                     Sys_Error("svc_lightstyle > MAX_LIGHTSTYLES");
                 Q_strcpy(cl_lightstyle[i].map, MSG_ReadString());
-                cl_lightstyle[i].length = Q_strlen(cl_lightstyle[i].map);
+                cl_lightstyle[i].length = (i32) Q_strlen(cl_lightstyle[i].map);
                 break;
 
             case svc_sound:
@@ -789,7 +789,7 @@ void CL_ParseServerMessage(void) {
                 if (i >= cl.maxclients)
                     Host_Error("CL_ParseServerMessage: svc_updatename > "
                                "MAX_SCOREBOARD");
-                strcpy(cl.scores[i].name, MSG_ReadString());
+                Q_strcpy(cl.scores[i].name, MSG_ReadString());
                 break;
 
             case svc_updatefrags:
@@ -858,7 +858,6 @@ void CL_ParseServerMessage(void) {
                 if (i < 0 || i >= MAX_CL_STATS)
                     Sys_Error("svc_updatestat: %i is invalid", i);
                 cl.stats[i] = MSG_ReadLong();
-                ;
                 break;
 
             case svc_spawnstaticsound:

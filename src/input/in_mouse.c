@@ -70,7 +70,7 @@ MOUSE EVENT
 ================================================================================
 */
 
-static int IN_TranslateMouseButton(const Uint8 button) {
+static i32 IN_TranslateMouseButton(const u8 button) {
     switch (button) {
         case SDL_BUTTON_LEFT:
             return K_MOUSE1;
@@ -89,7 +89,7 @@ static int IN_TranslateMouseButton(const Uint8 button) {
 
 static void IN_ButtonEvent(const SDL_MouseButtonEvent* button) {
     const qboolean down = (button->state == SDL_PRESSED);
-    const int key = IN_TranslateMouseButton(button->button);
+    const i32 key = IN_TranslateMouseButton(button->button);
     Key_Event(key, down);
 }
 
@@ -97,7 +97,7 @@ static void IN_WheelEvent(const SDL_MouseWheelEvent* wheel) {
     if (wheel->y == 0) {
         return;
     }
-    const int key = (wheel->y > 0 ? K_MWHEELUP : K_MWHEELDOWN);
+    const i32 key = (wheel->y > 0 ? K_MWHEELUP : K_MWHEELDOWN);
     Key_Event(key, true);
     Key_Event(key, false);
 }
@@ -140,8 +140,8 @@ static qboolean IN_StrafeActive(void) {
 }
 
 static void IN_GetMouseMove(float* x, float* y) {
-    int mx;
-    int my;
+    i32 mx;
+    i32 my;
     SDL_GetRelativeMouseState(&mx, &my);
     *x = (float) mx * sensitivity.value;
     *y = (float) my * sensitivity.value;

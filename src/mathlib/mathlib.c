@@ -23,13 +23,12 @@
 #include "mathlib.h"
 #include "model.h"
 #include <math.h>
-#include <string.h>
 
 
 void Sys_Error(char* error, ...);
 
 vec3_t vec3_origin = {0, 0, 0};
-int nanmask = 255 << 23;
+i32 nanmask = 255 << 23;
 
 /*-----------------------------------------------------------------*/
 
@@ -57,14 +56,14 @@ void ProjectPointOnPlane(vec3_t dst, const vec3_t p, const vec3_t normal) {
 ** assumes "src" is normalized
 */
 void PerpendicularVector(vec3_t dst, const vec3_t src) {
-    int pos;
-    int i;
+    i32 pos;
+    i32 i;
     float minelem = 1.0F;
     vec3_t tempvec;
 
     /*
-	** find the smallest magnitude axially aligned vector
-	*/
+     * find the smallest magnitude axially aligned vector
+     */
     for (pos = 0, i = 0; i < 3; i++) {
         if (fabs(src[i]) < minelem) {
             pos = i;
@@ -75,13 +74,13 @@ void PerpendicularVector(vec3_t dst, const vec3_t src) {
     tempvec[pos] = 1.0F;
 
     /*
-	** project the point onto the plane defined by src
-	*/
+     * project the point onto the plane defined by src
+     */
     ProjectPointOnPlane(dst, tempvec, src);
 
     /*
-	** normalize the result
-	*/
+     * normalize the result
+     */
     VectorNormalize(dst);
 }
 
@@ -92,7 +91,7 @@ void RotatePointAroundVector(vec3_t dst, const vec3_t dir, const vec3_t point,
     float zrot[3][3];
     float tmpmat[3][3];
     float rot[3][3];
-    int i;
+    i32 i;
     vec3_t vr, vup, vf;
 
     vf[0] = dir[0];
@@ -114,7 +113,7 @@ void RotatePointAroundVector(vec3_t dst, const vec3_t dir, const vec3_t point,
     m[1][2] = vf[1];
     m[2][2] = vf[2];
 
-    memcpy(im, m, sizeof(im));
+    Q_memcpy(im, m, sizeof(im));
 
     im[0][1] = m[1][0];
     im[0][2] = m[2][0];
@@ -123,7 +122,7 @@ void RotatePointAroundVector(vec3_t dst, const vec3_t dir, const vec3_t point,
     im[2][0] = m[0][2];
     im[2][1] = m[1][2];
 
-    memset(zrot, 0, sizeof(zrot));
+    Q_memset(zrot, 0, sizeof(zrot));
     zrot[0][0] = zrot[1][1] = zrot[2][2] = 1.0F;
 
     zrot[0][0] = cos(DEG2RAD(degrees));
@@ -145,11 +144,11 @@ void RotatePointAroundVector(vec3_t dst, const vec3_t dir, const vec3_t point,
 float anglemod(float a) {
 #if 0
     if (a >= 0)
-        a -= 360 * (int) (a / 360);
+        a -= 360 * (i32) (a / 360);
     else
-        a += 360 * (1 + (int) (-a / 360));
+        a += 360 * (1 + (i32) (-a / 360));
 #endif
-    a = (360.0 / 65536) * ((int) (a * (65536 / 360.0)) & 65535);
+    a = (360.0 / 65536) * ((i32) (a * (65536 / 360.0)) & 65535);
     return a;
 }
 
@@ -171,21 +170,20 @@ BoxOnPlaneSide
 Returns 1, 2, or 1 + 2
 ==================
 */
-int BoxOnPlaneSide(vec3_t emins, vec3_t emaxs, mplane_t* p) {
+i32 BoxOnPlaneSide(vec3_t emins, vec3_t emaxs, mplane_t* p) {
     float dist1, dist2;
-    int sides;
+    i32 sides;
 
-#if 0 // this is done by the BOX_ON_PLANE_SIDE macro before calling this       \
-      // function
-// fast axial cases
-	if (p->type < 3)
-	{
-		if (p->dist <= emins[p->type])
-			return 1;
-		if (p->dist >= emaxs[p->type])
-			return 2;
-		return 3;
-	}
+#if 0
+    // this is done by the BOX_ON_PLANE_SIDE macro before calling this function
+    // fast axial cases
+    if (p->type < 3) {
+        if (p->dist <= emins[p->type])
+            return 1;
+        if (p->dist >= emaxs[p->type])
+            return 2;
+        return 3;
+    }
 #endif
 
     // general case
@@ -245,29 +243,25 @@ int BoxOnPlaneSide(vec3_t emins, vec3_t emaxs, mplane_t* p) {
     }
 
 #if 0
-	int		i;
-	vec3_t	corners[2];
+    i32 i;
+    vec3_t corners[2];
 
-	for (i=0 ; i<3 ; i++)
-	{
-		if (plane->normal[i] < 0)
-		{
-			corners[0][i] = emins[i];
-			corners[1][i] = emaxs[i];
-		}
-		else
-		{
-			corners[1][i] = emins[i];
-			corners[0][i] = emaxs[i];
-		}
-	}
-	dist = DotProduct (plane->normal, corners[0]) - plane->dist;
-	dist2 = DotProduct (plane->normal, corners[1]) - plane->dist;
-	sides = 0;
-	if (dist1 >= 0)
-		sides = 1;
-	if (dist2 < 0)
-		sides |= 2;
+    for (i = 0; i < 3; i++) {
+        if (plane->normal[i] < 0) {
+            corners[0][i] = emins[i];
+            corners[1][i] = emaxs[i];
+        } else {
+            corners[1][i] = emins[i];
+            corners[0][i] = emaxs[i];
+        }
+    }
+    dist = DotProduct(plane->normal, corners[0]) - plane->dist;
+    dist2 = DotProduct(plane->normal, corners[1]) - plane->dist;
+    sides = 0;
+    if (dist1 >= 0)
+        sides = 1;
+    if (dist2 < 0)
+        sides |= 2;
 
 #endif
 
@@ -310,8 +304,8 @@ void AngleVectors(vec3_t angles, vec3_t forward, vec3_t right, vec3_t up) {
     up[2] = cr * cp;
 }
 
-int VectorCompare(vec3_t v1, vec3_t v2) {
-    int i;
+i32 VectorCompare(vec3_t v1, vec3_t v2) {
+    i32 i;
 
     for (i = 0; i < 3; i++)
         if (v1[i] != v2[i])
@@ -358,7 +352,7 @@ void CrossProduct(vec3_t v1, vec3_t v2, vec3_t cross) {
 double sqrt(double x);
 
 vec_t Length(vec3_t v) {
-    int i;
+    i32 i;
     float length;
 
     length = 0;
@@ -398,8 +392,8 @@ void VectorScale(vec3_t in, vec_t scale, vec3_t out) {
 }
 
 
-int Q_log2(int val) {
-    int answer = 0;
+i32 Q_log2(i32 val) {
+    i32 answer = 0;
     while (val >>= 1)
         answer++;
     return answer;
@@ -476,8 +470,8 @@ quotient must fit in 32 bits.
 ====================
 */
 
-void FloorDivMod(double numer, double denom, int* quotient, int* rem) {
-    int q, r;
+void FloorDivMod(double numer, double denom, i32* quotient, i32* rem) {
+    i32 q, r;
     double x;
 
 #ifndef PARANOID
@@ -492,18 +486,18 @@ void FloorDivMod(double numer, double denom, int* quotient, int* rem) {
     if (numer >= 0.0) {
 
         x = floor(numer / denom);
-        q = (int) x;
-        r = (int) floor(numer - (x * denom));
+        q = (i32) x;
+        r = (i32) floor(numer - (x * denom));
     } else {
         //
         // perform operations with positive values, and fix mod to make floor-based
         //
         x = floor(-numer / denom);
-        q = -(int) x;
-        r = (int) floor(-numer - (x * denom));
+        q = -(i32) x;
+        r = (i32) floor(-numer - (x * denom));
         if (r != 0) {
             q--;
-            r = (int) denom - r;
+            r = (i32) denom - r;
         }
     }
 
@@ -517,7 +511,7 @@ void FloorDivMod(double numer, double denom, int* quotient, int* rem) {
 GreatestCommonDivisor
 ====================
 */
-int GreatestCommonDivisor(int i1, int i2) {
+i32 GreatestCommonDivisor(i32 i1, i32 i2) {
     if (i1 > i2) {
         if (i2 == 0)
             return (i1);

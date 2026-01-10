@@ -86,7 +86,7 @@ void R_Alias_clip_z(finalvert_t* pfv0, finalvert_t* pfv1, finalvert_t* out) {
 
 void R_Alias_clip_left(finalvert_t* pfv0, finalvert_t* pfv1, finalvert_t* out) {
     float scale;
-    int i;
+    i32 i;
 
     if (pfv0->v[1] >= pfv1->v[1]) {
         scale = (float) (r_refdef.aliasvrect.x - pfv0->v[0]) /
@@ -105,7 +105,7 @@ void R_Alias_clip_left(finalvert_t* pfv0, finalvert_t* pfv1, finalvert_t* out) {
 void R_Alias_clip_right(finalvert_t* pfv0, finalvert_t* pfv1,
                         finalvert_t* out) {
     float scale;
-    int i;
+    i32 i;
 
     if (pfv0->v[1] >= pfv1->v[1]) {
         scale = (float) (r_refdef.aliasvrectright - pfv0->v[0]) /
@@ -123,7 +123,7 @@ void R_Alias_clip_right(finalvert_t* pfv0, finalvert_t* pfv1,
 
 void R_Alias_clip_top(finalvert_t* pfv0, finalvert_t* pfv1, finalvert_t* out) {
     float scale;
-    int i;
+    i32 i;
 
     if (pfv0->v[1] >= pfv1->v[1]) {
         scale = (float) (r_refdef.aliasvrect.y - pfv0->v[1]) /
@@ -142,7 +142,7 @@ void R_Alias_clip_top(finalvert_t* pfv0, finalvert_t* pfv1, finalvert_t* out) {
 void R_Alias_clip_bottom(finalvert_t* pfv0, finalvert_t* pfv1,
                          finalvert_t* out) {
     float scale;
-    int i;
+    i32 i;
 
     if (pfv0->v[1] >= pfv1->v[1]) {
         scale = (float) (r_refdef.aliasvrectbottom - pfv0->v[1]) /
@@ -159,11 +159,11 @@ void R_Alias_clip_bottom(finalvert_t* pfv0, finalvert_t* pfv1,
     }
 }
 
-int R_AliasClip(finalvert_t* in, finalvert_t* out, int flag, int count,
+i32 R_AliasClip(finalvert_t* in, finalvert_t* out, i32 flag, i32 count,
                 void (*clip)(finalvert_t* pfv0, finalvert_t* pfv1,
                              finalvert_t* out)) {
-    int i, j, k;
-    int flags, oldflags;
+    i32 i, j, k;
+    i32 flags, oldflags;
 
     j = count - 1;
     k = 0;
@@ -202,9 +202,9 @@ R_AliasClipTriangle
 ================
 */
 void R_AliasClipTriangle(mtriangle_t* ptri) {
-    int i, k, pingpong;
+    i32 i, k, pingpong;
     mtriangle_t mtri;
-    unsigned clipflags;
+    u32 clipflags;
 
     // copy vertexes and fix seam texture coordinates
     if (ptri->facesfront) {

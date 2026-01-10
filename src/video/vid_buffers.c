@@ -31,10 +31,10 @@ static SDL_Surface* screen_buffer = NULL;
 // The RGBA intermediate buffer that we blit the screen_buffer to.
 static SDL_Surface* argb_buffer = NULL;
 
-extern const Uint32 pixel_format;
+extern const u32 pixel_format;
 
-static int VID_highhunkmark;
-static int vid_surfcachesize;
+static i32 VID_highhunkmark;
+static i32 vid_surfcachesize;
 
 static qboolean palette_changed;
 static SDL_Color pal[256];
@@ -56,7 +56,7 @@ static void VID_UpdatePalette(void) {
 
 void VID_SetPalette(const byte* palette) {
     // Translate the palette values to an SDL palette array and set the values.
-    for (int i = 0; i < 256; i++) {
+    for (i32 i = 0; i < 256; i++) {
         byte r = palette[i * 3];
         byte g = palette[(i * 3) + 1];
         byte b = palette[(i * 3) + 2];
@@ -95,7 +95,7 @@ static void VID_AllocSurfaceCache() {
 }
 
 static void VID_AllocZBuffer() {
-    int chunk = vid.width * vid.height * sizeof(*d_pzbuffer);
+    i32 chunk = vid.width * vid.height * sizeof(*d_pzbuffer);
     chunk += vid_surfcachesize;
     VID_highhunkmark = Hunk_HighMark();
     d_pzbuffer = Hunk_HighAllocName(chunk, "video");
@@ -109,31 +109,33 @@ static void VID_AllocZBuffer() {
 // screen pixel format because we import the surface data into the texture.
 //
 static void VID_AllocRgbaBuffer(void) {
-    int w = (int) vid.width;
-    int h = (int) vid.height;
-    int depth = 0;
-    int pitch = 0;
-    argb_buffer = SDL_CreateRGBSurfaceWithFormatFrom(NULL, w, h, depth, pitch,
-                                                     pixel_format);
-
-    SDL_FillRect(argb_buffer, NULL, 0);
+    void* pixels = NULL;
+    i32 w = (i32) vid.width;
+    i32 h = (i32) vid.height;
+    i32 depth = 0;
+    i32 pitch = 0;
+    argb_buffer = SDL_CreateRGBSurfaceWithFormatFrom(
+        pixels, w, h, depth, pitch, pixel_format
+    );
 }
 
 //
 // Create the 8-bit paletted screen buffer.
 //
 static void VID_AllocScreenBuffer(void) {
-    Uint32 flags = 0;
-    int w = (int) vid.width;
-    int h = (int) vid.height;
-    int depth = 8;
-    Uint32 r_mask = 0;
-    Uint32 g_mask = 0;
-    Uint32 b_mask = 0;
-    Uint32 a_mask = 0;
+    u32 flags = 0;
+    i32 w = (i32) vid.width;
+    i32 h = (i32) vid.height;
+    i32 depth = 8;
+    u32 r_mask = 0;
+    u32 g_mask = 0;
+    u32 b_mask = 0;
+    u32 a_mask = 0;
 
-    screen_buffer = SDL_CreateRGBSurface(flags, w, h, depth, r_mask, g_mask,
-                                         b_mask, a_mask);
+    screen_buffer = SDL_CreateRGBSurface(
+        flags, w, h, depth, r_mask,
+        g_mask, b_mask, a_mask
+    );
     SDL_FillRect(screen_buffer, NULL, 0);
 
     vid.buffer = (byte*) screen_buffer->pixels;
@@ -199,8 +201,8 @@ void VID_UpdateTexture(SDL_Texture* texture, vrect_t* rect) {
         // Ensure we blit the whole screen after updating the palette.
         rect->x = 0;
         rect->x = 0;
-        rect->width = (int) vid.width;
-        rect->height = (int) vid.height;
+        rect->width = (i32) vid.width;
+        rect->height = (i32) vid.height;
     }
     SDL_Rect src_rect = {
         .x = rect->x,

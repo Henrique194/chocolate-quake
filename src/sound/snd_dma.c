@@ -45,9 +45,9 @@ static void S_StopAllSoundsC(void);
 // =======================================================================
 
 channel_t snd_channels[MAX_CHANNELS];
-int total_channels;
+i32 total_channels;
 
-int snd_blocked = 0;
+i32 snd_blocked = 0;
 qboolean snd_initialized = false;
 
 volatile dma_t sn;
@@ -61,16 +61,16 @@ float voicevolumescale = 1; //for audio ducking while speaking
 
 #define sound_nominal_clip_dist 1000.0
 
-int soundtime;   // sample PAIRS
-int paintedtime; // sample PAIRS
+i32 soundtime;   // sample PAIRS
+i32 paintedtime; // sample PAIRS
 
-int s_rawend;
+i32 s_rawend;
 portable_samplepair_t s_rawsamples[MAX_RAW_SAMPLES];
 
 
 #define MAX_SFX 512
 static sfx_t* known_sfx = NULL; // hunk allocated [MAX_SFX]
-static int num_sfx;
+static i32 num_sfx;
 
 static sfx_t* ambient_sfx[NUM_AMBIENTS];
 
@@ -160,7 +160,7 @@ static void S_PrecacheAmbientSound() {
 }
 
 static void S_InitVariables() {
-    int i = COM_CheckParm("-sndspeed");
+    i32 i = COM_CheckParm("-sndspeed");
     if (i && i < com_argc - 1) {
         Cvar_Set("sndspeed", com_argv[i + 1]);
     }
@@ -269,18 +269,18 @@ S_FindName
 ==================
 */
 static sfx_t* S_FindName(const char* name) {
-    int i;
+    i32 i;
     sfx_t* sfx;
 
     if (!name)
         Sys_Error("S_FindName: NULL");
 
-    if (strlen(name) >= MAX_QPATH)
+    if (Q_strlen(name) >= MAX_QPATH)
         Sys_Error("Sound name too long: %s", name);
 
     // see if already loaded
     for (i = 0; i < num_sfx; i++) {
-        if (!strcmp(known_sfx[i].name, name)) {
+        if (!Q_strcmp(known_sfx[i].name, name)) {
             return &known_sfx[i];
         }
     }
@@ -344,10 +344,10 @@ SND_PickChannel
 picks a channel based on priorities, empty slots, number of channels
 =================
 */
-channel_t* SND_PickChannel(int entnum, int entchannel) {
-    int ch_idx;
-    int first_to_die;
-    int life_left;
+channel_t* SND_PickChannel(i32 entnum, i32 entchannel) {
+    i32 ch_idx;
+    i32 first_to_die;
+    i32 life_left;
 
     // Check for replacement sound, or find the best one to replace
     first_to_die = -1;
@@ -422,12 +422,12 @@ void SND_Spatialize(channel_t* ch) {
 
     // add in distance effect
     scale = (1.0 - dist) * rscale;
-    ch->rightvol = (int) (ch->master_vol * scale * voicevolumescale);
+    ch->rightvol = (i32) (ch->master_vol * scale * voicevolumescale);
     if (ch->rightvol < 0)
         ch->rightvol = 0;
 
     scale = (1.0 - dist) * lscale;
-    ch->leftvol = (int) (ch->master_vol * scale * voicevolumescale);
+    ch->leftvol = (i32) (ch->master_vol * scale * voicevolumescale);
     if (ch->leftvol < 0)
         ch->leftvol = 0;
 }
@@ -437,12 +437,12 @@ void SND_Spatialize(channel_t* ch) {
 // Start a sound effect
 // =======================================================================
 
-void S_StartSound(int entnum, int entchannel, sfx_t* sfx, vec3_t origin,
+void S_StartSound(i32 entnum, i32 entchannel, sfx_t* sfx, vec3_t origin,
                   float fvol, float attenuation) {
     channel_t *target_chan, *check;
     sfxcache_t* sc;
-    int ch_idx;
-    int skip;
+    i32 ch_idx;
+    i32 skip;
 
     if (!sound_started)
         return;
@@ -459,10 +459,10 @@ void S_StartSound(int entnum, int entchannel, sfx_t* sfx, vec3_t origin,
         return;
 
     // spatialize
-    memset(target_chan, 0, sizeof(*target_chan));
+    Q_memset(target_chan, 0, sizeof(*target_chan));
     VectorCopy(origin, target_chan->origin);
     target_chan->dist_mult = attenuation / sound_nominal_clip_dist;
-    target_chan->master_vol = (int) (fvol * 255);
+    target_chan->master_vol = (i32) (fvol * 255);
     target_chan->entnum = entnum;
     target_chan->entchannel = entchannel;
     SND_Spatialize(target_chan);
@@ -490,7 +490,7 @@ void S_StartSound(int entnum, int entchannel, sfx_t* sfx, vec3_t origin,
             continue;
         if (check->sfx == sfx && !check->pos) {
             /*
-			skip = rand () % (int)(0.1 * shm->speed);
+			skip = rand () % (i32)(0.1 * shm->speed);
 			if (skip >= target_chan->end)
 				skip = target_chan->end - 1;
 			*/
@@ -507,8 +507,8 @@ void S_StartSound(int entnum, int entchannel, sfx_t* sfx, vec3_t origin,
     }
 }
 
-void S_StopSound(int entnum, int entchannel) {
-    int i;
+void S_StopSound(i32 entnum, i32 entchannel) {
+    i32 i;
 
     for (i = 0; i < MAX_DYNAMIC_CHANNELS; i++) {
         if (snd_channels[i].entnum == entnum
@@ -521,7 +521,7 @@ void S_StopSound(int entnum, int entchannel) {
 }
 
 void S_StopAllSounds(qboolean clear) {
-    int i;
+    i32 i;
     if (!sound_started)
         return;
 
@@ -531,7 +531,7 @@ void S_StopAllSounds(qboolean clear) {
         if (snd_channels[i].sfx)
             snd_channels[i].sfx = NULL;
 
-    memset(snd_channels, 0, MAX_CHANNELS * sizeof(channel_t));
+    Q_memset(snd_channels, 0, MAX_CHANNELS * sizeof(channel_t));
 
     if (clear)
         S_ClearBuffer();
@@ -542,7 +542,7 @@ static void S_StopAllSoundsC(void) {
 }
 
 void S_ClearBuffer(void) {
-    int clear;
+    i32 clear;
 
     if (!sound_started || !shm)
         return;
@@ -558,7 +558,7 @@ void S_ClearBuffer(void) {
     else
         clear = 0;
 
-    memset(shm->buffer, clear, shm->samples * shm->samplebits / 8);
+    Q_memset(shm->buffer, clear, shm->samples * shm->samplebits / 8);
 
     SNDDMA_Submit();
 }
@@ -595,7 +595,7 @@ void S_StaticSound(sfx_t* sfx, vec3_t origin, float vol, float attenuation) {
 
     ss->sfx = sfx;
     VectorCopy(origin, ss->origin);
-    ss->master_vol = (int) vol;
+    ss->master_vol = (i32) vol;
     ss->dist_mult = (attenuation / 64) / sound_nominal_clip_dist;
     ss->end = paintedtime + sc->length;
 
@@ -613,7 +613,7 @@ S_UpdateAmbientSounds
 static void S_UpdateAmbientSounds(void) {
     mleaf_t* l;
     float vol;
-    int ambient_channel;
+    i32 ambient_channel;
     channel_t* chan;
 
     // calc ambient sound levels
@@ -655,26 +655,31 @@ static void S_UpdateAmbientSounds(void) {
 
 /*
 ===================
-S_RawSamples		(from QuakeII)
+S_RawSamples (from QuakeII)
 
-Streaming music support. Byte swapping
-of data must be handled by the codec.
-Expects data in signed 16 bit, or unsigned
-8 bit format.
+Streaming music support.
+Byte swapping of data must be handled by the codec.
+Expects data in signed 16 bit, or unsigned 8 bit format.
 ===================
 */
-void S_RawSamples(int samples, int rate, int width, int channels, byte* data,
-                  float volume) {
-    int i;
-    int src, dst;
+void S_RawSamples(
+    i32 samples,
+    i32 rate,
+    i32 width,
+    i32 channels,
+    byte* data,
+    float volume
+) {
+    i32 i;
+    i32 src, dst;
     float scale;
-    int intVolume;
+    i32 intVolume;
 
     if (s_rawend < paintedtime)
         s_rawend = paintedtime;
 
     scale = (float) rate / shm->speed;
-    intVolume = (int) (256 * volume);
+    intVolume = (i32) (256 * volume);
 
     if (channels == 2 && width == 2) {
         for (i = 0;; i++) {
@@ -683,8 +688,8 @@ void S_RawSamples(int samples, int rate, int width, int channels, byte* data,
                 break;
             dst = s_rawend & (MAX_RAW_SAMPLES - 1);
             s_rawend++;
-            s_rawsamples[dst].left = ((short*) data)[src * 2] * intVolume;
-            s_rawsamples[dst].right = ((short*) data)[src * 2 + 1] * intVolume;
+            s_rawsamples[dst].left = ((i16*) data)[src * 2] * intVolume;
+            s_rawsamples[dst].right = ((i16*) data)[src * 2 + 1] * intVolume;
         }
     } else if (channels == 1 && width == 2) {
         for (i = 0;; i++) {
@@ -693,8 +698,8 @@ void S_RawSamples(int samples, int rate, int width, int channels, byte* data,
                 break;
             dst = s_rawend & (MAX_RAW_SAMPLES - 1);
             s_rawend++;
-            s_rawsamples[dst].left = ((short*) data)[src] * intVolume;
-            s_rawsamples[dst].right = ((short*) data)[src] * intVolume;
+            s_rawsamples[dst].left = ((i16*) data)[src] * intVolume;
+            s_rawsamples[dst].right = ((i16*) data)[src] * intVolume;
         }
     } else if (channels == 2 && width == 1) {
         intVolume *= 256;
@@ -705,8 +710,8 @@ void S_RawSamples(int samples, int rate, int width, int channels, byte* data,
                 break;
             dst = s_rawend & (MAX_RAW_SAMPLES - 1);
             s_rawend++;
-            //	s_rawsamples [dst].left = ((signed char *) data)[src * 2] * intVolume;
-            //	s_rawsamples [dst].right = ((signed char *) data)[src * 2 + 1] * intVolume;
+            //	s_rawsamples [dst].left = ((i8*) data)[src * 2] * intVolume;
+            //	s_rawsamples [dst].right = ((i8*) data)[src * 2 + 1] * intVolume;
             s_rawsamples[dst].left =
                 (((byte*) data)[src * 2] - 128) * intVolume;
             s_rawsamples[dst].right =
@@ -721,8 +726,8 @@ void S_RawSamples(int samples, int rate, int width, int channels, byte* data,
                 break;
             dst = s_rawend & (MAX_RAW_SAMPLES - 1);
             s_rawend++;
-            //	s_rawsamples [dst].left = ((signed char *) data)[src] * intVolume;
-            //	s_rawsamples [dst].right = ((signed char *) data)[src] * intVolume;
+            //	s_rawsamples [dst].left = ((i8*) data)[src] * intVolume;
+            //	s_rawsamples [dst].right = ((i8*) data)[src] * intVolume;
             s_rawsamples[dst].left = (((byte*) data)[src] - 128) * intVolume;
             s_rawsamples[dst].right = (((byte*) data)[src] - 128) * intVolume;
         }
@@ -737,8 +742,8 @@ Called once each time through the main loop
 ============
 */
 void S_Update(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up) {
-    int i, j;
-    int total;
+    i32 i, j;
+    i32 total;
     channel_t* ch;
     channel_t* combine;
 
@@ -825,14 +830,14 @@ void S_Update(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up) {
 }
 
 static void GetSoundtime(void) {
-    static int buffers;
-    static int oldsamplepos;
+    static i32 buffers;
+    static i32 oldsamplepos;
 
-    int fullsamples = shm->samples / shm->channels;
+    i32 fullsamples = shm->samples / shm->channels;
 
     // It is possible to miscount buffers if it has
     // wrapped twice between calls to S_Update.
-    int samplepos = SNDDMA_GetDMAPos();
+    i32 samplepos = SNDDMA_GetDMAPos();
 
     if (samplepos < oldsamplepos) {
         // Buffer wrapped.
@@ -858,8 +863,8 @@ void S_ExtraUpdate(void) {
 }
 
 static void S_Update_(void) {
-    unsigned endtime;
-    int samps;
+    u32 endtime;
+    i32 samps;
 
     if (!sound_started || (snd_blocked > 0)) {
         return;
@@ -885,7 +890,7 @@ static void S_Update_(void) {
     if (endtime - soundtime > samps)
         endtime = soundtime + samps;
 
-    S_PaintChannels((int) endtime);
+    S_PaintChannels((i32) endtime);
 
     SNDDMA_Submit();
 }
@@ -899,8 +904,8 @@ CONSOLE FUNCTIONS
 */
 
 static void S_Play(void) {
-    static int hash = 345;
-    int i;
+    static i32 hash = 345;
+    i32 i;
     char name[256];
     sfx_t* sfx;
 
@@ -918,8 +923,8 @@ static void S_Play(void) {
 }
 
 static void S_PlayVol(void) {
-    static int hash = 543;
-    int i;
+    static i32 hash = 543;
+    i32 i;
     float vol;
     char name[256];
     sfx_t* sfx;
@@ -939,17 +944,17 @@ static void S_PlayVol(void) {
 }
 
 static void S_SoundList(void) {
-    int i;
+    i32 i;
     sfx_t* sfx;
 
-    int total = 0;
+    i32 total = 0;
     for (sfx = known_sfx, i = 0; i < num_sfx; i++, sfx++) {
         const sfxcache_t* sc = (sfxcache_t*) Cache_Check(&sfx->cache);
         if (!sc) {
             continue;
         }
 
-        int size = sc->length * sc->width * (sc->stereo + 1);
+        i32 size = sc->length * sc->width * (sc->stereo + 1);
         total += size;
         if (sc->loopstart >= 0) {
             Con_SafePrintf("L");

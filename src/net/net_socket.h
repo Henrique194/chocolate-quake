@@ -37,19 +37,19 @@ typedef struct qsocket_s {
     qboolean canSend;
     qboolean sendNext;
 
-    int driver;
+    i32 driver;
     UDPsocket socket;
     void* driverdata;
 
-    unsigned int ackSequence;
-    unsigned int sendSequence;
-    unsigned int unreliableSendSequence;
-    int sendMessageLength;
+    u32 ackSequence;
+    u32 sendSequence;
+    u32 unreliableSendSequence;
+    i32 sendMessageLength;
     byte sendMessage[NET_MAXMESSAGE];
 
-    unsigned int receiveSequence;
-    unsigned int unreliableReceiveSequence;
-    int receiveMessageLength;
+    u32 receiveSequence;
+    u32 unreliableReceiveSequence;
+    i32 receiveMessageLength;
     byte receiveMessage[NET_MAXMESSAGE];
 
     IPaddress addr;
@@ -71,13 +71,13 @@ qboolean NET_IsSocketDisconnected(const qsocket_t* sock);
 
 void NET_PrintSocketStats(const char* addr);
 
-int NET_GetSocketMessage(qsocket_t* sock);
+i32 NET_GetSocketMessage(qsocket_t* sock);
 
 qboolean NET_CanSocketSendMessage(qsocket_t* sock);
 
-int NET_SendSocketMessage(qsocket_t* sock, sizebuf_t* data);
+i32 NET_SendSocketMessage(qsocket_t* sock, sizebuf_t* data);
 
-int NET_SendSocketUnreliableMessage(qsocket_t* sock, sizebuf_t* data);
+i32 NET_SendSocketUnreliableMessage(qsocket_t* sock, sizebuf_t* data);
 
 void NET_InitSockets(void);
 

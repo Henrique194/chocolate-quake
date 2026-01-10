@@ -55,11 +55,11 @@ kbutton_t in_lookup, in_lookdown, in_moveleft, in_moveright;
 kbutton_t in_strafe, in_speed, in_use, in_jump, in_attack;
 kbutton_t in_up, in_down;
 
-int in_impulse;
+i32 in_impulse;
 
 
 void KeyDown(kbutton_t* b) {
-    int k;
+    i32 k;
     char* c;
 
     c = Cmd_Argv(1);
@@ -86,7 +86,7 @@ void KeyDown(kbutton_t* b) {
 }
 
 void KeyUp(kbutton_t* b) {
-    int k;
+    i32 k;
     char* c;
 
     c = Cmd_Argv(1);
@@ -384,8 +384,8 @@ CL_SendMove
 ==============
 */
 void CL_SendMove(usercmd_t* cmd) {
-    int i;
-    int bits;
+    i32 i;
+    i32 bits;
     sizebuf_t buf;
     byte data[128];
 

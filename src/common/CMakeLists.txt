@@ -8,6 +8,7 @@ add_library(common STATIC
     com_msg.c
     com_sizebuf.c
     com_stdio.c
+    com_stdlib.c
     com_string.c
     com_token.c
     com_va.c
@@ -15,6 +16,7 @@ add_library(common STATIC
 
 target_include_directories(common PRIVATE ${CMAKE_BINARY_DIR} "../")
 target_include_directories(common PUBLIC "./include")
+target_link_libraries(common PUBLIC ${SDL2_LIBRARIES})
 target_link_libraries(common PRIVATE
     cmd
     console

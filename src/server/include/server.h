@@ -32,10 +32,10 @@
 
 
 typedef struct {
-    int maxclients;
-    int maxclientslimit;
+    i32 maxclients;
+    i32 maxclientslimit;
     struct client_s* clients;    // [maxclients]
-    int serverflags;             // episode completion information
+    i32 serverflags;             // episode completion information
     qboolean changelevel_issued; // cleared when at SV_SpawnServer
 } server_static_t;
 
@@ -51,7 +51,7 @@ typedef struct {
 
     double time;
 
-    int lastcheck; // used by PF_checkclient
+    i32 lastcheck; // used by PF_checkclient
     double lastchecktime;
 
     char name[64];      // map name
@@ -61,8 +61,8 @@ typedef struct {
     struct model_s* models[MAX_MODELS];
     char* sound_precache[MAX_SOUNDS]; // NULL terminated
     char* lightstyles[MAX_LIGHTSTYLES];
-    int num_edicts;
-    int max_edicts;
+    i32 num_edicts;
+    i32 max_edicts;
     edict_t* edicts;      // can NOT be array indexed, because
                           // edict_t is variable sized, but can
                           // be used to reference the world ent
@@ -101,16 +101,16 @@ typedef struct client_s {
     byte msgbuf[MAX_MSGLEN];
     edict_t* edict; // EDICT_NUM(clientnum+1)
     char name[32];  // for printing to other people
-    int colors;
+    i32 colors;
 
     float ping_times[NUM_PING_TIMES];
-    int num_pings; // ping_times[num_pings%NUM_PING_TIMES]
+    i32 num_pings; // ping_times[num_pings%NUM_PING_TIMES]
 
     // spawn parms are carried from level to level
     float spawn_parms[NUM_SPAWN_PARMS];
 
     // client known data for deltas
-    int old_frags;
+    i32 old_frags;
 } client_t;
 
 
@@ -197,8 +197,8 @@ extern edict_t* sv_player;
 
 void SV_Init(void);
 
-void SV_StartParticle(vec3_t org, vec3_t dir, int color, int count);
-void SV_StartSound(edict_t* entity, int channel, char* sample, int volume,
+void SV_StartParticle(vec3_t org, vec3_t dir, i32 color, i32 count);
+void SV_StartSound(edict_t* entity, i32 channel, char* sample, i32 volume,
                    float attenuation);
 
 void SV_DropClient(qboolean crash);
@@ -206,7 +206,7 @@ void SV_DropClient(qboolean crash);
 void SV_SendClientMessages(void);
 void SV_ClearDatagram(void);
 
-int SV_ModelIndex(char* name);
+i32 SV_ModelIndex(char* name);
 
 void SV_SetIdealPitch(void);
 

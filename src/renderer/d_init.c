@@ -31,12 +31,12 @@ cvar_t d_mipscale = {"d_mipscale", "1"};
 
 surfcache_t* d_initial_rover;
 qboolean d_roverwrapped;
-int d_minmip;
+i32 d_minmip;
 float d_scalemip[NUM_MIPS - 1];
 
 static float basemip[NUM_MIPS - 1] = {1.0, 0.5 * 0.8, 0.25 * 0.8};
 
-extern int d_aflatcolor;
+extern i32 d_aflatcolor;
 
 void (*d_drawspans)(espan_t* pspan);
 
@@ -66,7 +66,7 @@ void D_Init(void) {
 D_CopyRects
 ===============
 */
-void D_CopyRects(vrect_t* prects, int transparent) {
+void D_CopyRects(vrect_t* prects, i32 transparent) {
 
     // this function is only required if the CPU doesn't have direct access to the
     // back buffer, and there's some driver interface function that the driver
@@ -115,7 +115,7 @@ D_SetupFrame
 ===============
 */
 void D_SetupFrame(void) {
-    int i;
+    i32 i;
 
     if (r_dowarp)
         d_viewbuffer = r_warpbuffer;

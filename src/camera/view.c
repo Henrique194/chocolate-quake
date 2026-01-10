@@ -76,7 +76,7 @@ cvar_t gl_cshiftpercent = {"gl_cshiftpercent", "100", false};
 
 float v_dmg_time, v_dmg_roll, v_dmg_pitch;
 
-extern int in_forward, in_forward2, in_back;
+extern i32 in_forward, in_forward2, in_back;
 
 
 /*
@@ -121,7 +121,7 @@ float V_CalcBob(void) {
     float bob;
     float cycle;
 
-    cycle = cl.time - (int) (cl.time / cl_bobcycle.value) * cl_bobcycle.value;
+    cycle = cl.time - (i32) (cl.time / cl_bobcycle.value) * cl_bobcycle.value;
     cycle /= cl_bobcycle.value;
     if (cycle < cl_bobup.value)
         cycle = M_PI * cycle / cl_bobup.value;
@@ -252,7 +252,7 @@ cvar_t v_gamma = {"gamma", "1", true};
 byte gammatable[256]; // palette is sent through this
 
 void BuildGammaTable(float g) {
-    int i, inf;
+    i32 i, inf;
 
     if (g == 1.0) {
         for (i = 0; i < 256; i++)
@@ -295,9 +295,9 @@ V_ParseDamage
 ===============
 */
 void V_ParseDamage(void) {
-    int armor, blood;
+    i32 armor, blood;
     vec3_t from;
-    int i;
+    i32 i;
     vec3_t forward, right, up;
     entity_t* ent;
     float side;
@@ -388,7 +388,7 @@ V_SetContentsColor
 Underwater, lava, etc each has a color shift
 =============
 */
-void V_SetContentsColor(int contents) {
+void V_SetContentsColor(i32 contents) {
     switch (contents) {
         case CONTENTS_EMPTY:
         case CONTENTS_SOLID:
@@ -441,11 +441,11 @@ V_UpdatePalette
 =============
 */
 void V_UpdatePalette(void) {
-    int i, j;
+    i32 i, j;
     qboolean new;
     byte *basepal, *newpal;
     byte pal[768];
-    int r, g, b;
+    i32 r, g, b;
     qboolean force;
 
     V_CalcPowerupCshift();
@@ -685,7 +685,7 @@ V_CalcRefdef
 */
 void V_CalcRefdef(void) {
     entity_t *ent, *view;
-    int i;
+    i32 i;
     vec3_t forward, right, up;
     vec3_t angles;
     float bob;
@@ -759,7 +759,8 @@ void V_CalcRefdef(void) {
     // roughly equal with different FOV
 
 #if 0
-	if (cl.model_precache[cl.stats[STAT_WEAPON]] && strcmp (cl.model_precache[cl.stats[STAT_WEAPON]]->name,  "progs/v_shot2.mdl"))
+    if (cl.model_precache[cl.stats[STAT_WEAPON]]
+        && strcmp(cl.model_precache[cl.stats[STAT_WEAPON]]->name,"progs/v_shot2.mdl"))
 #endif
     if (scr_viewsize.value == 110)
         view->origin[2] += 1;
@@ -834,7 +835,7 @@ void V_RenderView(void) {
         //
         // render two interleaved views
         //
-        int i;
+        i32 i;
 
         vid.width <<= 1;
         vid.aspect *= 0.5;

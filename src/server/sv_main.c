@@ -42,7 +42,7 @@ SV_Init
 ===============
 */
 void SV_Init(void) {
-    int i;
+    i32 i;
     extern cvar_t sv_maxvelocity;
     extern cvar_t sv_gravity;
     extern cvar_t sv_nostep;
@@ -84,8 +84,8 @@ SV_StartParticle
 Make sure the event gets sent to all clients
 ==================
 */
-void SV_StartParticle(vec3_t org, vec3_t dir, int color, int count) {
-    int i, v;
+void SV_StartParticle(vec3_t org, vec3_t dir, i32 color, i32 count) {
+    i32 i, v;
 
     if (sv.datagram.cursize > MAX_DATAGRAM - 16)
         return;
@@ -120,12 +120,12 @@ Larger attenuations will drop off.  (max 4 attenuation)
 
 ==================
 */
-void SV_StartSound(edict_t* entity, int channel, char* sample, int volume,
+void SV_StartSound(edict_t* entity, i32 channel, char* sample, i32 volume,
                    float attenuation) {
-    int sound_num;
-    int field_mask;
-    int i;
-    int ent;
+    i32 sound_num;
+    i32 field_mask;
+    i32 i;
+    i32 ent;
 
     if (volume < 0 || volume > 255)
         Sys_Error("SV_StartSound: volume = %i", volume);
@@ -142,7 +142,7 @@ void SV_StartSound(edict_t* entity, int channel, char* sample, int volume,
     // find precache number for sound
     for (sound_num = 1; sound_num < MAX_SOUNDS && sv.sound_precache[sound_num];
          sound_num++)
-        if (!strcmp(sample, sv.sound_precache[sound_num]))
+        if (!Q_strcmp(sample, sv.sound_precache[sound_num]))
             break;
 
     if (sound_num == MAX_SOUNDS || !sv.sound_precache[sound_num]) {
@@ -244,12 +244,12 @@ Initializes a client_t for a new net connection.  This will only be called
 once for a player each game, not once for each level change.
 ================
 */
-void SV_ConnectClient(int clientnum) {
+void SV_ConnectClient(i32 clientnum) {
     edict_t* ent;
     client_t* client;
-    int edictnum;
+    i32 edictnum;
     qsocket_t* netconnection;
-    int i;
+    i32 i;
     float spawn_parms[NUM_SPAWN_PARMS];
 
     client = svs.clients + clientnum;
@@ -264,11 +264,11 @@ void SV_ConnectClient(int clientnum) {
     netconnection = client->netconnection;
 
     if (sv.loadgame)
-        memcpy(spawn_parms, client->spawn_parms, sizeof(spawn_parms));
-    memset(client, 0, sizeof(*client));
+        Q_memcpy(spawn_parms, client->spawn_parms, sizeof(spawn_parms));
+    Q_memset(client, 0, sizeof(*client));
     client->netconnection = netconnection;
 
-    strcpy(client->name, "unconnected");
+    Q_strcpy(client->name, "unconnected");
     client->active = true;
     client->spawned = false;
     client->edict = ent;
@@ -277,7 +277,7 @@ void SV_ConnectClient(int clientnum) {
     client->message.allowoverflow = true; // we can catch it
 
     if (sv.loadgame)
-        memcpy(client->spawn_parms, spawn_parms, sizeof(spawn_parms));
+        Q_memcpy(client->spawn_parms, spawn_parms, sizeof(spawn_parms));
     else {
         // call the progs to get default spawn parms for the new client
         PR_ExecuteProgram(pr_global_struct->SetNewParms);
@@ -297,7 +297,7 @@ SV_CheckForNewClients
 */
 void SV_CheckForNewClients(void) {
     qsocket_t* ret;
-    int i;
+    i32 i;
 
     //
     // check for new connections
@@ -353,11 +353,11 @@ crosses a waterline.
 =============================================================================
 */
 
-int fatbytes;
+i32 fatbytes;
 byte fatpvs[MAX_MAP_LEAFS / 8];
 
 void SV_AddToFatPVS(vec3_t org, mnode_t* node) {
-    int i;
+    i32 i;
     byte* pvs;
     mplane_t* plane;
     float d;
@@ -411,8 +411,8 @@ SV_WriteEntitiesToClient
 =============
 */
 void SV_WriteEntitiesToClient(edict_t* clent, sizebuf_t* msg) {
-    int e, i;
-    int bits;
+    i32 e, i;
+    i32 bits;
     byte* pvs;
     vec3_t org;
     float miss;
@@ -532,12 +532,12 @@ SV_CleanupEnts
 =============
 */
 void SV_CleanupEnts(void) {
-    int e;
+    i32 e;
     edict_t* ent;
 
     ent = NEXT_EDICT(sv.edicts);
     for (e = 1; e < sv.num_edicts; e++, ent = NEXT_EDICT(ent)) {
-        ent->v.effects = (int) ent->v.effects & ~EF_MUZZLEFLASH;
+        ent->v.effects = (i32) ent->v.effects & ~EF_MUZZLEFLASH;
     }
 }
 
@@ -548,10 +548,10 @@ SV_WriteClientdataToMessage
 ==================
 */
 void SV_WriteClientdataToMessage(edict_t* ent, sizebuf_t* msg) {
-    int bits;
-    int i;
+    i32 bits;
+    i32 i;
     edict_t* other;
-    int items;
+    i32 items;
     eval_t* val;
 
     //
@@ -596,14 +596,14 @@ void SV_WriteClientdataToMessage(edict_t* ent, sizebuf_t* msg) {
     val = GetEdictFieldValue(ent, "items2");
 
     if (val)
-        items = (int) ent->v.items | ((int) val->_float << 23);
+        items = (i32) ent->v.items | ((i32) val->_float << 23);
     else
         items =
-            (int) ent->v.items | ((int) pr_global_struct->serverflags << 28);
+            (i32) ent->v.items | ((i32) pr_global_struct->serverflags << 28);
 
     bits |= SU_ITEMS;
 
-    if ((int) ent->v.flags & FL_ONGROUND)
+    if ((i32) ent->v.flags & FL_ONGROUND)
         bits |= SU_ONGROUND;
 
     if (ent->v.waterlevel >= 2)
@@ -664,7 +664,7 @@ void SV_WriteClientdataToMessage(edict_t* ent, sizebuf_t* msg) {
         MSG_WriteByte(msg, ent->v.weapon);
     } else {
         for (i = 0; i < 32; i++) {
-            if (((int) ent->v.weapon) & (1 << i)) {
+            if (((i32) ent->v.weapon) & (1 << i)) {
                 MSG_WriteByte(msg, i);
                 break;
             }
@@ -712,7 +712,7 @@ SV_UpdateToReliableMessages
 =======================
 */
 void SV_UpdateToReliableMessages(void) {
-    int i, j;
+    i32 i, j;
     client_t* client;
 
     // check for changes to be sent over the reliable streams
@@ -772,7 +772,7 @@ SV_SendClientMessages
 =======================
 */
 void SV_SendClientMessages(void) {
-    int i;
+    i32 i;
 
     // update frags, names, etc
     SV_UpdateToReliableMessages();
@@ -848,14 +848,14 @@ SV_ModelIndex
 
 ================
 */
-int SV_ModelIndex(char* name) {
-    int i;
+i32 SV_ModelIndex(char* name) {
+    i32 i;
 
     if (!name || !name[0])
         return 0;
 
     for (i = 0; i < MAX_MODELS && sv.model_precache[i]; i++)
-        if (!strcmp(sv.model_precache[i], name))
+        if (!Q_strcmp(sv.model_precache[i], name))
             return i;
     if (i == MAX_MODELS || !sv.model_precache[i])
         Sys_Error("SV_ModelIndex: model %s not precached", name);
@@ -869,9 +869,9 @@ SV_CreateBaseline
 ================
 */
 void SV_CreateBaseline(void) {
-    int i;
+    i32 i;
     edict_t* svent;
-    int entnum;
+    i32 entnum;
 
     for (entnum = 0; entnum < sv.num_edicts; entnum++) {
         // get the current server version
@@ -948,7 +948,7 @@ transition to another level
 ================
 */
 void SV_SaveSpawnparms(void) {
-    int i, j;
+    i32 i, j;
 
     svs.serverflags = pr_global_struct->serverflags;
 
@@ -977,7 +977,7 @@ extern float scr_centertime_off;
 
 void SV_SpawnServer(char* server) {
     edict_t* ent;
-    int i;
+    i32 i;
 
     // let's not have any servers with no name
     if (hostname.string[0] == 0)
@@ -999,7 +999,7 @@ void SV_SpawnServer(char* server) {
     //
     if (coop.value)
         Cvar_SetValue("deathmatch", 0);
-    current_skill = (int) (skill.value + 0.5);
+    current_skill = (i32) (skill.value + 0.5);
     if (current_skill < 0)
         current_skill = 0;
     if (current_skill > 3)
@@ -1012,9 +1012,9 @@ void SV_SpawnServer(char* server) {
     //
     Host_ClearMemory();
 
-    memset(&sv, 0, sizeof(sv));
+    Q_memset(&sv, 0, sizeof(sv));
 
-    strcpy(sv.name, server);
+    Q_strcpy(sv.name, server);
 
     // load progs to get entity field count
     PR_LoadProgs();
@@ -1048,7 +1048,7 @@ void SV_SpawnServer(char* server) {
 
     sv.time = 1.0;
 
-    strcpy(sv.name, server);
+    Q_strcpy(sv.name, server);
     sprintf(sv.modelname, "maps/%s.bsp", server);
     sv.worldmodel = Mod_ForName(sv.modelname, false);
     if (!sv.worldmodel) {
@@ -1076,7 +1076,7 @@ void SV_SpawnServer(char* server) {
     // load the rest of the entities
     //
     ent = EDICT_NUM(0);
-    memset(&ent->v, 0, progs->entityfields * 4);
+    Q_memset(&ent->v, 0, progs->entityfields * 4);
     ent->free = false;
     ent->v.model = PR_SetString(sv.worldmodel->name);
     ent->v.modelindex = 1; // world model

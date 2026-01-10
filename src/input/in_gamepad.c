@@ -43,7 +43,7 @@ static cvar_t joy_enable = {"joy_enable", "1", true};
 typedef struct {
     qboolean was_pressed; // The previous state of the button.
     qboolean pressed;     // The current state of the button.
-    int key;              // The key code associated with this button.
+    i32 key;              // The key code associated with this button.
     double timer;         // Timer to manage repeated button presses.
 } button_t;
 

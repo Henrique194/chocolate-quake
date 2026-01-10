@@ -94,14 +94,14 @@ char* Cmd_CompleteCommand(char* partial);
 // attempts to match a partial command for automatic command line completion
 // returns NULL if nothing fits
 
-int Cmd_Argc(void);
-char* Cmd_Argv(int arg);
+i32 Cmd_Argc(void);
+char* Cmd_Argv(i32 arg);
 char* Cmd_Args(void);
 // The functions that execute commands get their parameters with these
 // functions. Cmd_Argv () will return an empty string, not a NULL
 // if arg > argc, so string operations are allways safe.
 
-int Cmd_CheckParm(char* parm);
+i32 Cmd_CheckParm(char* parm);
 // Returns the position (1 to argc-1) in the command's argument list
 // where the given parameter apears, or 0 if not present
 

@@ -38,7 +38,7 @@ trivertx_t* r_apverts;
 // TODO: these probably will go away with optimized rasterization
 mdl_t* pmdl;
 vec3_t r_plightvec;
-int r_ambientlight;
+i32 r_ambientlight;
 float r_shadelight;
 aliashdr_t* paliashdr;
 finalvert_t* pfinalverts;
@@ -50,15 +50,15 @@ static vec3_t alias_forward, alias_right, alias_up;
 
 static maliasskindesc_t* pskindesc;
 
-int r_amodels_drawn;
-int a_skinwidth;
-int r_anumverts;
+i32 r_amodels_drawn;
+i32 a_skinwidth;
+i32 r_anumverts;
 
 float aliastransform[3][4];
 
 typedef struct {
-    int index0;
-    int index1;
+    i32 index0;
+    i32 index1;
 } aedge_t;
 
 static aedge_t aedges[12] = {{0, 1}, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6},
@@ -71,7 +71,7 @@ float r_avertexnormals[NUMVERTEXNORMALS][3] = {
 };
 
 void R_AliasTransformAndProjectFinalVerts(finalvert_t* fv, stvert_t* pstverts);
-void R_AliasSetUpTransform(int trivial_accept);
+void R_AliasSetUpTransform(i32 trivial_accept);
 void R_AliasTransformVector(vec3_t in, vec3_t out);
 void R_AliasTransformFinalVert(finalvert_t* fv, auxvert_t* av,
                                trivertx_t* pverts, stvert_t* pstverts);
@@ -84,15 +84,15 @@ R_AliasCheckBBox
 ================
 */
 qboolean R_AliasCheckBBox(void) {
-    int i, flags, frame, numv;
+    i32 i, flags, frame, numv;
     aliashdr_t* pahdr;
     float zi, basepts[8][3], v0, v1, frac;
     finalvert_t *pv0, *pv1, viewpts[16];
     auxvert_t *pa0, *pa1, viewaux[16];
     maliasframedesc_t* pframedesc;
     qboolean zclipped, zfullyclipped;
-    unsigned anyclip, allclip;
-    int minz;
+    u32 anyclip, allclip;
+    i32 minz;
 
     // expand, rotate, and translate points into worldspace
 
@@ -248,7 +248,7 @@ General clipped case
 ================
 */
 void R_AliasPreparePoints(void) {
-    int i;
+    i32 i;
     stvert_t* pstverts;
     finalvert_t* fv;
     auxvert_t* av;
@@ -310,8 +310,8 @@ void R_AliasPreparePoints(void) {
 R_AliasSetUpTransform
 ================
 */
-void R_AliasSetUpTransform(int trivial_accept) {
-    int i;
+void R_AliasSetUpTransform(i32 trivial_accept) {
+    i32 i;
     float rotationmatrix[3][4], t2matrix[3][4];
     static float tmatrix[3][4];
     static float viewmatrix[3][4];
@@ -385,7 +385,7 @@ R_AliasTransformFinalVert
 */
 void R_AliasTransformFinalVert(finalvert_t* fv, auxvert_t* av,
                                trivertx_t* pverts, stvert_t* pstverts) {
-    int temp;
+    i32 temp;
     float lightcos, *plightnormal;
 
     av->fv[0] = DotProduct(pverts->v, aliastransform[0]) + aliastransform[0][3];
@@ -403,7 +403,7 @@ void R_AliasTransformFinalVert(finalvert_t* fv, auxvert_t* av,
     temp = r_ambientlight;
 
     if (lightcos < 0) {
-        temp += (int) (r_shadelight * lightcos);
+        temp += (i32) (r_shadelight * lightcos);
 
         // clamp; because we limited the minimum ambient and shading light, we
         // don't have to clamp low light, just bright
@@ -420,7 +420,7 @@ R_AliasTransformAndProjectFinalVerts
 ================
 */
 void R_AliasTransformAndProjectFinalVerts(finalvert_t* fv, stvert_t* pstverts) {
-    int i, temp;
+    i32 i, temp;
     float lightcos, *plightnormal, zi;
     trivertx_t* pverts;
 
@@ -455,7 +455,7 @@ void R_AliasTransformAndProjectFinalVerts(finalvert_t* fv, stvert_t* pstverts) {
         temp = r_ambientlight;
 
         if (lightcos < 0) {
-            temp += (int) (r_shadelight * lightcos);
+            temp += (i32) (r_shadelight * lightcos);
 
             // clamp; because we limited the minimum ambient and shading light, we
             // don't have to clamp low light, just bright
@@ -518,8 +518,8 @@ R_AliasSetupSkin
 ===============
 */
 void R_AliasSetupSkin(void) {
-    int skinnum;
-    int i, numskins;
+    i32 skinnum;
+    i32 i, numskins;
     maliasskingroup_t* paliasskingroup;
     float *pskinintervals, fullskininterval;
     float skintargettime, skintime;
@@ -548,7 +548,7 @@ void R_AliasSetupSkin(void) {
         // when loading in Mod_LoadAliasSkinGroup, we guaranteed all interval
         // values are positive, so we don't have to worry about division by 0
         skintargettime =
-            skintime - ((int) (skintime / fullskininterval)) * fullskininterval;
+            skintime - ((i32) (skintime / fullskininterval)) * fullskininterval;
 
         for (i = 0; i < (numskins - 1); i++) {
             if (pskinintervals[i] > skintargettime)
@@ -605,8 +605,8 @@ set r_apverts
 =================
 */
 void R_AliasSetupFrame(void) {
-    int frame;
-    int i, numframes;
+    i32 frame;
+    i32 i, numframes;
     maliasgroup_t* paliasgroup;
     float *pintervals, fullinterval, targettime, time;
 
@@ -634,7 +634,7 @@ void R_AliasSetupFrame(void) {
     // when loading in Mod_LoadAliasGroup, we guaranteed all interval values
     // are positive, so we don't have to worry about division by 0
     //
-    targettime = time - ((int) (time / fullinterval)) * fullinterval;
+    targettime = time - ((i32) (time / fullinterval)) * fullinterval;
 
     for (i = 0; i < (numframes - 1); i++) {
         if (pintervals[i] > targettime)

@@ -31,14 +31,14 @@
 // no fewer than this no matter what's on the command line
 #define ABSOLUTE_MIN_PARTICLES 512
 
-int ramp1[8] = {0x6f, 0x6d, 0x6b, 0x69, 0x67, 0x65, 0x63, 0x61};
-int ramp2[8] = {0x6f, 0x6e, 0x6d, 0x6c, 0x6b, 0x6a, 0x68, 0x66};
-int ramp3[8] = {0x6d, 0x6b, 6, 5, 4, 3};
+i32 ramp1[8] = {0x6f, 0x6d, 0x6b, 0x69, 0x67, 0x65, 0x63, 0x61};
+i32 ramp2[8] = {0x6f, 0x6e, 0x6d, 0x6c, 0x6b, 0x6a, 0x68, 0x66};
+i32 ramp3[8] = {0x6d, 0x6b, 6, 5, 4, 3};
 
 particle_t *active_particles, *free_particles;
 
 particle_t* particles;
-int r_numparticles;
+i32 r_numparticles;
 
 vec3_t r_pright, r_pup, r_ppn;
 
@@ -49,12 +49,12 @@ R_InitParticles
 ===============
 */
 void R_InitParticles(void) {
-    int i;
+    i32 i;
 
     i = COM_CheckParm("-particles");
 
     if (i) {
-        r_numparticles = (int) (Q_atoi(com_argv[i + 1]));
+        r_numparticles = Q_atoi(com_argv[i + 1]);
         if (r_numparticles < ABSOLUTE_MIN_PARTICLES)
             r_numparticles = ABSOLUTE_MIN_PARTICLES;
     } else {
@@ -80,8 +80,8 @@ float partstep = 0.01;
 float timescale = 0.01;
 
 void R_EntityParticles(entity_t* ent) {
-    int count;
-    int i;
+    i32 count;
+    i32 i;
     particle_t* p;
     float angle;
     float sr, sp, sy, cr, cp, cy;
@@ -139,7 +139,7 @@ R_ClearParticles
 ===============
 */
 void R_ClearParticles(void) {
-    int i;
+    i32 i;
 
     free_particles = &particles[0];
     active_particles = NULL;
@@ -153,8 +153,8 @@ void R_ClearParticles(void) {
 void R_ReadPointFile_f(void) {
     FILE* f;
     vec3_t org;
-    int r;
-    int c;
+    i32 r;
+    i32 c;
     particle_t* p;
     char name[MAX_OSPATH];
 
@@ -203,7 +203,7 @@ Parse an effect out of the server message
 */
 void R_ParseParticleEffect(void) {
     vec3_t org, dir;
-    int i, count, msgcount, color;
+    i32 i, count, msgcount, color;
 
     for (i = 0; i < 3; i++)
         org[i] = MSG_ReadCoord();
@@ -227,7 +227,7 @@ R_ParticleExplosion
 ===============
 */
 void R_ParticleExplosion(vec3_t org) {
-    int i, j;
+    i32 i, j;
     particle_t* p;
 
     for (i = 0; i < 1024; i++) {
@@ -263,10 +263,10 @@ R_ParticleExplosion2
 
 ===============
 */
-void R_ParticleExplosion2(vec3_t org, int colorStart, int colorLength) {
-    int i, j;
+void R_ParticleExplosion2(vec3_t org, i32 colorStart, i32 colorLength) {
+    i32 i, j;
     particle_t* p;
-    int colorMod = 0;
+    i32 colorMod = 0;
 
     for (i = 0; i < 512; i++) {
         if (!free_particles)
@@ -295,7 +295,7 @@ R_BlobExplosion
 ===============
 */
 void R_BlobExplosion(vec3_t org) {
-    int i, j;
+    i32 i, j;
     particle_t* p;
 
     for (i = 0; i < 1024; i++) {
@@ -332,8 +332,8 @@ R_RunParticleEffect
 
 ===============
 */
-void R_RunParticleEffect(vec3_t org, vec3_t dir, int color, int count) {
-    int i, j;
+void R_RunParticleEffect(vec3_t org, vec3_t dir, i32 color, i32 count) {
+    i32 i, j;
     particle_t* p;
 
     for (i = 0; i < count; i++) {
@@ -381,7 +381,7 @@ R_LavaSplash
 ===============
 */
 void R_LavaSplash(vec3_t org) {
-    int i, j, k;
+    i32 i, j, k;
     particle_t* p;
     float vel;
     vec3_t dir;
@@ -421,7 +421,7 @@ R_TeleportSplash
 ===============
 */
 void R_TeleportSplash(vec3_t org) {
-    int i, j, k;
+    i32 i, j, k;
     particle_t* p;
     float vel;
     vec3_t dir;
@@ -454,13 +454,13 @@ void R_TeleportSplash(vec3_t org) {
             }
 }
 
-void R_RocketTrail(vec3_t start, vec3_t end, int type) {
+void R_RocketTrail(vec3_t start, vec3_t end, i32 type) {
     vec3_t vec;
     float len;
-    int j;
+    i32 j;
     particle_t* p;
-    int dec;
-    static int tracercount;
+    i32 dec;
+    static i32 tracercount;
 
     VectorSubtract(end, start, vec);
     len = VectorNormalize(vec);
@@ -487,7 +487,7 @@ void R_RocketTrail(vec3_t start, vec3_t end, int type) {
         switch (type) {
             case 0: // rocket trail
                 p->ramp = (rand() & 3);
-                p->color = ramp3[(int) p->ramp];
+                p->color = ramp3[(i32) p->ramp];
                 p->type = pt_fire;
                 for (j = 0; j < 3; j++)
                     p->org[j] = start[j] + ((rand() % 6) - 3);
@@ -495,7 +495,7 @@ void R_RocketTrail(vec3_t start, vec3_t end, int type) {
 
             case 1: // smoke smoke
                 p->ramp = (rand() & 3) + 2;
-                p->color = ramp3[(int) p->ramp];
+                p->color = ramp3[(i32) p->ramp];
                 p->type = pt_fire;
                 for (j = 0; j < 3; j++)
                     p->org[j] = start[j] + ((rand() % 6) - 3);
@@ -562,7 +562,7 @@ extern cvar_t sv_gravity;
 void R_DrawParticles(void) {
     particle_t *p, *kill;
     float grav;
-    int i;
+    i32 i;
     float time2, time3;
     float time1;
     float dvel;
@@ -618,7 +618,7 @@ void R_DrawParticles(void) {
                 if (p->ramp >= 6)
                     p->die = -1;
                 else
-                    p->color = ramp3[(int) p->ramp];
+                    p->color = ramp3[(i32) p->ramp];
                 p->vel[2] += grav;
                 break;
 
@@ -627,7 +627,7 @@ void R_DrawParticles(void) {
                 if (p->ramp >= 8)
                     p->die = -1;
                 else
-                    p->color = ramp1[(int) p->ramp];
+                    p->color = ramp1[(i32) p->ramp];
                 for (i = 0; i < 3; i++)
                     p->vel[i] += p->vel[i] * dvel;
                 p->vel[2] -= grav;
@@ -638,7 +638,7 @@ void R_DrawParticles(void) {
                 if (p->ramp >= 8)
                     p->die = -1;
                 else
-                    p->color = ramp2[(int) p->ramp];
+                    p->color = ramp2[(i32) p->ramp];
                 for (i = 0; i < 3; i++)
                     p->vel[i] -= p->vel[i] * frametime;
                 p->vel[2] -= grav;

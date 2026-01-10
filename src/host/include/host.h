@@ -34,10 +34,10 @@
 typedef struct {
     char* basedir;
     char* cachedir; // for development over ISDN lines
-    int argc;
+    i32 argc;
     char** argv;
     void* membase;
-    int memsize;
+    i32 memsize;
 } quakeparms_t;
 
 
@@ -57,17 +57,17 @@ extern byte* host_basepal;
 extern byte* host_colormap;
 
 // Incremented every frame, never reset.
-extern int host_framecount;
+extern i32 host_framecount;
 
 // Not bounded in any way, changed at start of every frame, never reset.
 extern double realtime;
 
-extern int minimum_memory;
+extern i32 minimum_memory;
 
 // Skill level for currently loaded level. In case the user
 // changes the cvar while the level is running, this reflects
 // the level actually in use.
-extern int current_skill;
+extern i32 current_skill;
 
 extern qboolean noclip_anglehack;
 

@@ -26,11 +26,11 @@
 #include "sys.h"
 
 
-int msg_readcount;
+i32 msg_readcount;
 qboolean msg_badread;
 
 
-void MSG_WriteChar(sizebuf_t* sb, int c) {
+void MSG_WriteChar(sizebuf_t* sb, i32 c) {
 #ifdef PARANOID
     if (c < -128 || c > 127) {
         Sys_Error("MSG_WriteChar: range error");
@@ -40,7 +40,7 @@ void MSG_WriteChar(sizebuf_t* sb, int c) {
     buf[0] = (byte) c;
 }
 
-void MSG_WriteByte(sizebuf_t* sb, int c) {
+void MSG_WriteByte(sizebuf_t* sb, i32 c) {
 #ifdef PARANOID
     if (c < 0 || c > 255) {
         Sys_Error("MSG_WriteByte: range error");
@@ -50,9 +50,9 @@ void MSG_WriteByte(sizebuf_t* sb, int c) {
     buf[0] = (byte) c;
 }
 
-void MSG_WriteShort(sizebuf_t* sb, int c) {
+void MSG_WriteShort(sizebuf_t* sb, i32 c) {
 #ifdef PARANOID
-    if (c < ((short) 0x8000) || c > (short) 0x7fff) {
+    if (c < ((i16) 0x8000) || c > (i16) 0x7fff) {
         Sys_Error("MSG_WriteShort: range error");
     }
 #endif
@@ -61,7 +61,7 @@ void MSG_WriteShort(sizebuf_t* sb, int c) {
     buf[1] = (byte) (c >> 8);
 }
 
-void MSG_WriteLong(sizebuf_t* sb, int c) {
+void MSG_WriteLong(sizebuf_t* sb, i32 c) {
     byte* buf = SZ_GetSpace(sb, 4);
     buf[0] = c & 0xff;
     buf[1] = (c >> 8) & 0xff;
@@ -70,7 +70,7 @@ void MSG_WriteLong(sizebuf_t* sb, int c) {
 }
 
 void MSG_WriteFloat(sizebuf_t* sb, float f) {
-    int* l = (int*) &f;
+    i32* l = (i32*) &f;
     *l = LittleLong(*l);
     SZ_Write(sb, l, 4);
 }
@@ -79,16 +79,16 @@ void MSG_WriteString(sizebuf_t* sb, char* s) {
     if (!s) {
         SZ_Write(sb, "", 1);
     } else {
-        SZ_Write(sb, s, Q_strlen(s) + 1);
+        SZ_Write(sb, s, (i32) Q_strlen(s) + 1);
     }
 }
 
 void MSG_WriteCoord(sizebuf_t* sb, float f) {
-    MSG_WriteShort(sb, (int) (f * 8));
+    MSG_WriteShort(sb, (i32) (f * 8));
 }
 
 void MSG_WriteAngle(sizebuf_t* sb, float f) {
-    MSG_WriteByte(sb, ((int) f * 256 / 360) & 255);
+    MSG_WriteByte(sb, ((i32) f * 256 / 360) & 255);
 }
 
 
@@ -98,7 +98,7 @@ void MSG_BeginReading(void) {
 }
 
 // returns -1 and sets msg_badread if no more characters are available
-int MSG_ReadChar(void) {
+i32 MSG_ReadChar(void) {
     if (msg_readcount + 1 > net_message.cursize) {
         msg_badread = true;
         return -1;
@@ -108,7 +108,7 @@ int MSG_ReadChar(void) {
     return c;
 }
 
-int MSG_ReadByte(void) {
+i32 MSG_ReadByte(void) {
     if (msg_readcount + 1 > net_message.cursize) {
         msg_badread = true;
         return -1;
@@ -118,24 +118,24 @@ int MSG_ReadByte(void) {
     return c;
 }
 
-int MSG_ReadShort(void) {
+i32 MSG_ReadShort(void) {
     if (msg_readcount + 2 > net_message.cursize) {
         msg_badread = true;
         return -1;
     }
     const byte* data = &net_message.data[msg_readcount];
-    short c = (short) (data[0] + (data[1] << 8));
+    i16 c = (i16) (data[0] + (data[1] << 8));
     msg_readcount += 2;
     return c;
 }
 
-int MSG_ReadLong(void) {
+i32 MSG_ReadLong(void) {
     if (msg_readcount + 4 > net_message.cursize) {
         msg_badread = true;
         return -1;
     }
     const byte* data = &net_message.data[msg_readcount];
-    int c = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
+    i32 c = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
     msg_readcount += 4;
     return c;
 }
@@ -149,7 +149,7 @@ float MSG_ReadFloat(void) {
     b[2] = data[2];
     b[3] = data[3];
     msg_readcount += 4;
-    int* l = (int*) b;
+    i32* l = (i32*) b;
     *l = LittleLong(*l);
     return f;
 }
@@ -157,9 +157,9 @@ float MSG_ReadFloat(void) {
 char* MSG_ReadString(void) {
     static char string[2048];
 
-    int l = 0;
+    i32 l = 0;
     do {
-        int c = MSG_ReadChar();
+        i32 c = MSG_ReadChar();
         if (c == -1 || c == 0) {
             break;
         }

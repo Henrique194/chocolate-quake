@@ -51,8 +51,8 @@ void D_DrawParticle(particle_t* pparticle) {
     vec3_t local, transformed;
     float zi;
     byte* pdest;
-    short* pz;
-    int i, izi, pix, count, u, v;
+    i16* pz;
+    i32 i, izi, pix, count, u, v;
 
     // transform point
     VectorSubtract(pparticle->org, r_origin, local);
@@ -67,8 +67,8 @@ void D_DrawParticle(particle_t* pparticle) {
     // project the point
     // FIXME: preadjust xcenter and ycenter
     zi = 1.0 / transformed[2];
-    u = (int) (xcenter + zi * transformed[0] + 0.5);
-    v = (int) (ycenter - zi * transformed[1] + 0.5);
+    u = (i32) (xcenter + zi * transformed[0] + 0.5);
+    v = (i32) (ycenter - zi * transformed[1] + 0.5);
 
     if ((v > d_vrectbottom_particle) || (u > d_vrectright_particle) ||
         (v < d_vrecty) || (u < d_vrectx)) {
@@ -77,7 +77,7 @@ void D_DrawParticle(particle_t* pparticle) {
 
     pz = d_pzbuffer + (d_zwidth * v) + u;
     pdest = d_viewbuffer + d_scantable[v] + u;
-    izi = (int) (zi * 0x8000);
+    izi = (i32) (zi * 0x8000);
 
     pix = izi >> d_pix_shift;
 

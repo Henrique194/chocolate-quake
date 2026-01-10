@@ -50,7 +50,7 @@ char* COM_FileExtension(const char* in) {
         return "";
     }
     in++;
-    int i;
+    i32 i;
     for (i = 0; i < 7 && *in; i++, in++) {
         exten[i] = *in;
     }
@@ -80,14 +80,14 @@ void COM_FileBase(const char* in, char* out, size_t outsize) {
         dot = s;
     }
     if (dot - slash < 2) {
-        strncpy(out, "?model?", outsize);
+        Q_strncpy(out, "?model?", outsize);
         return;
     }
     size_t len = dot - slash;
     if (len >= outsize) {
         len = outsize - 1;
     }
-    memcpy(out, slash, len);
+    Q_memcpy(out, slash, len);
     out[len] = '\0';
 }
 
@@ -102,7 +102,7 @@ void COM_DefaultExtension(char* path, const char* extension) {
     // if path doesn't have a .EXT, append extension
     // (extension should include the .)
     //
-    const char* src = path + strlen(path) - 1;
+    const char* src = path + Q_strlen(path) - 1;
     while (*src != '/' && src != path) {
         if (*src == '.') {
             // it has an extension
@@ -110,5 +110,5 @@ void COM_DefaultExtension(char* path, const char* extension) {
         }
         src--;
     }
-    strcat(path, extension);
+    Q_strcat(path, extension);
 }

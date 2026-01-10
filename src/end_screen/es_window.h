@@ -24,7 +24,7 @@
 
 #include "quakedef.h"
 
-int ES_InitWindow(void);
+i32 ES_InitWindow(void);
 
 void ES_ShutdownWindow(void);
 

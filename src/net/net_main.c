@@ -35,31 +35,31 @@ qboolean serialAvailable = false;
 qboolean ipxAvailable = false;
 qboolean tcpipAvailable = false;
 
-int net_hostport;
-int DEFAULTnet_hostport = 26000;
+i32 net_hostport;
+i32 DEFAULTnet_hostport = 26000;
 
 char my_ipx_address[NET_NAMELEN];
 char my_tcpip_address[NET_NAMELEN];
 
-void (*GetComPortConfig)(int portNumber, int* port, int* irq, int* baud,
+void (*GetComPortConfig)(i32 portNumber, i32* port, i32* irq, i32* baud,
                          qboolean* useModem);
-void (*SetComPortConfig)(int portNumber, int port, int irq, int baud,
+void (*SetComPortConfig)(i32 portNumber, i32 port, i32 irq, i32 baud,
                          qboolean useModem);
-void (*GetModemConfig)(int portNumber, char* dialType, char* clear, char* init,
+void (*GetModemConfig)(i32 portNumber, char* dialType, char* clear, char* init,
                        char* hangup);
-void (*SetModemConfig)(int portNumber, char* dialType, char* clear, char* init,
+void (*SetModemConfig)(i32 portNumber, char* dialType, char* clear, char* init,
                        char* hangup);
 
 static qboolean listening = false;
 
 
 sizebuf_t net_message;
-int net_activeconnections = 0;
+i32 net_activeconnections = 0;
 
-int messagesSent = 0;
-int messagesReceived = 0;
-int unreliableMessagesSent = 0;
-int unreliableMessagesReceived = 0;
+i32 messagesSent = 0;
+i32 messagesReceived = 0;
+i32 unreliableMessagesSent = 0;
+i32 unreliableMessagesReceived = 0;
 
 cvar_t hostname = {"hostname", "UNNAMED"};
 
@@ -73,13 +73,13 @@ cvar_t config_modem_clear = {"_config_modem_clear", "ATZ", true};
 cvar_t config_modem_init = {"_config_modem_init", "", true};
 cvar_t config_modem_hangup = {"_config_modem_hangup", "AT H", true};
 
-int vcrFile = -1;
+i32 vcrFile = -1;
 qboolean recording = false;
 
 // macro to make the code more readable
 #define dfunc net_drivers[net_driverlevel]
 
-int net_driverlevel;
+i32 net_driverlevel;
 
 
 double net_time;
@@ -108,7 +108,7 @@ static void NET_Listen_f(void) {
 
 
 static void MaxPlayers_f(void) {
-    int n;
+    i32 n;
 
     if (Cmd_Argc() != 2) {
         Con_Printf("\"maxplayers\" is \"%u\"\n", svs.maxclients);
@@ -144,7 +144,7 @@ static void MaxPlayers_f(void) {
 
 
 static void NET_Port_f(void) {
-    int n;
+    i32 n;
 
     if (Cmd_Argc() != 2) {
         Con_Printf("\"port\" is \"%u\"\n", net_hostport);
@@ -174,13 +174,13 @@ NET_Connect
 ===================
 */
 
-int hostCacheCount = 0;
+i32 hostCacheCount = 0;
 hostcache_t hostcache[HOSTCACHESIZE];
 
 qsocket_t* NET_Connect(char* host) {
     qsocket_t* ret;
-    int n;
-    int numdrivers = net_numdrivers;
+    i32 n;
+    i32 numdrivers = net_numdrivers;
 
     SetNetTime();
 
@@ -249,7 +249,7 @@ NET_CheckNewConnections
 
 struct {
     double time;
-    int op;
+    i32 op;
     intptr_t session;
 } vcrConnect;
 
@@ -302,19 +302,19 @@ returns -1 if connection is invalid
 
 struct {
     double time;
-    int op;
+    i32 op;
     intptr_t session;
-    int ret;
-    int len;
+    i32 ret;
+    i32 len;
 } vcrGetMessage;
 
 extern void PrintStats(qsocket_t* s);
 
-int NET_GetMessage(qsocket_t* sock) {
+i32 NET_GetMessage(qsocket_t* sock) {
     if (!sock) {
         return -1;
     }
-    const int ret = NET_GetSocketMessage(sock);
+    const i32 ret = NET_GetSocketMessage(sock);
     if (NET_IsSocketDisconnected(sock)) {
         return -1;
     }
@@ -348,12 +348,12 @@ returns -1 if the connection died
 */
 struct {
     double time;
-    int op;
+    i32 op;
     intptr_t session;
-    int r;
+    i32 r;
 } vcrSendMessage;
 
-static void NET_SendVCRMessage(const qsocket_t* sock, const int op, const int ret) {
+static void NET_SendVCRMessage(const qsocket_t* sock, const i32 op, const i32 ret) {
     if (NET_IsSocketDisconnected(sock)) {
         return;
     }
@@ -365,11 +365,11 @@ static void NET_SendVCRMessage(const qsocket_t* sock, const int op, const int re
 }
 
 
-int NET_SendMessage(qsocket_t* sock, sizebuf_t* data) {
+i32 NET_SendMessage(qsocket_t* sock, sizebuf_t* data) {
     if (!sock) {
         return -1;
     }
-    const int ret = NET_SendSocketMessage(sock, data);
+    const i32 ret = NET_SendSocketMessage(sock, data);
     if (recording) {
         NET_SendVCRMessage(sock, VCR_OP_SENDMESSAGE, ret);
     }
@@ -377,11 +377,11 @@ int NET_SendMessage(qsocket_t* sock, sizebuf_t* data) {
 }
 
 
-int NET_SendUnreliableMessage(qsocket_t* sock, sizebuf_t* data) {
+i32 NET_SendUnreliableMessage(qsocket_t* sock, sizebuf_t* data) {
     if (!sock) {
         return -1;
     }
-    const int ret = NET_SendSocketUnreliableMessage(sock, data);
+    const i32 ret = NET_SendSocketUnreliableMessage(sock, data);
     if (recording) {
         NET_SendVCRMessage(sock, VCR_OP_SENDMESSAGE, ret);
     }
@@ -401,7 +401,7 @@ qboolean NET_CanSendMessage(qsocket_t* sock) {
     if (!sock) {
         return false;
     }
-    const int ret = NET_CanSocketSendMessage(sock);
+    const i32 ret = NET_CanSocketSendMessage(sock);
     if (recording) {
         NET_SendVCRMessage(sock, VCR_OP_CANSENDMESSAGE, ret);
     }
@@ -409,10 +409,10 @@ qboolean NET_CanSendMessage(qsocket_t* sock) {
 }
 
 
-int NET_SendToAll(sizebuf_t* data, int blocktime) {
+i32 NET_SendToAll(sizebuf_t* data, i32 blocktime) {
     double start;
-    int i;
-    int count = 0;
+    i32 i;
+    i32 count = 0;
     qboolean state1[MAX_SCOREBOARD];
     qboolean state2[MAX_SCOREBOARD];
 
@@ -478,8 +478,8 @@ NET_Init
 */
 
 void NET_Init(void) {
-    int i;
-    int controlSocket;
+    i32 i;
+    i32 controlSocket;
 
     if (COM_CheckParm("-playback")) {
         net_numdrivers = 1;

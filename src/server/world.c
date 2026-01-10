@@ -42,12 +42,12 @@ typedef struct {
     vec3_t mins2, maxs2;     // size when clipping against mosnters
     float *start, *end;
     trace_t trace;
-    int type;
+    i32 type;
     edict_t* passedict;
 } moveclip_t;
 
 
-int SV_HullPointContents(hull_t* hull, int num, vec3_t p);
+i32 SV_HullPointContents(hull_t* hull, i32 num, vec3_t p);
 
 /*
 ===============================================================================
@@ -71,8 +71,8 @@ can just be stored out and get a proper hull_t structure.
 ===================
 */
 void SV_InitBoxHull(void) {
-    int i;
-    int side;
+    i32 i;
+    i32 side;
 
     box_hull.clipnodes = box_clipnodes;
     box_hull.planes = box_planes;
@@ -138,7 +138,7 @@ hull_t* SV_HullForEntity(edict_t* ent, vec3_t mins, vec3_t maxs,
         if (ent->v.movetype != MOVETYPE_PUSH)
             Sys_Error("SOLID_BSP without MOVETYPE_PUSH");
 
-        model = sv.models[(int) ent->v.modelindex];
+        model = sv.models[(i32) ent->v.modelindex];
 
         if (!model || model->type != mod_brush)
             Sys_Error("MOVETYPE_PUSH with a non bsp model");
@@ -176,7 +176,7 @@ ENTITY AREA CHECKING
 */
 
 typedef struct areanode_s {
-    int axis; // -1 = leaf node
+    i32 axis; // -1 = leaf node
     float dist;
     struct areanode_s* children[2];
     link_t trigger_edicts;
@@ -187,7 +187,7 @@ typedef struct areanode_s {
 #define AREA_NODES 32
 
 static areanode_t sv_areanodes[AREA_NODES];
-static int sv_numareanodes;
+static i32 sv_numareanodes;
 
 /*
 ===============
@@ -195,7 +195,7 @@ SV_CreateAreaNode
 
 ===============
 */
-areanode_t* SV_CreateAreaNode(int depth, vec3_t mins, vec3_t maxs) {
+areanode_t* SV_CreateAreaNode(i32 depth, vec3_t mins, vec3_t maxs) {
     areanode_t* anode;
     vec3_t size;
     vec3_t mins1, maxs1, mins2, maxs2;
@@ -241,7 +241,7 @@ SV_ClearWorld
 void SV_ClearWorld(void) {
     SV_InitBoxHull();
 
-    memset(sv_areanodes, 0, sizeof(sv_areanodes));
+    Q_memset(sv_areanodes, 0, sizeof(sv_areanodes));
     sv_numareanodes = 0;
     SV_CreateAreaNode(0, sv.worldmodel->mins, sv.worldmodel->maxs);
 }
@@ -269,7 +269,7 @@ SV_TouchLinks
 void SV_TouchLinks(edict_t* ent, areanode_t* node) {
     link_t *l, *next;
     edict_t* touch;
-    int old_self, old_other;
+    i32 old_self, old_other;
 
     // touch linked edicts
     for (l = node->trigger_edicts.next; l != &node->trigger_edicts; l = next) {
@@ -318,8 +318,8 @@ SV_FindTouchedLeafs
 void SV_FindTouchedLeafs(edict_t* ent, mnode_t* node) {
     mplane_t* splitplane;
     mleaf_t* leaf;
-    int sides;
-    int leafnum;
+    i32 sides;
+    i32 leafnum;
 
     if (node->contents == CONTENTS_SOLID)
         return;
@@ -377,7 +377,7 @@ void SV_LinkEdict(edict_t* ent, qboolean touch_triggers) {
     // to make items easier to pick up and allow them to be grabbed off
     // of shelves, the abs sizes are expanded
     //
-    if ((int) ent->v.flags & FL_ITEM) {
+    if ((i32) ent->v.flags & FL_ITEM) {
         ent->v.absmin[0] -= 15;
         ent->v.absmin[1] -= 15;
         ent->v.absmax[0] += 15;
@@ -440,7 +440,7 @@ SV_HullPointContents
 
 ==================
 */
-int SV_HullPointContents(hull_t* hull, int num, vec3_t p) {
+i32 SV_HullPointContents(hull_t* hull, i32 num, vec3_t p) {
     float d;
     dclipnode_t* node;
     mplane_t* plane;
@@ -471,8 +471,8 @@ SV_PointContents
 
 ==================
 */
-int SV_PointContents(vec3_t p) {
-    int cont;
+i32 SV_PointContents(vec3_t p) {
+    i32 cont;
 
     cont = SV_HullPointContents(&sv.worldmodel->hulls[0], 0, p);
     if (cont <= CONTENTS_CURRENT_0 && cont >= CONTENTS_CURRENT_DOWN)
@@ -480,7 +480,7 @@ int SV_PointContents(vec3_t p) {
     return cont;
 }
 
-int SV_TruePointContents(vec3_t p) {
+i32 SV_TruePointContents(vec3_t p) {
     return SV_HullPointContents(&sv.worldmodel->hulls[0], 0, p);
 }
 
@@ -523,15 +523,15 @@ SV_RecursiveHullCheck
 
 ==================
 */
-qboolean SV_RecursiveHullCheck(hull_t* hull, int num, float p1f, float p2f,
+qboolean SV_RecursiveHullCheck(hull_t* hull, i32 num, float p1f, float p2f,
                                vec3_t p1, vec3_t p2, trace_t* trace) {
     dclipnode_t* node;
     mplane_t* plane;
     float t1, t2;
     float frac;
-    int i;
+    i32 i;
     vec3_t mid;
-    int side;
+    i32 side;
     float midf;
 
     // check for empty
@@ -666,7 +666,7 @@ trace_t SV_ClipMoveToEntity(edict_t* ent, vec3_t start, vec3_t mins,
     hull_t* hull;
 
     // fill in a default trace
-    memset(&trace, 0, sizeof(trace_t));
+    Q_memset(&trace, 0, sizeof(trace_t));
     trace.fraction = 1;
     trace.allsolid = true;
     VectorCopy(end, trace.endpos);
@@ -741,7 +741,7 @@ void SV_ClipToLinks(areanode_t* node, moveclip_t* clip) {
                 continue; // don't clip against owner
         }
 
-        if ((int) touch->v.flags & FL_MONSTER)
+        if ((i32) touch->v.flags & FL_MONSTER)
             trace = SV_ClipMoveToEntity(touch, clip->start, clip->mins2,
                                         clip->maxs2, clip->end);
         else
@@ -782,7 +782,7 @@ void SV_MoveBounds(vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end,
 boxmins[0] = boxmins[1] = boxmins[2] = -9999;
 boxmaxs[0] = boxmaxs[1] = boxmaxs[2] = 9999;
 #else
-    int i;
+    i32 i;
 
     for (i = 0; i < 3; i++) {
         if (end[i] > start[i]) {
@@ -801,12 +801,12 @@ boxmaxs[0] = boxmaxs[1] = boxmaxs[2] = 9999;
 SV_Move
 ==================
 */
-trace_t SV_Move(vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end, int type,
+trace_t SV_Move(vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end, i32 type,
                 edict_t* passedict) {
     moveclip_t clip;
-    int i;
+    i32 i;
 
-    memset(&clip, 0, sizeof(moveclip_t));
+    Q_memset(&clip, 0, sizeof(moveclip_t));
 
     // clip to world
     clip.trace = SV_ClipMoveToEntity(sv.edicts, start, mins, maxs, end);

@@ -62,7 +62,7 @@ entity_t cl_static_entities[MAX_STATIC_ENTITIES];
 lightstyle_t cl_lightstyle[MAX_LIGHTSTYLES];
 dlight_t cl_dlights[MAX_DLIGHTS];
 
-int cl_numvisedicts;
+i32 cl_numvisedicts;
 entity_t* cl_visedicts[MAX_VISEDICTS];
 
 
@@ -73,23 +73,23 @@ CL_ClearState
 =====================
 */
 void CL_ClearState(void) {
-    int i;
+    i32 i;
 
     if (!sv.active)
         Host_ClearMemory();
 
     // wipe the entire cl structure
-    memset(&cl, 0, sizeof(cl));
+    Q_memset(&cl, 0, sizeof(cl));
 
     SZ_Clear(&cls.message);
 
     // clear other arrays
-    memset(cl_efrags, 0, sizeof(cl_efrags));
-    memset(cl_entities, 0, sizeof(cl_entities));
-    memset(cl_dlights, 0, sizeof(cl_dlights));
-    memset(cl_lightstyle, 0, sizeof(cl_lightstyle));
-    memset(cl_temp_entities, 0, sizeof(cl_temp_entities));
-    memset(cl_beams, 0, sizeof(cl_beams));
+    Q_memset(cl_efrags, 0, sizeof(cl_efrags));
+    Q_memset(cl_entities, 0, sizeof(cl_entities));
+    Q_memset(cl_dlights, 0, sizeof(cl_dlights));
+    Q_memset(cl_lightstyle, 0, sizeof(cl_lightstyle));
+    Q_memset(cl_temp_entities, 0, sizeof(cl_temp_entities));
+    Q_memset(cl_beams, 0, sizeof(cl_beams));
 
     //
     // allocate the efrags and chain together into a free list
@@ -195,8 +195,8 @@ void CL_SignonReply(void) {
 
             MSG_WriteByte(&cls.message, clc_stringcmd);
             MSG_WriteString(&cls.message,
-                            va("color %i %i\n", ((int) cl_color.value) >> 4,
-                               ((int) cl_color.value) & 15));
+                            va("color %i %i\n", ((i32) cl_color.value) >> 4,
+                               ((i32) cl_color.value) & 15));
 
             MSG_WriteByte(&cls.message, clc_stringcmd);
             sprintf(str, "spawn %s", cls.spawnparms);
@@ -251,7 +251,7 @@ CL_PrintEntities_f
 */
 void CL_PrintEntities_f(void) {
     entity_t* ent;
-    int i;
+    i32 i;
 
     for (i = 0, ent = cl_entities; i < cl.num_entities; i++, ent++) {
         Con_Printf("%3i:", i);
@@ -274,38 +274,33 @@ SetPal
 Debugging tool, just flashes the screen
 ===============
 */
-void SetPal(int i) {
+void SetPal(i32 i) {
 #if 0
-	static int old;
-	byte	pal[768];
-	int		c;
-	
-	if (i == old)
-		return;
-	old = i;
+    static i32 old;
+    byte pal[768];
+    i32 c;
 
-	if (i==0)
-		VID_SetPalette (host_basepal);
-	else if (i==1)
-	{
-		for (c=0 ; c<768 ; c+=3)
-		{
-			pal[c] = 0;
-			pal[c+1] = 255;
-			pal[c+2] = 0;
-		}
-		VID_SetPalette (pal);
-	}
-	else
-	{
-		for (c=0 ; c<768 ; c+=3)
-		{
-			pal[c] = 0;
-			pal[c+1] = 0;
-			pal[c+2] = 255;
-		}
-		VID_SetPalette (pal);
-	}
+    if (i == old)
+        return;
+    old = i;
+
+    if (i == 0)
+        VID_SetPalette(host_basepal);
+    else if (i == 1) {
+        for (c = 0; c < 768; c += 3) {
+            pal[c] = 0;
+            pal[c + 1] = 255;
+            pal[c + 2] = 0;
+        }
+        VID_SetPalette(pal);
+    } else {
+        for (c = 0; c < 768; c += 3) {
+            pal[c] = 0;
+            pal[c + 1] = 0;
+            pal[c + 2] = 255;
+        }
+        VID_SetPalette(pal);
+    }
 #endif
 }
 
@@ -315,8 +310,8 @@ CL_AllocDlight
 
 ===============
 */
-dlight_t* CL_AllocDlight(int key) {
-    int i;
+dlight_t* CL_AllocDlight(i32 key) {
+    i32 i;
     dlight_t* dl;
 
     // first look for an exact key match
@@ -324,7 +319,7 @@ dlight_t* CL_AllocDlight(int key) {
         dl = cl_dlights;
         for (i = 0; i < MAX_DLIGHTS; i++, dl++) {
             if (dl->key == key) {
-                memset(dl, 0, sizeof(*dl));
+                Q_memset(dl, 0, sizeof(*dl));
                 dl->key = key;
                 return dl;
             }
@@ -335,14 +330,14 @@ dlight_t* CL_AllocDlight(int key) {
     dl = cl_dlights;
     for (i = 0; i < MAX_DLIGHTS; i++, dl++) {
         if (dl->die < cl.time) {
-            memset(dl, 0, sizeof(*dl));
+            Q_memset(dl, 0, sizeof(*dl));
             dl->key = key;
             return dl;
         }
     }
 
     dl = &cl_dlights[0];
-    memset(dl, 0, sizeof(*dl));
+    Q_memset(dl, 0, sizeof(*dl));
     dl->key = key;
     return dl;
 }
@@ -355,7 +350,7 @@ CL_DecayLights
 ===============
 */
 void CL_DecayLights(void) {
-    int i;
+    i32 i;
     dlight_t* dl;
     float time;
 
@@ -425,7 +420,7 @@ CL_RelinkEntities
 */
 void CL_RelinkEntities(void) {
     entity_t* ent;
-    int i, j;
+    i32 i, j;
     float frac, f, d;
     vec3_t delta;
     float bobjrotate;
@@ -569,8 +564,8 @@ CL_ReadFromServer
 Read all incoming data from the server
 ===============
 */
-int CL_ReadFromServer(void) {
-    int ret;
+i32 CL_ReadFromServer(void) {
+    i32 ret;
 
     cl.oldtime = cl.time;
     cl.time += host_frametime;

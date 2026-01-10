@@ -23,32 +23,32 @@
 
 qboolean bigendien;
 
-short (*BigShort)(short l);
-short (*LittleShort)(short l);
-int (*BigLong)(int l);
-int (*LittleLong)(int l);
+i16 (*BigShort)(i16 l);
+i16 (*LittleShort)(i16 l);
+i32 (*BigLong)(i32 l);
+i32 (*LittleLong)(i32 l);
 float (*BigFloat)(float l);
 float (*LittleFloat)(float l);
 
-static short ShortSwap(short l) {
+static i16 ShortSwap(i16 l) {
     byte b1 = l & 255;
     byte b2 = (l >> 8) & 255;
-    return (short) ((b1 << 8) + b2);
+    return (i16) ((b1 << 8) + b2);
 }
 
-static short ShortNoSwap(short l) {
+static i16 ShortNoSwap(i16 l) {
     return l;
 }
 
-static int LongSwap(int l) {
+static i32 LongSwap(i32 l) {
     byte b1 = l & 255;
     byte b2 = (l >> 8) & 255;
     byte b3 = (l >> 16) & 255;
     byte b4 = (l >> 24) & 255;
-    return ((int) b1 << 24) + ((int) b2 << 16) + ((int) b3 << 8) + b4;
+    return ((i32) b1 << 24) + ((i32) b2 << 16) + ((i32) b3 << 8) + b4;
 }
 
-static int LongNoSwap(int l) {
+static i32 LongNoSwap(i32 l) {
     return l;
 }
 
@@ -73,7 +73,7 @@ static float FloatNoSwap(float f) {
 void COM_InitByteSwap(void) {
     byte swaptest[2] = {1, 0};
 
-    if (*(short*) swaptest == 1) {
+    if (*(i16*) swaptest == 1) {
         bigendien = false;
         BigShort = ShortSwap;
         LittleShort = ShortNoSwap;

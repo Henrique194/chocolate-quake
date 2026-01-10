@@ -21,7 +21,7 @@
 
 #include "host.h"
 #include "sys.h"
-#include <SDL.h>
+#include <SDL_main.h>
 
 
 int main(int argc, char* argv[]) {

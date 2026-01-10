@@ -29,8 +29,8 @@
 FGetLittleLong
 =================
 */
-static int FGetLittleLong(FILE* f) {
-    int v;
+static i32 FGetLittleLong(FILE* f) {
+    i32 v;
     fread(&v, 1, sizeof(v), f);
     return LittleLong(v);
 }
@@ -40,8 +40,8 @@ static int FGetLittleLong(FILE* f) {
 FGetLittleShort
 =================
 */
-static short FGetLittleShort(FILE* f) {
-    short v;
+static i16 FGetLittleShort(FILE* f) {
+    i16 v;
     fread(&v, 1, sizeof(v), f);
     return LittleShort(v);
 }
@@ -51,13 +51,13 @@ static short FGetLittleShort(FILE* f) {
 WAV_ReadChunkInfo
 =================
 */
-static int WAV_ReadChunkInfo(FILE* f, char* name) {
+static i32 WAV_ReadChunkInfo(FILE* f, char* name) {
     name[4] = 0;
-    const int r = (int) fread(name, 1, 4, f);
+    const i32 r = (i32) fread(name, 1, 4, f);
     if (r != 4) {
         return -1;
     }
-    const int len = FGetLittleLong(f);
+    const i32 len = FGetLittleLong(f);
     if (len < 0) {
         Con_Printf("WAV: Negative chunk length\n");
         return -1;
@@ -72,12 +72,12 @@ WAV_FindRIFFChunk
 Returns the length of the data in the chunk, or -1 if not found
 =================
 */
-static int WAV_FindRIFFChunk(FILE* f, const char* chunk) {
+static i32 WAV_FindRIFFChunk(FILE* f, const char* chunk) {
     char name[5];
-    int len;
+    i32 len;
     while ((len = WAV_ReadChunkInfo(f, name)) >= 0) {
         // If this is the right chunk, return
-        if (!strncmp(name, chunk, 4)) {
+        if (!Q_strncmp(name, chunk, 4)) {
             return len;
         }
         // Pad by 2.
@@ -99,11 +99,11 @@ static qboolean WAV_ReadRIFFHeader(
     snd_info_t* info
 ) {
     char dump[16];
-    int fmtlen = 0;
+    i32 fmtlen = 0;
 
     if (fread(dump, 1, 12, file) < 12
-        || strncmp(dump, "RIFF", 4) != 0
-        || strncmp(&dump[8], "WAVE", 4) != 0)
+        || Q_strncmp(dump, "RIFF", 4) != 0
+        || Q_strncmp(&dump[8], "WAVE", 4) != 0)
     {
         Con_Printf("%s is missing RIFF/WAVE chunks\n", name);
         return false;
@@ -116,7 +116,7 @@ static qboolean WAV_ReadRIFFHeader(
     }
 
     // Save the parameters
-    const int wav_format = FGetLittleShort(file);
+    const i32 wav_format = FGetLittleShort(file);
     if (wav_format != WAV_FORMAT_PCM) {
         Con_Printf("%s is not Microsoft PCM format\n", name);
         return false;
@@ -168,7 +168,7 @@ S_WAV_CodecOpenStream
 =================
 */
 static qboolean S_WAV_CodecOpenStream(snd_stream_t* stream) {
-    const long start = stream->fh.start;
+    const i64 start = stream->fh.start;
 
     // Read the RIFF header
     // The file reads are sequential, therefore no need for
@@ -193,8 +193,8 @@ static qboolean S_WAV_CodecOpenStream(snd_stream_t* stream) {
 S_WAV_CodecReadStream
 =================
 */
-int S_WAV_CodecReadStream(snd_stream_t* stream, int bytes, void* buffer) {
-    const int remaining = stream->info.size - stream->fh.pos;
+i32 S_WAV_CodecReadStream(snd_stream_t* stream, i32 bytes, void* buffer) {
+    const i32 remaining = stream->info.size - stream->fh.pos;
     if (remaining <= 0) {
         return 0;
     }
@@ -204,9 +204,9 @@ int S_WAV_CodecReadStream(snd_stream_t* stream, int bytes, void* buffer) {
     stream->fh.pos += bytes;
     fread(buffer, 1, bytes, stream->fh.file);
     if (stream->info.width == 2) {
-        const int samples = bytes / 2;
-        short* sbuf = buffer;
-        for (int i = 0; i < samples; i++) {
+        const i32 samples = bytes / 2;
+        i16* sbuf = buffer;
+        for (i32 i = 0; i < samples; i++) {
             sbuf[i] = LittleShort(sbuf[i]);
         }
     }
@@ -217,7 +217,7 @@ static void S_WAV_CodecCloseStream(snd_stream_t* stream) {
     S_CodecUtilClose(&stream);
 }
 
-static int S_WAV_CodecRewindStream(snd_stream_t* stream) {
+static i32 S_WAV_CodecRewindStream(snd_stream_t* stream) {
     Q_rewind(&stream->fh);
     return 0;
 }

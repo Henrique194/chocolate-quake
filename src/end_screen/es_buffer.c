@@ -39,8 +39,8 @@ static SDL_Surface* argb_buffer;
 static SDL_Texture* texture;
 static vga_char_t end_screen[TEXT_SCREEN_SIZE];
 
-static int buffer_width;
-static int buffer_height;
+static i32 buffer_width;
+static i32 buffer_height;
 
 static const SDL_PixelFormatEnum pixel_format = SDL_PIXELFORMAT_ARGB8888;
 
@@ -65,7 +65,7 @@ static byte* ES_GetScreenData(void) {
     // Write the version number directly to the end screen.
     char ver[7];
     SDL_snprintf(ver, 7, " v%4.2f", VERSION);
-    for (int i = 0; i < 6; i++) {
+    for (i32 i = 0; i < 6; i++) {
         screen_data[(72 + i) * 2] = ver[i];
     }
 
@@ -77,8 +77,8 @@ static qboolean ES_ReadScreenData(void) {
     if (!screen_data) {
         return false;
     }
-    const int size = TEXT_SCREEN_SIZE * 2;
-    for (int i = 0; i < size; i += 2) {
+    const i32 size = TEXT_SCREEN_SIZE * 2;
+    for (i32 i = 0; i < size; i += 2) {
         const byte char_byte = screen_data[i];
         const byte color_byte = screen_data[i + 1];
 
@@ -96,14 +96,14 @@ static qboolean ES_ReadScreenData(void) {
 }
 
 static qboolean ES_CreateScreenBuffer(void) {
-    const int w = buffer_width;
-    const int h = buffer_height;
-    const Uint32 flags = 0;
-    const int depth = 8;
-    const Uint32 r = 0;
-    const Uint32 g = 0;
-    const Uint32 b = 0;
-    const Uint32 a = 0;
+    const i32 w = buffer_width;
+    const i32 h = buffer_height;
+    const u32 flags = 0;
+    const i32 depth = 8;
+    const u32 r = 0;
+    const u32 g = 0;
+    const u32 b = 0;
+    const u32 a = 0;
     screen_buffer = SDL_CreateRGBSurface(flags, w, h, depth, r, g, b, a);
     if (!screen_buffer) {
         return false;
@@ -113,10 +113,10 @@ static qboolean ES_CreateScreenBuffer(void) {
 }
 
 static SDL_bool ES_CreateRgbaBuffer(void) {
-    const int w = buffer_width;
-    const int h = buffer_height;
-    const int depth = 0;
-    const int pitch = 0;
+    const i32 w = buffer_width;
+    const i32 h = buffer_height;
+    const i32 depth = 0;
+    const i32 pitch = 0;
     argb_buffer = SDL_CreateRGBSurfaceWithFormatFrom(NULL, w, h, depth, pitch,
                                                      pixel_format);
     if (!argb_buffer) {
@@ -129,9 +129,9 @@ static SDL_bool ES_CreateRgbaBuffer(void) {
 static SDL_bool ES_CreateTexture(SDL_Renderer* renderer) {
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-    const int w = buffer_width;
-    const int h = buffer_height;
-    const int access = SDL_TEXTUREACCESS_STREAMING;
+    const i32 w = buffer_width;
+    const i32 h = buffer_height;
+    const i32 access = SDL_TEXTUREACCESS_STREAMING;
     texture = SDL_CreateTexture(renderer, pixel_format, access, w, h);
     return texture != NULL;
 }
@@ -193,7 +193,7 @@ static void ES_UpdateTexture(void) {
     SDL_UnlockTexture(texture);
 }
 
-static void ES_UpdateCharacter(const int x, const int y) {
+static void ES_UpdateCharacter(const i32 x, const i32 y) {
     // Retrieve VGA char.
     const vga_char_t* vga_char = &end_screen[x + (y * TEXT_SCREEN_WIDTH)];
     const byte character = vga_char->ch;
@@ -205,15 +205,15 @@ static void ES_UpdateCharacter(const int x, const int y) {
 
     // Retrieve char data from font.
     const font_t* font = ES_GetCurrentFont();
-    const Uint32 char_size = (font->w * font->h) / 8;
+    const u32 char_size = (font->w * font->h) / 8;
     const byte* char_data = &font->data[character * char_size];
 
-    const unsigned int spot = (x * font->w) + (y * font->h * screen_buffer->pitch);
+    const u32 spot = (x * font->w) + (y * font->h * screen_buffer->pitch);
     byte* dst = ((byte*) screen_buffer->pixels) + spot;
     byte bit = 0;
 
-    for (int y1 = 0; y1 < font->h; y1++) {
-        for (int x1 = 0; x1 < font->w; x1++) {
+    for (i32 y1 = 0; y1 < font->h; y1++) {
+        for (i32 x1 = 0; x1 < font->w; x1++) {
             dst[x1] = (*char_data & (1 << bit)) ? fg : bg;
             bit++;
             if (bit == 8) {
@@ -227,8 +227,8 @@ static void ES_UpdateCharacter(const int x, const int y) {
 
 static void ES_UpdateScreenBuffer(void) {
     SDL_LockSurface(screen_buffer);
-    for (int y = 0; y < TEXT_SCREEN_HEIGHT; y++) {
-        for (int x = 0; x < TEXT_SCREEN_WIDTH; x++) {
+    for (i32 y = 0; y < TEXT_SCREEN_HEIGHT; y++) {
+        for (i32 x = 0; x < TEXT_SCREEN_WIDTH; x++) {
             ES_UpdateCharacter(x, y);
         }
     }

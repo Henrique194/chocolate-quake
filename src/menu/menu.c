@@ -95,30 +95,30 @@ void M_GameOptions_Draw(void);
 void M_Search_Draw(void);
 void M_ServerList_Draw(void);
 
-void M_Main_Key(int key);
-void M_SinglePlayer_Key(int key);
-void M_Load_Key(int key);
-void M_Save_Key(int key);
-void M_MultiPlayer_Key(int key);
-void M_Setup_Key(int key);
-void M_Net_Key(int key);
-void M_Options_Key(int key);
-void M_Keys_Key(int key);
-void M_Video_Key(int key);
-void M_Help_Key(int key);
-void M_Quit_Key(int key);
-void M_SerialConfig_Key(int key);
-void M_ModemConfig_Key(int key);
-void M_LanConfig_Key(int key);
-void M_GameOptions_Key(int key);
-void M_Search_Key(int key);
-void M_ServerList_Key(int key);
+void M_Main_Key(i32 key);
+void M_SinglePlayer_Key(i32 key);
+void M_Load_Key(i32 key);
+void M_Save_Key(i32 key);
+void M_MultiPlayer_Key(i32 key);
+void M_Setup_Key(i32 key);
+void M_Net_Key(i32 key);
+void M_Options_Key(i32 key);
+void M_Keys_Key(i32 key);
+void M_Video_Key(i32 key);
+void M_Help_Key(i32 key);
+void M_Quit_Key(i32 key);
+void M_SerialConfig_Key(i32 key);
+void M_ModemConfig_Key(i32 key);
+void M_LanConfig_Key(i32 key);
+void M_GameOptions_Key(i32 key);
+void M_Search_Key(i32 key);
+void M_ServerList_Key(i32 key);
 
 qboolean m_entersound; // play after drawing a frame, so caching
                        // won't disrupt the sound
 qboolean m_recursiveDraw;
 
-int m_return_state;
+i32 m_return_state;
 qboolean m_return_onerror;
 char m_return_reason[32];
 
@@ -139,11 +139,11 @@ M_DrawCharacter
 Draws one solid graphics character
 ================
 */
-void M_DrawCharacter(int cx, int line, int num) {
+void M_DrawCharacter(i32 cx, i32 line, i32 num) {
     Draw_Character(cx + ((vid.width - 320) >> 1), line, num);
 }
 
-void M_Print(int cx, int cy, char* str) {
+void M_Print(i32 cx, i32 cy, char* str) {
     while (*str) {
         M_DrawCharacter(cx, cy, (*str) + 128);
         str++;
@@ -151,7 +151,7 @@ void M_Print(int cx, int cy, char* str) {
     }
 }
 
-void M_PrintWhite(int cx, int cy, char* str) {
+void M_PrintWhite(i32 cx, i32 cy, char* str) {
     while (*str) {
         M_DrawCharacter(cx, cy, *str);
         str++;
@@ -159,51 +159,51 @@ void M_PrintWhite(int cx, int cy, char* str) {
     }
 }
 
-void M_DrawTransPic(int x, int y, qpic_t* pic) {
+void M_DrawTransPic(i32 x, i32 y, qpic_t* pic) {
     Draw_TransPic(x + ((vid.width - 320) >> 1), y, pic);
 }
 
-void M_DrawPic(int x, int y, qpic_t* pic) {
+void M_DrawPic(i32 x, i32 y, qpic_t* pic) {
     Draw_Pic(x + ((vid.width - 320) >> 1), y, pic);
 }
 
 byte identityTable[256];
 byte translationTable[256];
 
-void M_BuildTranslationTable(int top, int bottom) {
-    int j;
+void M_BuildTranslationTable(i32 top, i32 bottom) {
+    i32 j;
     byte *dest, *source;
 
     for (j = 0; j < 256; j++)
         identityTable[j] = j;
     dest = translationTable;
     source = identityTable;
-    memcpy(dest, source, 256);
+    Q_memcpy(dest, source, 256);
 
     if (top < 128) // the artists made some backwards ranges.  sigh.
-        memcpy(dest + TOP_RANGE, source + top, 16);
+        Q_memcpy(dest + TOP_RANGE, source + top, 16);
     else
         for (j = 0; j < 16; j++)
             dest[TOP_RANGE + j] = source[top + 15 - j];
 
     if (bottom < 128)
-        memcpy(dest + BOTTOM_RANGE, source + bottom, 16);
+        Q_memcpy(dest + BOTTOM_RANGE, source + bottom, 16);
     else
         for (j = 0; j < 16; j++)
             dest[BOTTOM_RANGE + j] = source[bottom + 15 - j];
 }
 
 
-void M_DrawTransPicTranslate(int x, int y, qpic_t* pic) {
+void M_DrawTransPicTranslate(i32 x, i32 y, qpic_t* pic) {
     Draw_TransPicTranslate(x + ((vid.width - 320) >> 1), y, pic,
                            translationTable);
 }
 
 
-void M_DrawTextBox(int x, int y, int width, int lines) {
+void M_DrawTextBox(i32 x, i32 y, i32 width, i32 lines) {
     qpic_t* p;
-    int cx, cy;
-    int n;
+    i32 cx, cy;
+    i32 n;
 
     // draw left side
     cx = x;
@@ -252,7 +252,7 @@ void M_DrawTextBox(int x, int y, int width, int lines) {
 
 //=============================================================================
 
-int m_save_demonum;
+i32 m_save_demonum;
 
 /*
 ================
@@ -282,7 +282,7 @@ void M_ToggleMenu_f(void) {
 //=============================================================================
 /* MAIN MENU */
 
-int m_main_cursor;
+i32 m_main_cursor;
 #define MAIN_ITEMS 5
 
 
@@ -298,7 +298,7 @@ void M_Menu_Main_f(void) {
 
 
 void M_Main_Draw(void) {
-    int f;
+    i32 f;
     qpic_t* p;
 
     M_DrawTransPic(16, 4, Draw_CachePic("gfx/qplaque.lmp"));
@@ -306,14 +306,14 @@ void M_Main_Draw(void) {
     M_DrawPic((320 - p->width) / 2, 4, p);
     M_DrawTransPic(72, 32, Draw_CachePic("gfx/mainmenu.lmp"));
 
-    f = (int) (host_time * 10) % 6;
+    f = (i32) (host_time * 10) % 6;
 
     M_DrawTransPic(54, 32 + m_main_cursor * 20,
                    Draw_CachePic(va("gfx/menudot%i.lmp", f + 1)));
 }
 
 
-void M_Main_Key(int key) {
+void M_Main_Key(i32 key) {
     switch (key) {
         case K_ESCAPE:
         case K_BBUTTON:
@@ -368,7 +368,7 @@ void M_Main_Key(int key) {
 //=============================================================================
 /* SINGLE PLAYER MENU */
 
-int m_singleplayer_cursor;
+i32 m_singleplayer_cursor;
 #define SINGLEPLAYER_ITEMS 3
 
 
@@ -380,7 +380,7 @@ void M_Menu_SinglePlayer_f(void) {
 
 
 void M_SinglePlayer_Draw(void) {
-    int f;
+    i32 f;
     qpic_t* p;
 
     M_DrawTransPic(16, 4, Draw_CachePic("gfx/qplaque.lmp"));
@@ -388,14 +388,14 @@ void M_SinglePlayer_Draw(void) {
     M_DrawPic((320 - p->width) / 2, 4, p);
     M_DrawTransPic(72, 32, Draw_CachePic("gfx/sp_menu.lmp"));
 
-    f = (int) (host_time * 10) % 6;
+    f = (i32) (host_time * 10) % 6;
 
     M_DrawTransPic(54, 32 + m_singleplayer_cursor * 20,
                    Draw_CachePic(va("gfx/menudot%i.lmp", f + 1)));
 }
 
 
-void M_SinglePlayer_Key(int key) {
+void M_SinglePlayer_Key(i32 key) {
     switch (key) {
         case K_ESCAPE:
         case K_BBUTTON:
@@ -445,20 +445,20 @@ void M_SinglePlayer_Key(int key) {
 //=============================================================================
 /* LOAD/SAVE MENU */
 
-int load_cursor; // 0 < load_cursor < MAX_SAVEGAMES
+i32 load_cursor; // 0 < load_cursor < MAX_SAVEGAMES
 
 #define MAX_SAVEGAMES 12
 char m_filenames[MAX_SAVEGAMES][SAVEGAME_COMMENT_LENGTH + 1];
-int loadable[MAX_SAVEGAMES];
+i32 loadable[MAX_SAVEGAMES];
 
 void M_ScanSaves(void) {
-    int i, j;
+    i32 i, j;
     char name[MAX_OSPATH];
     FILE* f;
-    int version;
+    i32 version;
 
     for (i = 0; i < MAX_SAVEGAMES; i++) {
-        strcpy(m_filenames[i], "--- UNUSED SLOT ---");
+        Q_strcpy(m_filenames[i], "--- UNUSED SLOT ---");
         loadable[i] = false;
         sprintf(name, "%s/s%i.sav", com_gamedir, i);
         f = fopen(name, "r");
@@ -466,7 +466,7 @@ void M_ScanSaves(void) {
             continue;
         fscanf(f, "%i\n", &version);
         fscanf(f, "%79s\n", name);
-        strncpy(m_filenames[i], name, sizeof(m_filenames[i]) - 1);
+        Q_strncpy(m_filenames[i], name, sizeof(m_filenames[i]) - 1);
 
         // change _ back to space
         for (j = 0; j < SAVEGAME_COMMENT_LENGTH; j++)
@@ -500,7 +500,7 @@ void M_Menu_Save_f(void) {
 
 
 void M_Load_Draw(void) {
-    int i;
+    i32 i;
     qpic_t* p;
 
     p = Draw_CachePic("gfx/p_load.lmp");
@@ -510,12 +510,12 @@ void M_Load_Draw(void) {
         M_Print(16, 32 + 8 * i, m_filenames[i]);
 
     // line cursor
-    M_DrawCharacter(8, 32 + load_cursor * 8, 12 + ((int) (realtime * 4) & 1));
+    M_DrawCharacter(8, 32 + load_cursor * 8, 12 + ((i32) (realtime * 4) & 1));
 }
 
 
 void M_Save_Draw(void) {
-    int i;
+    i32 i;
     qpic_t* p;
 
     p = Draw_CachePic("gfx/p_save.lmp");
@@ -525,11 +525,11 @@ void M_Save_Draw(void) {
         M_Print(16, 32 + 8 * i, m_filenames[i]);
 
     // line cursor
-    M_DrawCharacter(8, 32 + load_cursor * 8, 12 + ((int) (realtime * 4) & 1));
+    M_DrawCharacter(8, 32 + load_cursor * 8, 12 + ((i32) (realtime * 4) & 1));
 }
 
 
-void M_Load_Key(int k) {
+void M_Load_Key(i32 k) {
     switch (k) {
         case K_ESCAPE:
         case K_BBUTTON:
@@ -571,7 +571,7 @@ void M_Load_Key(int k) {
 }
 
 
-void M_Save_Key(int k) {
+void M_Save_Key(i32 k) {
     switch (k) {
         case K_ESCAPE:
         case K_BBUTTON:
@@ -606,7 +606,7 @@ void M_Save_Key(int k) {
 //=============================================================================
 /* MULTIPLAYER MENU */
 
-int m_multiplayer_cursor;
+i32 m_multiplayer_cursor;
 #define MULTIPLAYER_ITEMS 3
 
 
@@ -618,7 +618,7 @@ void M_Menu_MultiPlayer_f(void) {
 
 
 void M_MultiPlayer_Draw(void) {
-    int f;
+    i32 f;
     qpic_t* p;
 
     M_DrawTransPic(16, 4, Draw_CachePic("gfx/qplaque.lmp"));
@@ -626,7 +626,7 @@ void M_MultiPlayer_Draw(void) {
     M_DrawPic((320 - p->width) / 2, 4, p);
     M_DrawTransPic(72, 32, Draw_CachePic("gfx/mp_menu.lmp"));
 
-    f = (int) (host_time * 10) % 6;
+    f = (i32) (host_time * 10) % 6;
 
     M_DrawTransPic(54, 32 + m_multiplayer_cursor * 20,
                    Draw_CachePic(va("gfx/menudot%i.lmp", f + 1)));
@@ -638,7 +638,7 @@ void M_MultiPlayer_Draw(void) {
 }
 
 
-void M_MultiPlayer_Key(int key) {
+void M_MultiPlayer_Key(i32 key) {
     switch (key) {
         case K_ESCAPE:
         case K_BBUTTON:
@@ -681,15 +681,15 @@ void M_MultiPlayer_Key(int key) {
 //=============================================================================
 /* SETUP MENU */
 
-int setup_cursor = 4;
-int setup_cursor_table[] = {40, 56, 80, 104, 140};
+i32 setup_cursor = 4;
+i32 setup_cursor_table[] = {40, 56, 80, 104, 140};
 
 char setup_hostname[16];
 char setup_myname[16];
-int setup_oldtop;
-int setup_oldbottom;
-int setup_top;
-int setup_bottom;
+i32 setup_oldtop;
+i32 setup_oldbottom;
+i32 setup_top;
+i32 setup_bottom;
 
 #define NUM_SETUP_CMDS 5
 
@@ -699,8 +699,8 @@ void M_Menu_Setup_f(void) {
     m_entersound = true;
     Q_strcpy(setup_myname, cl_name.string);
     Q_strcpy(setup_hostname, hostname.string);
-    setup_top = setup_oldtop = ((int) cl_color.value) >> 4;
-    setup_bottom = setup_oldbottom = ((int) cl_color.value) & 15;
+    setup_top = setup_oldtop = ((i32) cl_color.value) >> 4;
+    setup_bottom = setup_oldbottom = ((i32) cl_color.value) & 15;
 }
 
 
@@ -732,22 +732,22 @@ void M_Setup_Draw(void) {
     M_DrawTransPicTranslate(172, 72, p);
 
     M_DrawCharacter(56, setup_cursor_table[setup_cursor],
-                    12 + ((int) (realtime * 4) & 1));
+                    12 + ((i32) (realtime * 4) & 1));
 
     if (setup_cursor == 0)
-        M_DrawCharacter(168 + 8 * strlen(setup_hostname),
+        M_DrawCharacter(168 + 8 * Q_strlen(setup_hostname),
                         setup_cursor_table[setup_cursor],
-                        10 + ((int) (realtime * 4) & 1));
+                        10 + ((i32) (realtime * 4) & 1));
 
     if (setup_cursor == 1)
-        M_DrawCharacter(168 + 8 * strlen(setup_myname),
+        M_DrawCharacter(168 + 8 * Q_strlen(setup_myname),
                         setup_cursor_table[setup_cursor],
-                        10 + ((int) (realtime * 4) & 1));
+                        10 + ((i32) (realtime * 4) & 1));
 }
 
 
-void M_Setup_Key(int k) {
-    int l;
+void M_Setup_Key(i32 k) {
+    i32 l;
 
     switch (k) {
         case K_ESCAPE:
@@ -810,13 +810,13 @@ void M_Setup_Key(int k) {
 
         case K_BACKSPACE:
             if (setup_cursor == 0) {
-                if (strlen(setup_hostname))
-                    setup_hostname[strlen(setup_hostname) - 1] = 0;
+                if (Q_strlen(setup_hostname))
+                    setup_hostname[Q_strlen(setup_hostname) - 1] = 0;
             }
 
             if (setup_cursor == 1) {
-                if (strlen(setup_myname))
-                    setup_myname[strlen(setup_myname) - 1] = 0;
+                if (Q_strlen(setup_myname))
+                    setup_myname[Q_strlen(setup_myname) - 1] = 0;
             }
             break;
 
@@ -824,14 +824,14 @@ void M_Setup_Key(int k) {
             if (k < 32 || k > 127)
                 break;
             if (setup_cursor == 0) {
-                l = strlen(setup_hostname);
+                l = Q_strlen(setup_hostname);
                 if (l < 15) {
                     setup_hostname[l + 1] = 0;
                     setup_hostname[l] = k;
                 }
             }
             if (setup_cursor == 1) {
-                l = strlen(setup_myname);
+                l = Q_strlen(setup_myname);
                 if (l < 15) {
                     setup_myname[l + 1] = 0;
                     setup_myname[l] = k;
@@ -852,9 +852,9 @@ void M_Setup_Key(int k) {
 //=============================================================================
 /* NET MENU */
 
-int m_net_cursor;
-int m_net_items;
-int m_net_saveHeight;
+i32 m_net_cursor;
+i32 m_net_items;
+i32 m_net_saveHeight;
 
 char* net_helpMessage[] = {
     /* .........1.........2.... */
@@ -884,7 +884,7 @@ void M_Menu_Net_f(void) {
 
 
 void M_Net_Draw(void) {
-    int f;
+    i32 f;
     qpic_t* p;
 
     M_DrawTransPic(16, 4, Draw_CachePic("gfx/qplaque.lmp"));
@@ -942,13 +942,13 @@ void M_Net_Draw(void) {
     M_Print(f, 158, net_helpMessage[m_net_cursor * 4 + 2]);
     M_Print(f, 166, net_helpMessage[m_net_cursor * 4 + 3]);
 
-    f = (int) (host_time * 10) % 6;
+    f = (i32) (host_time * 10) % 6;
     M_DrawTransPic(54, 32 + m_net_cursor * 20,
                    Draw_CachePic(va("gfx/menudot%i.lmp", f + 1)));
 }
 
 
-void M_Net_Key(int k) {
+void M_Net_Key(i32 k) {
 again:
     switch (k) {
         case K_ESCAPE:
@@ -1012,7 +1012,7 @@ again:
 
 #define SLIDER_RANGE 10
 
-int options_cursor;
+i32 options_cursor;
 
 void M_Menu_Options_f(void) {
     key_dest = key_menu;
@@ -1024,7 +1024,7 @@ void M_Menu_Options_f(void) {
 }
 
 
-void M_AdjustSliders(int dir) {
+void M_AdjustSliders(i32 dir) {
     S_LocalSound("misc/menu3.wav");
 
     switch (options_cursor) {
@@ -1095,8 +1095,8 @@ void M_AdjustSliders(int dir) {
 }
 
 
-void M_DrawSlider(int x, int y, float range) {
-    int i;
+void M_DrawSlider(i32 x, i32 y, float range) {
+    i32 i;
 
     if (range < 0)
         range = 0;
@@ -1109,7 +1109,7 @@ void M_DrawSlider(int x, int y, float range) {
     M_DrawCharacter(x + (SLIDER_RANGE - 1) * 8 * range, y, 131);
 }
 
-void M_DrawCheckbox(int x, int y, int on) {
+void M_DrawCheckbox(i32 x, i32 y, i32 on) {
 #if 0
 	if (on)
 		M_DrawCharacter (x, y, 131);
@@ -1174,11 +1174,11 @@ void M_Options_Draw(void) {
     }
 
     // cursor
-    M_DrawCharacter(200, 32 + options_cursor * 8, 12 + ((int) (realtime * 4) & 1));
+    M_DrawCharacter(200, 32 + options_cursor * 8, 12 + ((i32) (realtime * 4) & 1));
 }
 
 
-void M_Options_Key(int k) {
+void M_Options_Key(i32 k) {
     switch (k) {
         case K_ESCAPE:
         case K_BBUTTON:
@@ -1256,8 +1256,8 @@ char* bindnames[][2] = {
 
 #define NUMCOMMANDS (sizeof(bindnames) / sizeof(bindnames[0]))
 
-int keys_cursor;
-int bind_grab;
+i32 keys_cursor;
+i32 bind_grab;
 
 void M_Menu_Keys_f(void) {
     key_dest = key_menu;
@@ -1266,21 +1266,21 @@ void M_Menu_Keys_f(void) {
 }
 
 
-void M_FindKeysForCommand(char* command, int* twokeys) {
-    int count;
-    int j;
-    int l;
+void M_FindKeysForCommand(char* command, i32* twokeys) {
+    i32 count;
+    i32 j;
+    i32 l;
     char* b;
 
     twokeys[0] = twokeys[1] = -1;
-    l = strlen(command);
+    l = Q_strlen(command);
     count = 0;
 
     for (j = 0; j < 256; j++) {
         b = keybindings[j];
         if (!b)
             continue;
-        if (!strncmp(b, command, l)) {
+        if (!Q_strncmp(b, command, l)) {
             twokeys[count] = j;
             count++;
             if (count == 2)
@@ -1290,27 +1290,27 @@ void M_FindKeysForCommand(char* command, int* twokeys) {
 }
 
 void M_UnbindCommand(char* command) {
-    int j;
-    int l;
+    i32 j;
+    i32 l;
     char* b;
 
-    l = strlen(command);
+    l = Q_strlen(command);
 
     for (j = 0; j < 256; j++) {
         b = keybindings[j];
         if (!b)
             continue;
-        if (!strncmp(b, command, l))
+        if (!Q_strncmp(b, command, l))
             Key_SetBinding(j, "");
     }
 }
 
 
 void M_Keys_Draw(void) {
-    int i, l;
-    int keys[2];
+    i32 i, l;
+    i32 keys[2];
     char* name;
-    int x, y;
+    i32 x, y;
     qpic_t* p;
 
     p = Draw_CachePic("gfx/ttl_cstm.lmp");
@@ -1327,7 +1327,7 @@ void M_Keys_Draw(void) {
 
         M_Print(16, y, bindnames[i][1]);
 
-        l = strlen(bindnames[i][0]);
+        l = Q_strlen(bindnames[i][0]);
 
         M_FindKeysForCommand(bindnames[i][0], keys);
 
@@ -1336,7 +1336,7 @@ void M_Keys_Draw(void) {
         } else {
             name = Key_KeynumToString(keys[0]);
             M_Print(140, y, name);
-            x = strlen(name) * 8;
+            x = Q_strlen(name) * 8;
             if (keys[1] != -1) {
                 M_Print(140 + x + 8, y, "or");
                 M_Print(140 + x + 32, y, Key_KeynumToString(keys[1]));
@@ -1348,13 +1348,13 @@ void M_Keys_Draw(void) {
         M_DrawCharacter(130, 48 + keys_cursor * 8, '=');
     else
         M_DrawCharacter(130, 48 + keys_cursor * 8,
-                        12 + ((int) (realtime * 4) & 1));
+                        12 + ((i32) (realtime * 4) & 1));
 }
 
 
-void M_Keys_Key(int k) {
+void M_Keys_Key(i32 k) {
     char cmd[80];
-    int keys[2];
+    i32 keys[2];
 
     if (bind_grab) { // defining a key
         S_LocalSound("misc/menu1.wav");
@@ -1424,14 +1424,14 @@ void M_Video_Draw(void) {
 }
 
 
-void M_Video_Key(int key) {
+void M_Video_Key(i32 key) {
     VID_MenuKey(key);
 }
 
 //=============================================================================
 /* HELP MENU */
 
-int help_page;
+i32 help_page;
 #define NUM_HELP_PAGES 6
 
 
@@ -1448,7 +1448,7 @@ void M_Help_Draw(void) {
 }
 
 
-void M_Help_Key(int key) {
+void M_Help_Key(i32 key) {
     switch (key) {
         case K_ESCAPE:
         case K_BBUTTON:
@@ -1474,7 +1474,7 @@ void M_Help_Key(int key) {
 //=============================================================================
 /* QUIT MENU */
 
-int m_quit_prevstate;
+i32 m_quit_prevstate;
 qboolean wasInMenus;
 
 qboolean M_IsInQuitScreen(void) {
@@ -1492,7 +1492,7 @@ void M_Menu_Quit_f(void) {
 }
 
 
-void M_Quit_Key(int key) {
+void M_Quit_Key(i32 key) {
     switch (key) {
         case K_ESCAPE:
         case K_BBUTTON:
@@ -1556,23 +1556,23 @@ void M_Quit_Draw(void) {
 
 /* SERIAL CONFIG MENU */
 
-int serialConfig_cursor;
-int serialConfig_cursor_table[] = {48, 64, 80, 96, 112, 132};
+i32 serialConfig_cursor;
+i32 serialConfig_cursor_table[] = {48, 64, 80, 96, 112, 132};
 #define NUM_SERIALCONFIG_CMDS 6
 
-static int ISA_uarts[] = {0x3f8, 0x2f8, 0x3e8, 0x2e8};
-static int ISA_IRQs[] = {4, 3, 4, 3};
-int serialConfig_baudrate[] = {9600, 14400, 19200, 28800, 38400, 57600};
+static i32 ISA_uarts[] = {0x3f8, 0x2f8, 0x3e8, 0x2e8};
+static i32 ISA_IRQs[] = {4, 3, 4, 3};
+i32 serialConfig_baudrate[] = {9600, 14400, 19200, 28800, 38400, 57600};
 
-int serialConfig_comport;
-int serialConfig_irq;
-int serialConfig_baud;
+i32 serialConfig_comport;
+i32 serialConfig_irq;
+i32 serialConfig_baud;
 char serialConfig_phone[16];
 
 void M_Menu_SerialConfig_f(void) {
-    int n;
-    int port;
-    int baudrate;
+    i32 n;
+    i32 port;
+    i32 baudrate;
     qboolean useModem;
 
     key_dest = key_menu;
@@ -1610,7 +1610,7 @@ void M_Menu_SerialConfig_f(void) {
 
 void M_SerialConfig_Draw(void) {
     qpic_t* p;
-    int basex;
+    i32 basex;
     char* startJoin;
     char* directModem;
 
@@ -1662,20 +1662,20 @@ void M_SerialConfig_Draw(void) {
     }
 
     M_DrawCharacter(basex - 8, serialConfig_cursor_table[serialConfig_cursor],
-                    12 + ((int) (realtime * 4) & 1));
+                    12 + ((i32) (realtime * 4) & 1));
 
     if (serialConfig_cursor == 4)
-        M_DrawCharacter(168 + 8 * strlen(serialConfig_phone),
+        M_DrawCharacter(168 + 8 * Q_strlen(serialConfig_phone),
                         serialConfig_cursor_table[serialConfig_cursor],
-                        10 + ((int) (realtime * 4) & 1));
+                        10 + ((i32) (realtime * 4) & 1));
 
     if (*m_return_reason)
         M_PrintWhite(basex, 148, m_return_reason);
 }
 
 
-void M_SerialConfig_Key(int key) {
-    int l;
+void M_SerialConfig_Key(i32 key) {
+    i32 l;
 
     switch (key) {
         case K_ESCAPE:
@@ -1800,8 +1800,8 @@ void M_SerialConfig_Key(int key) {
 
         case K_BACKSPACE:
             if (serialConfig_cursor == 4) {
-                if (strlen(serialConfig_phone))
-                    serialConfig_phone[strlen(serialConfig_phone) - 1] = 0;
+                if (Q_strlen(serialConfig_phone))
+                    serialConfig_phone[Q_strlen(serialConfig_phone) - 1] = 0;
             }
             break;
 
@@ -1809,7 +1809,7 @@ void M_SerialConfig_Key(int key) {
             if (key < 32 || key > 127)
                 break;
             if (serialConfig_cursor == 4) {
-                l = strlen(serialConfig_phone);
+                l = Q_strlen(serialConfig_phone);
                 if (l < 15) {
                     serialConfig_phone[l + 1] = 0;
                     serialConfig_phone[l] = key;
@@ -1833,8 +1833,8 @@ void M_SerialConfig_Key(int key) {
 //=============================================================================
 /* MODEM CONFIG MENU */
 
-int modemConfig_cursor;
-int modemConfig_cursor_table[] = {40, 56, 88, 120, 156};
+i32 modemConfig_cursor;
+i32 modemConfig_cursor_table[] = {40, 56, 88, 120, 156};
 #define NUM_MODEMCONFIG_CMDS 5
 
 char modemConfig_dialing;
@@ -1853,7 +1853,7 @@ void M_Menu_ModemConfig_f(void) {
 
 void M_ModemConfig_Draw(void) {
     qpic_t* p;
-    int basex;
+    i32 basex;
 
     M_DrawTransPic(16, 4, Draw_CachePic("gfx/qplaque.lmp"));
     p = Draw_CachePic("gfx/p_multi.lmp");
@@ -1870,36 +1870,36 @@ void M_ModemConfig_Draw(void) {
     M_DrawTextBox(basex, modemConfig_cursor_table[1] + 4, 16, 1);
     M_Print(basex + 8, modemConfig_cursor_table[1] + 12, modemConfig_clear);
     if (modemConfig_cursor == 1)
-        M_DrawCharacter(basex + 8 + 8 * strlen(modemConfig_clear),
+        M_DrawCharacter(basex + 8 + 8 * Q_strlen(modemConfig_clear),
                         modemConfig_cursor_table[1] + 12,
-                        10 + ((int) (realtime * 4) & 1));
+                        10 + ((i32) (realtime * 4) & 1));
 
     M_Print(basex, modemConfig_cursor_table[2], "Init");
     M_DrawTextBox(basex, modemConfig_cursor_table[2] + 4, 30, 1);
     M_Print(basex + 8, modemConfig_cursor_table[2] + 12, modemConfig_init);
     if (modemConfig_cursor == 2)
-        M_DrawCharacter(basex + 8 + 8 * strlen(modemConfig_init),
+        M_DrawCharacter(basex + 8 + 8 * Q_strlen(modemConfig_init),
                         modemConfig_cursor_table[2] + 12,
-                        10 + ((int) (realtime * 4) & 1));
+                        10 + ((i32) (realtime * 4) & 1));
 
     M_Print(basex, modemConfig_cursor_table[3], "Hangup");
     M_DrawTextBox(basex, modemConfig_cursor_table[3] + 4, 16, 1);
     M_Print(basex + 8, modemConfig_cursor_table[3] + 12, modemConfig_hangup);
     if (modemConfig_cursor == 3)
-        M_DrawCharacter(basex + 8 + 8 * strlen(modemConfig_hangup),
+        M_DrawCharacter(basex + 8 + 8 * Q_strlen(modemConfig_hangup),
                         modemConfig_cursor_table[3] + 12,
-                        10 + ((int) (realtime * 4) & 1));
+                        10 + ((i32) (realtime * 4) & 1));
 
     M_DrawTextBox(basex, modemConfig_cursor_table[4] - 8, 2, 1);
     M_Print(basex + 8, modemConfig_cursor_table[4], "OK");
 
     M_DrawCharacter(basex - 8, modemConfig_cursor_table[modemConfig_cursor],
-                    12 + ((int) (realtime * 4) & 1));
+                    12 + ((i32) (realtime * 4) & 1));
 }
 
 
-void M_ModemConfig_Key(int key) {
-    int l;
+void M_ModemConfig_Key(i32 key) {
+    i32 l;
 
     switch (key) {
         case K_ESCAPE:
@@ -1953,18 +1953,18 @@ void M_ModemConfig_Key(int key) {
 
         case K_BACKSPACE:
             if (modemConfig_cursor == 1) {
-                if (strlen(modemConfig_clear))
-                    modemConfig_clear[strlen(modemConfig_clear) - 1] = 0;
+                if (Q_strlen(modemConfig_clear))
+                    modemConfig_clear[Q_strlen(modemConfig_clear) - 1] = 0;
             }
 
             if (modemConfig_cursor == 2) {
-                if (strlen(modemConfig_init))
-                    modemConfig_init[strlen(modemConfig_init) - 1] = 0;
+                if (Q_strlen(modemConfig_init))
+                    modemConfig_init[Q_strlen(modemConfig_init) - 1] = 0;
             }
 
             if (modemConfig_cursor == 3) {
-                if (strlen(modemConfig_hangup))
-                    modemConfig_hangup[strlen(modemConfig_hangup) - 1] = 0;
+                if (Q_strlen(modemConfig_hangup))
+                    modemConfig_hangup[Q_strlen(modemConfig_hangup) - 1] = 0;
             }
             break;
 
@@ -1973,7 +1973,7 @@ void M_ModemConfig_Key(int key) {
                 break;
 
             if (modemConfig_cursor == 1) {
-                l = strlen(modemConfig_clear);
+                l = Q_strlen(modemConfig_clear);
                 if (l < 15) {
                     modemConfig_clear[l + 1] = 0;
                     modemConfig_clear[l] = key;
@@ -1981,7 +1981,7 @@ void M_ModemConfig_Key(int key) {
             }
 
             if (modemConfig_cursor == 2) {
-                l = strlen(modemConfig_init);
+                l = Q_strlen(modemConfig_init);
                 if (l < 29) {
                     modemConfig_init[l + 1] = 0;
                     modemConfig_init[l] = key;
@@ -1989,7 +1989,7 @@ void M_ModemConfig_Key(int key) {
             }
 
             if (modemConfig_cursor == 3) {
-                l = strlen(modemConfig_hangup);
+                l = Q_strlen(modemConfig_hangup);
                 if (l < 15) {
                     modemConfig_hangup[l + 1] = 0;
                     modemConfig_hangup[l] = key;
@@ -2001,11 +2001,11 @@ void M_ModemConfig_Key(int key) {
 //=============================================================================
 /* LAN CONFIG MENU */
 
-int lanConfig_cursor = -1;
-int lanConfig_cursor_table[] = {72, 92, 124};
+i32 lanConfig_cursor = -1;
+i32 lanConfig_cursor_table[] = {72, 92, 124};
 #define NUM_LANCONFIG_CMDS 3
 
-int lanConfig_port;
+i32 lanConfig_port;
 char lanConfig_portname[6];
 char lanConfig_joinname[22];
 
@@ -2031,7 +2031,7 @@ void M_Menu_LanConfig_f(void) {
 
 void M_LanConfig_Draw(void) {
     qpic_t* p;
-    int basex;
+    i32 basex;
     char* startJoin;
     char* protocol;
 
@@ -2072,25 +2072,25 @@ void M_LanConfig_Draw(void) {
     }
 
     M_DrawCharacter(basex - 8, lanConfig_cursor_table[lanConfig_cursor],
-                    12 + ((int) (realtime * 4) & 1));
+                    12 + ((i32) (realtime * 4) & 1));
 
     if (lanConfig_cursor == 0)
-        M_DrawCharacter(basex + 9 * 8 + 8 * strlen(lanConfig_portname),
+        M_DrawCharacter(basex + 9 * 8 + 8 * Q_strlen(lanConfig_portname),
                         lanConfig_cursor_table[0],
-                        10 + ((int) (realtime * 4) & 1));
+                        10 + ((i32) (realtime * 4) & 1));
 
     if (lanConfig_cursor == 2)
-        M_DrawCharacter(basex + 16 + 8 * strlen(lanConfig_joinname),
+        M_DrawCharacter(basex + 16 + 8 * Q_strlen(lanConfig_joinname),
                         lanConfig_cursor_table[2],
-                        10 + ((int) (realtime * 4) & 1));
+                        10 + ((i32) (realtime * 4) & 1));
 
     if (*m_return_reason)
         M_PrintWhite(basex, 148, m_return_reason);
 }
 
 
-void M_LanConfig_Key(int key) {
-    int l;
+void M_LanConfig_Key(i32 key) {
+    i32 l;
 
     switch (key) {
         case K_ESCAPE:
@@ -2143,13 +2143,13 @@ void M_LanConfig_Key(int key) {
 
         case K_BACKSPACE:
             if (lanConfig_cursor == 0) {
-                if (strlen(lanConfig_portname))
-                    lanConfig_portname[strlen(lanConfig_portname) - 1] = 0;
+                if (Q_strlen(lanConfig_portname))
+                    lanConfig_portname[Q_strlen(lanConfig_portname) - 1] = 0;
             }
 
             if (lanConfig_cursor == 2) {
-                if (strlen(lanConfig_joinname))
-                    lanConfig_joinname[strlen(lanConfig_joinname) - 1] = 0;
+                if (Q_strlen(lanConfig_joinname))
+                    lanConfig_joinname[Q_strlen(lanConfig_joinname) - 1] = 0;
             }
             break;
 
@@ -2158,7 +2158,7 @@ void M_LanConfig_Key(int key) {
                 break;
 
             if (lanConfig_cursor == 2) {
-                l = strlen(lanConfig_joinname);
+                l = Q_strlen(lanConfig_joinname);
                 if (l < 21) {
                     lanConfig_joinname[l + 1] = 0;
                     lanConfig_joinname[l] = key;
@@ -2168,7 +2168,7 @@ void M_LanConfig_Key(int key) {
             if (key < '0' || key > '9')
                 break;
             if (lanConfig_cursor == 0) {
-                l = strlen(lanConfig_portname);
+                l = Q_strlen(lanConfig_portname);
                 if (l < 5) {
                     lanConfig_portname[l + 1] = 0;
                     lanConfig_portname[l] = key;
@@ -2285,8 +2285,8 @@ level_t roguelevels[] = {
 
 typedef struct {
     char* description;
-    int firstLevel;
-    int levels;
+    i32 firstLevel;
+    i32 levels;
 } episode_t;
 
 episode_t episodes[] = {
@@ -2308,9 +2308,9 @@ episode_t rogueepisodes[] = {{"Introduction", 0, 1},
                              {"Corridors of Time", 8, 8},
                              {"Deathmatch Arena", 16, 1}};
 
-int startepisode;
-int startlevel;
-int maxplayers;
+i32 startepisode;
+i32 startlevel;
+i32 maxplayers;
 qboolean m_serverInfoMessage = false;
 double m_serverInfoMessageTime;
 
@@ -2325,13 +2325,13 @@ void M_Menu_GameOptions_f(void) {
 }
 
 
-int gameoptions_cursor_table[] = {40, 56, 64, 72, 80, 88, 96, 112, 120};
+i32 gameoptions_cursor_table[] = {40, 56, 64, 72, 80, 88, 96, 112, 120};
 #define NUM_GAMEOPTIONS 9
-int gameoptions_cursor;
+i32 gameoptions_cursor;
 
 void M_GameOptions_Draw(void) {
     qpic_t* p;
-    int x;
+    i32 x;
 
     M_DrawTransPic(16, 4, Draw_CachePic("gfx/qplaque.lmp"));
     p = Draw_CachePic("gfx/p_multi.lmp");
@@ -2353,7 +2353,7 @@ void M_GameOptions_Draw(void) {
     if (rogue) {
         char* msg;
 
-        switch ((int) teamplay.value) {
+        switch ((i32) teamplay.value) {
             case 1:
                 msg = "No Friendly Fire";
                 break;
@@ -2380,7 +2380,7 @@ void M_GameOptions_Draw(void) {
     } else {
         char* msg;
 
-        switch ((int) teamplay.value) {
+        switch ((i32) teamplay.value) {
             case 1:
                 msg = "No Friendly Fire";
                 break;
@@ -2408,13 +2408,13 @@ void M_GameOptions_Draw(void) {
     if (fraglimit.value == 0)
         M_Print(160, 88, "none");
     else
-        M_Print(160, 88, va("%i frags", (int) fraglimit.value));
+        M_Print(160, 88, va("%i frags", (i32) fraglimit.value));
 
     M_Print(0, 96, "       Time Limit");
     if (timelimit.value == 0)
         M_Print(160, 96, "none");
     else
-        M_Print(160, 96, va("%i minutes", (int) timelimit.value));
+        M_Print(160, 96, va("%i minutes", (i32) timelimit.value));
 
     M_Print(0, 112, "         Episode");
     //MED 01/06/97 added hipnotic episodes
@@ -2456,7 +2456,7 @@ void M_GameOptions_Draw(void) {
 
     // line cursor
     M_DrawCharacter(144, gameoptions_cursor_table[gameoptions_cursor],
-                    12 + ((int) (realtime * 4) & 1));
+                    12 + ((i32) (realtime * 4) & 1));
 
     if (m_serverInfoMessage) {
         if ((realtime - m_serverInfoMessageTime) < 5.0) {
@@ -2474,8 +2474,8 @@ void M_GameOptions_Draw(void) {
 }
 
 
-void M_NetStart_Change(int dir) {
-    int count;
+void M_NetStart_Change(i32 dir) {
+    i32 count;
 
     switch (gameoptions_cursor) {
         case 1:
@@ -2573,7 +2573,7 @@ void M_NetStart_Change(int dir) {
     }
 }
 
-void M_GameOptions_Key(int key) {
+void M_GameOptions_Key(i32 key) {
     switch (key) {
         case K_ESCAPE:
         case K_BBUTTON:
@@ -2665,7 +2665,7 @@ void M_Menu_Search_f(void) {
 
 void M_Search_Draw(void) {
     qpic_t* p;
-    int x;
+    i32 x;
 
     p = Draw_CachePic("gfx/p_multi.lmp");
     M_DrawPic((320 - p->width) / 2, 4, p);
@@ -2696,13 +2696,13 @@ void M_Search_Draw(void) {
 }
 
 
-void M_Search_Key(int key) {
+void M_Search_Key(i32 key) {
 }
 
 //=============================================================================
 /* SLIST MENU */
 
-int slist_cursor;
+i32 slist_cursor;
 qboolean slist_sorted;
 
 void M_Menu_ServerList_f(void) {
@@ -2717,17 +2717,17 @@ void M_Menu_ServerList_f(void) {
 
 
 void M_ServerList_Draw(void) {
-    int n;
+    i32 n;
     char string[64];
     qpic_t* p;
 
     if (!slist_sorted) {
         if (hostCacheCount > 1) {
-            int i, j;
+            i32 i, j;
             hostcache_t temp;
             for (i = 0; i < hostCacheCount; i++)
                 for (j = i + 1; j < hostCacheCount; j++)
-                    if (strcmp(hostcache[j].name, hostcache[i].name) < 0) {
+                    if (Q_strcmp(hostcache[j].name, hostcache[i].name) < 0) {
                         Q_memcpy(&temp, &hostcache[j], sizeof(hostcache_t));
                         Q_memcpy(&hostcache[j], &hostcache[i],
                                  sizeof(hostcache_t));
@@ -2749,14 +2749,14 @@ void M_ServerList_Draw(void) {
                     hostcache[n].map);
         M_Print(16, 32 + 8 * n, string);
     }
-    M_DrawCharacter(0, 32 + slist_cursor * 8, 12 + ((int) (realtime * 4) & 1));
+    M_DrawCharacter(0, 32 + slist_cursor * 8, 12 + ((i32) (realtime * 4) & 1));
 
     if (*m_return_reason)
         M_PrintWhite(16, 148, m_return_reason);
 }
 
 
-void M_ServerList_Key(int k) {
+void M_ServerList_Key(i32 k) {
     switch (k) {
         case K_ESCAPE:
         case K_BBUTTON:
@@ -2910,7 +2910,7 @@ void M_Draw(void) {
 }
 
 
-void M_Keydown(int key) {
+void M_Keydown(i32 key) {
     switch (m_state) {
         case m_none:
             return;

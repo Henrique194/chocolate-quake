@@ -28,14 +28,14 @@
 
 void COM_InitByteSwap(void);
 
-int static_registered = 1;
+i32 static_registered = 1;
 
 
 cvar_t registered = {"registered", "0"};
 static cvar_t cmdline = {"cmdline", "0", false, true};
 
 // This graphic needs to be in the pak file to use registered features.
-static unsigned short pop[] = {
+static u16 pop[] = {
     0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
     0x0000, 0x6600, 0x0000, 0x0000, 0x0000, 0x6600, 0x0000, 0x0000, 0x0066,
     0x0000, 0x0000, 0x0000, 0x0000, 0x0067, 0x0000, 0x0000, 0x6665, 0x0000,
@@ -65,7 +65,7 @@ being registered.
 ================
 */
 static void COM_CheckRegistered(void) {
-    int h;
+    i32 h;
     COM_OpenFile("gfx/pop.lmp", &h);
     static_registered = 0;
     if (h == -1) {
@@ -76,11 +76,11 @@ static void COM_CheckRegistered(void) {
         return;
     }
 
-    unsigned short check[128];
+    u16 check[128];
     Sys_FileRead(h, check, sizeof(check));
     COM_CloseFile(h);
-    for (int i = 0; i < 128; i++) {
-        if (pop[i] != (unsigned short) BigShort(check[i])) {
+    for (i32 i = 0; i < 128; i++) {
+        if (pop[i] != (u16) BigShort(check[i])) {
             Sys_Error("Corrupted data file.");
         }
     }

@@ -27,6 +27,6 @@
 #include "snd_codec.h"
 
 extern snd_codec_t mp3_codec;
-int MP3_SkipTags(snd_stream_t*);
+i32 MP3_SkipTags(snd_stream_t*);
 
 #endif /* ! _SND_MP3_H_ */

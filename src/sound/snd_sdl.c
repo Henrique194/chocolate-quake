@@ -24,36 +24,36 @@
 #include <SDL.h>
 
 
-static int buffersize;
+static i32 buffersize;
 
 
-static void SDLCALL paint_audio(void* unused, Uint8* stream, int len) {
+static void SDLCALL paint_audio(void* unused, u8* stream, i32 len) {
     if (!shm) {
         // Shouldn't happen, but just in case.
-        memset(stream, 0, len);
+        Q_memset(stream, 0, len);
         return;
     }
 
-    int pos = (shm->samplepos * (shm->samplebits / 8));
+    i32 pos = (shm->samplepos * (shm->samplebits / 8));
     if (pos >= buffersize) {
         shm->samplepos = 0;
         pos = 0;
     }
-    int tobufend = buffersize - pos; // bytes to buffer's end.
-    int len1 = len;
-    int len2 = 0;
+    i32 tobufend = buffersize - pos; // bytes to buffer's end.
+    i32 len1 = len;
+    i32 len2 = 0;
     if (len1 > tobufend) {
         len1 = tobufend;
         len2 = len - len1;
     }
 
-    memcpy(stream, shm->buffer + pos, len1);
+    Q_memcpy(stream, shm->buffer + pos, len1);
 
     if (len2 <= 0) {
         shm->samplepos += (len1 / (shm->samplebits / 8));
     } else {
         // wraparound?
-        memcpy(stream + len1, shm->buffer, len2);
+        Q_memcpy(stream + len1, shm->buffer, len2);
         shm->samplepos = (len2 / (shm->samplebits / 8));
     }
 
@@ -86,7 +86,7 @@ Fill the audio DMA information block.
 ============
 */
 static qboolean SNDDMA_InitAudio(dma_t* dma, const SDL_AudioSpec* device) {
-    memset((void*) dma, 0, sizeof(dma_t));
+    Q_memset((void*) dma, 0, sizeof(dma_t));
     shm = dma;
 
     // First byte of format is bits.
@@ -99,7 +99,7 @@ static qboolean SNDDMA_InitAudio(dma_t* dma, const SDL_AudioSpec* device) {
     shm->samples = (device->samples * device->channels) * 10;
     if (shm->samples & (shm->samples - 1)) {
         // Make it a power of two.
-        int val = 1;
+        i32 val = 1;
         while (val < shm->samples) {
             val <<= 1;
         }
@@ -107,7 +107,7 @@ static qboolean SNDDMA_InitAudio(dma_t* dma, const SDL_AudioSpec* device) {
     }
 
     buffersize = shm->samples * (shm->samplebits / 8);
-    shm->buffer = (unsigned char*) calloc(1, buffersize);
+    shm->buffer = (byte*) Q_calloc(1, buffersize);
     if (!shm->buffer) {
         SDL_CloseAudio();
         SDL_QuitSubSystem(SDL_INIT_AUDIO);
@@ -127,7 +127,7 @@ Set up the desired device format.
 ============
 */
 static void SNDDMA_SetupDevice(SDL_AudioSpec* device) {
-    device->freq = (int) snd_mixspeed.value;
+    device->freq = (i32) snd_mixspeed.value;
     device->format = (loadas8bit.value != 0) ? AUDIO_U8 : AUDIO_S16SYS;
     device->channels = 2; // desired_channels
     device->callback = paint_audio;
@@ -181,7 +181,7 @@ qboolean SNDDMA_Init(dma_t* dma) {
     return true;
 }
 
-int SNDDMA_GetDMAPos(void) {
+i32 SNDDMA_GetDMAPos(void) {
     return shm->samplepos;
 }
 
@@ -193,7 +193,7 @@ void SNDDMA_Shutdown(void) {
     SDL_CloseAudio();
     SDL_QuitSubSystem(SDL_INIT_AUDIO);
     if (shm->buffer) {
-        free(shm->buffer);
+        Q_free(shm->buffer);
     }
     shm->buffer = NULL;
     shm = NULL;

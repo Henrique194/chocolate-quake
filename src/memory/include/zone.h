@@ -88,29 +88,29 @@ Zone block
 
 #include "quakedef.h"
 
-void Memory_Init(void* buf, int size);
+void Memory_Init(void* buf, i32 size);
 
 void Z_Free(void* ptr);
-void* Z_Malloc(int size); // returns 0 filled memory
-void* Z_Realloc(void* ptr, int size);
-void* Z_TagMalloc(int size, int tag);
+void* Z_Malloc(i32 size); // returns 0 filled memory
+void* Z_Realloc(void* ptr, i32 size);
+void* Z_TagMalloc(i32 size, i32 tag);
 
 void Z_DumpHeap(void);
 void Z_CheckHeap(void);
-int Z_FreeMemory(void);
+i32 Z_FreeMemory(void);
 
-void* Hunk_Alloc(int size); // returns 0 filled memory
-void* Hunk_AllocName(int size, char* name);
+void* Hunk_Alloc(i32 size); // returns 0 filled memory
+void* Hunk_AllocName(i32 size, char* name);
 
-void* Hunk_HighAllocName(int size, char* name);
+void* Hunk_HighAllocName(i32 size, char* name);
 
-int Hunk_LowMark(void);
-void Hunk_FreeToLowMark(int mark);
+i32 Hunk_LowMark(void);
+void Hunk_FreeToLowMark(i32 mark);
 
-int Hunk_HighMark(void);
-void Hunk_FreeToHighMark(int mark);
+i32 Hunk_HighMark(void);
+void Hunk_FreeToHighMark(i32 mark);
 
-void* Hunk_TempAlloc(int size);
+void* Hunk_TempAlloc(i32 size);
 
 void Hunk_Check(void);
 
@@ -126,7 +126,7 @@ void* Cache_Check(cache_user_t* c);
 
 void Cache_Free(cache_user_t* c);
 
-void* Cache_Alloc(cache_user_t* c, int size, char* name);
+void* Cache_Alloc(cache_user_t* c, i32 size, char* name);
 // Returns NULL if all purgable data was tossed and there still
 // wasn't enough room.
 

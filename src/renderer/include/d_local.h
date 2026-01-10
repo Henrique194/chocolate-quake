@@ -44,11 +44,11 @@
 typedef struct surfcache_s {
     struct surfcache_s* next;
     struct surfcache_s** owner; // NULL is an empty chunk of memory
-    int lightadj[MAXLIGHTMAPS]; // checked for strobe flush
-    int dlight;
-    int size; // including header
-    unsigned width;
-    unsigned height; // DEBUG only needed for debug
+    i32 lightadj[MAXLIGHTMAPS]; // checked for strobe flush
+    i32 dlight;
+    i32 size; // including header
+    u32 width;
+    u32 height; // DEBUG only needed for debug
     float mipscale;
     struct texture_s* texture; // checked for animating textures
     byte data[4];              // width*height elements
@@ -56,7 +56,7 @@ typedef struct surfcache_s {
 
 // !!! if this is changed, it must be changed in asm_draw.h too !!!
 typedef struct sspan_s {
-    int u, v, count;
+    i32 u, v, count;
 } sspan_t;
 
 extern cvar_t d_subdiv16;
@@ -85,25 +85,25 @@ void D_DrawSkyScans8(espan_t* pspan);
 void D_DrawSkyScans16(espan_t* pspan);
 
 void R_ShowSubDiv(void);
-surfcache_t* D_CacheSurface(msurface_t* surface, int miplevel);
+surfcache_t* D_CacheSurface(msurface_t* surface, i32 miplevel);
 
-extern int D_MipLevelForScale(float scale);
+extern i32 D_MipLevelForScale(float scale);
 
-extern short* d_pzbuffer;
-extern unsigned int d_zrowbytes, d_zwidth;
+extern i16* d_pzbuffer;
+extern u32 d_zrowbytes, d_zwidth;
 
-extern int* d_pscantable;
-extern int d_scantable[MAXHEIGHT];
+extern i32* d_pscantable;
+extern i32 d_scantable[MAXHEIGHT];
 
-extern int d_vrectx, d_vrecty, d_vrectright_particle, d_vrectbottom_particle;
+extern i32 d_vrectx, d_vrecty, d_vrectright_particle, d_vrectbottom_particle;
 
-extern int d_y_aspect_shift, d_pix_min, d_pix_max, d_pix_shift;
+extern i32 d_y_aspect_shift, d_pix_min, d_pix_max, d_pix_shift;
 
 extern pixel_t* d_viewbuffer;
 
-extern short* zspantable[MAXHEIGHT];
+extern i16* zspantable[MAXHEIGHT];
 
-extern int d_minmip;
+extern i32 d_minmip;
 extern float d_scalemip[3];
 
 extern void (*d_drawspans)(espan_t* pspan);

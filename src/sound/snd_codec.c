@@ -82,7 +82,7 @@ void S_CodecShutdown() {
 S_CodecOpenStream
 =================
 */
-snd_stream_t* S_CodecOpenStreamType(const char* filename, unsigned int type,
+snd_stream_t* S_CodecOpenStreamType(const char* filename, u32 type,
                                     qboolean loop) {
     if (type == CODECTYPE_NONE) {
         Con_Printf("Bad type for %s\n", filename);
@@ -116,18 +116,18 @@ void S_CodecCloseStream(snd_stream_t* stream) {
     stream->codec->codec_close(stream);
 }
 
-int S_CodecRewindStream(snd_stream_t* stream) {
+i32 S_CodecRewindStream(snd_stream_t* stream) {
     return stream->codec->codec_rewind(stream);
 }
 
-int S_CodecJumpToOrder(snd_stream_t* stream, int to) {
+i32 S_CodecJumpToOrder(snd_stream_t* stream, i32 to) {
     if (stream->codec->codec_jump) {
         return stream->codec->codec_jump(stream, to);
     }
     return -1;
 }
 
-int S_CodecReadStream(snd_stream_t* stream, int bytes, void* buffer) {
+i32 S_CodecReadStream(snd_stream_t* stream, i32 bytes, void* buffer) {
     return stream->codec->codec_read(stream, bytes, buffer);
 }
 
@@ -137,10 +137,9 @@ snd_stream_t* S_CodecUtilOpen(const char* filename, snd_codec_t* codec,
                               qboolean loop) {
     snd_stream_t* stream;
     FILE* handle;
-    long length;
 
     /* Try to open the file */
-    length = (long) COM_FindMusicTrack(filename, &handle);
+    i64 length = COM_FindMusicTrack(filename, &handle);
     if (length == -1) {
         Con_DPrintf("Couldn't open %s\n", filename);
         return NULL;
@@ -165,7 +164,7 @@ void S_CodecUtilClose(snd_stream_t** stream) {
     *stream = NULL;
 }
 
-int S_CodecIsAvailable(unsigned int type) {
+i32 S_CodecIsAvailable(u32 type) {
     snd_codec_t* codec = codecs;
     while (codec) {
         if (type == codec->type) {

@@ -1,3 +1,9 @@
+include(CheckDefine)
+
+check_define(strcpy "string.h" HAVE_STRCPY)
+check_define(strncpy "string.h" HAVE_STRNCPY)
+check_define(strcat "string.h" HAVE_STRCAT)
+
 set(LIBS
     camera
     client

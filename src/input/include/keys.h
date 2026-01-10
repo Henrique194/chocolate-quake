@@ -133,14 +133,14 @@ typedef enum {
 
 extern keydest_t key_dest;
 extern char* keybindings[256];
-extern int key_repeats[256];
-extern int key_count; // incremented every key event
-extern int key_lastpress;
+extern i32 key_repeats[256];
+extern i32 key_count; // incremented every key event
+extern i32 key_lastpress;
 
-void Key_Event(int key, qboolean down);
+void Key_Event(i32 key, qboolean down);
 void Key_Init(void);
 void Key_WriteBindings(FILE* f);
-void Key_SetBinding(int keynum, char* binding);
+void Key_SetBinding(i32 keynum, char* binding);
 void Key_ClearStates(void);
 
 #endif

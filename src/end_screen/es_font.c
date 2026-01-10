@@ -25,7 +25,7 @@
 #include "fonts/small.h"
 #include <SDL_stdinc.h>
 #include <SDL_video.h>
-#include <string.h>
+
 #ifdef _WIN32
 #include "windows.h"
 #endif
@@ -50,9 +50,9 @@ static const char* ES_GetFontName(const font_type_t type) {
 }
 
 static font_type_t ES_GetFontByName(const char* name) {
-    for (int i = 0; i < FONT_NUM; i++) {
+    for (i32 i = 0; i < FONT_NUM; i++) {
         const char* font_name = ES_GetFontName(i);
-        if (!strcmp(name, font_name)) {
+        if (!Q_strcmp(name, font_name)) {
             return i;
         }
     }
@@ -98,12 +98,12 @@ qboolean ES_IsHighDPIFont(void) {
 // On Windows we can use the system DPI settings to make a
 // more educated guess about whether to use the large font.
 //
-static int ES_CanUseLargeFont(void) {
+static i32 ES_CanUseLargeFont(void) {
     HDC hdc = GetDC(NULL);
     if (!hdc) {
         return 0;
     }
-    const int dpix = GetDeviceCaps(hdc, LOGPIXELSX);
+    const i32 dpix = GetDeviceCaps(hdc, LOGPIXELSX);
     ReleaseDC(NULL, hdc);
     // 144 is the DPI when using "150%" scaling. If the user has this set
     // then consider this an appropriate threshold for using the large font.

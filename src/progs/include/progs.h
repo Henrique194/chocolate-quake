@@ -34,18 +34,18 @@ typedef union eval_s {
     float _float;
     float vector[3];
     func_t function;
-    int _int;
-    int edict;
+    i32 _int;
+    i32 edict;
 } eval_t;
 
 typedef struct {
     vec3_t origin;
     vec3_t angles;
-    int modelindex;
-    int frame;
-    int colormap;
-    int skin;
-    int effects;
+    i32 modelindex;
+    i32 frame;
+    i32 colormap;
+    i32 skin;
+    i32 effects;
 } entity_state_t;
 
 #define MAX_ENT_LEAFS 16
@@ -53,8 +53,8 @@ typedef struct edict_s {
     qboolean free;
     link_t area; // linked to a division node or leaf
 
-    int num_leafs;
-    short leafnums[MAX_ENT_LEAFS];
+    i32 num_leafs;
+    i16 leafnums[MAX_ENT_LEAFS];
 
     entity_state_t baseline;
 
@@ -75,7 +75,7 @@ extern dstatement_t* pr_statements;
 extern globalvars_t* pr_global_struct;
 extern float* pr_globals; // same as pr_global_struct
 
-extern int pr_edict_size; // in bytes
+extern i32 pr_edict_size; // in bytes
 
 //============================================================================
 
@@ -86,7 +86,7 @@ void PR_LoadProgs(void);
 
 string_t PR_SetString(const char* str);
 const char* PR_GetString(string_t num);
-string_t PR_NewString(int size, char** ptr);
+string_t PR_NewString(i32 size, char** ptr);
 
 void PR_Profile_f(void);
 
@@ -108,8 +108,8 @@ void ED_LoadFromFile(char* data);
 //define EDICT_NUM(n) ((edict_t *)(sv.edicts+ (n)*pr_edict_size))
 //define NUM_FOR_EDICT(e) (((byte *)(e) - sv.edicts)/pr_edict_size)
 
-edict_t* EDICT_NUM(int n);
-int NUM_FOR_EDICT(edict_t* e);
+edict_t* EDICT_NUM(i32 n);
+i32 NUM_FOR_EDICT(edict_t* e);
 
 #define NEXT_EDICT(e) ((edict_t*) ((byte*) e + pr_edict_size))
 
@@ -119,36 +119,36 @@ int NUM_FOR_EDICT(edict_t* e);
 //============================================================================
 
 #define G_FLOAT(o)    (pr_globals[o])
-#define G_INT(o)      (*(int*) &pr_globals[o])
-#define G_EDICT(o)    ((edict_t*) ((byte*) sv.edicts + *(int*) &pr_globals[o]))
+#define G_INT(o)      (*(i32*) &pr_globals[o])
+#define G_EDICT(o)    ((edict_t*) ((byte*) sv.edicts + *(i32*) &pr_globals[o]))
 #define G_EDICTNUM(o) NUM_FOR_EDICT(G_EDICT(o))
 #define G_VECTOR(o)   (&pr_globals[o])
 #define G_STRING(o)   (PR_GetString(*(string_t*) &pr_globals[o]))
 #define G_FUNCTION(o) (*(func_t*) &pr_globals[o])
 
 #define E_FLOAT(e, o)  (((float*) &e->v)[o])
-#define E_INT(e, o)    (*(int*) &((float*) &e->v)[o])
+#define E_INT(e, o)    (*(i32*) &((float*) &e->v)[o])
 #define E_VECTOR(e, o) (&((float*) &e->v)[o])
 #define E_STRING(e, o) (PR_GetString(*(string_t*) &((float*) &e->v)[o]))
 
-extern int type_size[8];
+extern i32 type_size[8];
 
 typedef void (*builtin_t)(void);
 extern builtin_t* pr_builtins;
-extern int pr_numbuiltins;
+extern i32 pr_numbuiltins;
 
-extern int pr_argc;
+extern i32 pr_argc;
 
 extern qboolean pr_trace;
 extern dfunction_t* pr_xfunction;
-extern int pr_xstatement;
+extern i32 pr_xstatement;
 
-extern unsigned short pr_crc;
+extern u16 pr_crc;
 
 void PR_RunError(char* error, ...);
 
 void ED_PrintEdicts(void);
-void ED_PrintNum(int ent);
+void ED_PrintNum(i32 ent);
 
 eval_t* GetEdictFieldValue(edict_t* ed, char* field);
 

@@ -40,8 +40,8 @@
 
 
 // only the refresh window will be updated unless these variables are flagged
-int scr_copytop;
-int scr_copyeverything;
+i32 scr_copytop;
+i32 scr_copyeverything;
 
 float scr_con_current;
 float scr_conlines; // lines of console to display
@@ -62,10 +62,10 @@ qpic_t* scr_ram;
 qpic_t* scr_net;
 qpic_t* scr_turtle;
 
-int scr_fullupdate;
+i32 scr_fullupdate;
 
-int clearconsole;
-int clearnotify;
+i32 clearconsole;
+i32 clearnotify;
 
 extern viddef_t vid; // global video state
 
@@ -92,9 +92,9 @@ CENTER PRINTING
 char scr_centerstring[1024];
 float scr_centertime_start; // for slow victory printing
 float scr_centertime_off;
-int scr_center_lines;
-int scr_erase_lines;
-int scr_erase_center;
+i32 scr_center_lines;
+i32 scr_erase_lines;
+i32 scr_erase_center;
 
 /*
 ==============
@@ -105,7 +105,7 @@ for a few moments
 ==============
 */
 void SCR_CenterPrint(char* str) {
-    strncpy(scr_centerstring, str, sizeof(scr_centerstring) - 1);
+    Q_strncpy(scr_centerstring, str, sizeof(scr_centerstring) - 1);
     scr_centertime_off = scr_centertime.value;
     scr_centertime_start = cl.time;
 
@@ -119,7 +119,7 @@ void SCR_CenterPrint(char* str) {
 }
 
 void SCR_EraseCenterString(void) {
-    int y;
+    i32 y;
 
     if (scr_erase_center++ > vid.numpages) {
         scr_erase_lines = 0;
@@ -137,10 +137,10 @@ void SCR_EraseCenterString(void) {
 
 void SCR_DrawCenterString(void) {
     char* start;
-    int l;
-    int j;
-    int x, y;
-    int remaining;
+    i32 l;
+    i32 j;
+    i32 x, y;
+    i32 remaining;
 
     // the finale prints the characters one at a time
     if (cl.intermission)
@@ -363,7 +363,7 @@ SCR_DrawTurtle
 ==============
 */
 void SCR_DrawTurtle(void) {
-    static int count;
+    static i32 count;
 
     if (!scr_showturtle.value)
         return;
@@ -469,8 +469,8 @@ void SCR_SetUpToDrawConsole(void) {
 
     if (clearconsole++ < vid.numpages) {
         scr_copytop = 1;
-        Draw_TileClear(0, (int) scr_con_current, vid.width,
-                       vid.height - (int) scr_con_current);
+        Draw_TileClear(0, (i32) scr_con_current, vid.width,
+                       vid.height - (i32) scr_con_current);
         Sbar_Changed();
     } else if (clearnotify++ < vid.numpages) {
         scr_copytop = 1;
@@ -510,19 +510,19 @@ typedef struct {
     char version;
     char encoding;
     char bits_per_pixel;
-    unsigned short xmin;
-    unsigned short ymin;
-    unsigned short xmax;
-    unsigned short ymax;
-    unsigned short hres;
-    unsigned short vres;
-    unsigned char palette[48];
+    u16 xmin;
+    u16 ymin;
+    u16 xmax;
+    u16 ymax;
+    u16 hres;
+    u16 vres;
+    byte palette[48];
     char reserved;
     char color_planes;
-    unsigned short bytes_per_line;
-    unsigned short palette_type;
+    u16 bytes_per_line;
+    u16 palette_type;
     char filler[58];
-    unsigned char data; // unbounded
+    byte data; // unbounded
 } pcx_t;
 
 /* 
@@ -530,9 +530,9 @@ typedef struct {
 WritePCXfile 
 ============== 
 */
-void WritePCXfile(char* filename, byte* data, int width, int height,
-                  int rowbytes, byte* palette) {
-    int i, j, length;
+void WritePCXfile(char* filename, byte* data, i32 width, i32 height,
+                  i32 rowbytes, byte* palette) {
+    i32 i, j, length;
     pcx_t* pcx;
     byte* pack;
 
@@ -548,13 +548,13 @@ void WritePCXfile(char* filename, byte* data, int width, int height,
     pcx->bits_per_pixel = 8;  // 256 color
     pcx->xmin = 0;
     pcx->ymin = 0;
-    pcx->xmax = LittleShort((short) (width - 1));
-    pcx->ymax = LittleShort((short) (height - 1));
-    pcx->hres = LittleShort((short) width);
-    pcx->vres = LittleShort((short) height);
+    pcx->xmax = LittleShort((i16) (width - 1));
+    pcx->ymax = LittleShort((i16) (height - 1));
+    pcx->hres = LittleShort((i16) width);
+    pcx->vres = LittleShort((i16) height);
     Q_memset(pcx->palette, 0, sizeof(pcx->palette));
     pcx->color_planes = 1; // chunky image
-    pcx->bytes_per_line = LittleShort((short) width);
+    pcx->bytes_per_line = LittleShort((i16) width);
     pcx->palette_type = LittleShort(2); // not a grey scale
     Q_memset(pcx->filler, 0, sizeof(pcx->filler));
 
@@ -591,14 +591,14 @@ SCR_ScreenShot_f
 ================== 
 */
 void SCR_ScreenShot_f(void) {
-    int i;
+    i32 i;
     char pcxname[80];
     char checkname[MAX_OSPATH];
 
     //
     // find a file name to save it to
     //
-    strcpy(pcxname, "quake00.pcx");
+    Q_strcpy(pcxname, "quake00.pcx");
 
     for (i = 0; i <= 99; i++) {
         pcxname[5] = i / 10 + '0';
@@ -680,9 +680,9 @@ qboolean scr_drawdialog;
 
 void SCR_DrawNotifyString(void) {
     char* start;
-    int l;
-    int j;
-    int x, y;
+    i32 l;
+    i32 j;
+    i32 x, y;
 
     start = scr_notifystring;
 
@@ -716,7 +716,7 @@ Displays a text string in the center of the screen and waits for a Y or N
 keypress.  
 ==================
 */
-int SCR_ModalMessage(char* text) {
+i32 SCR_ModalMessage(char* text) {
     extern qboolean keydown[256];
 
     if (cls.state == ca_dedicated)
@@ -758,7 +758,7 @@ Brings the console down and fades the palettes back to normal
 ================
 */
 void SCR_BringDownConsole(void) {
-    int i;
+    i32 i;
 
     scr_centertime_off = 0;
 

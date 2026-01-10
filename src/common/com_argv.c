@@ -38,7 +38,7 @@ static char* safeargvs[NUM_SAFE_ARGVS] = {
     "-dibonly"
 };
 
-int com_argc;
+i32 com_argc;
 char** com_argv;
 
 
@@ -50,8 +50,8 @@ Returns the position (1 to argc-1) in the program's argument list
 where the given parameter apears, or 0 if not present
 ================
 */
-int COM_CheckParm(const char* parm) {
-    for (int i = 1; i < com_argc; i++) {
+i32 COM_CheckParm(const char* parm) {
+    for (i32 i = 1; i < com_argc; i++) {
         if (!com_argv[i]) {
             // NEXTSTEP sometimes clears appkit vars.
             continue;
@@ -69,11 +69,11 @@ int COM_CheckParm(const char* parm) {
 COM_InitArgv
 ================
 */
-void COM_InitArgv(int argc, char** argv) {
+void COM_InitArgv(i32 argc, char** argv) {
     // Reconstitute the command line for the cmdline externally visible cvar.
-    int n = 0;
-    for (int j = 0; (j < MAX_NUM_ARGVS) && (j < argc); j++) {
-        int i = 0;
+    i32 n = 0;
+    for (i32 j = 0; (j < MAX_NUM_ARGVS) && (j < argc); j++) {
+        i32 i = 0;
         while ((n < (CMDLINE_LENGTH - 1)) && argv[j][i]) {
             com_cmdline[n++] = argv[j][i++];
         }
@@ -95,7 +95,7 @@ void COM_InitArgv(int argc, char** argv) {
         // Force all the safe-mode switches.
         // Note that we reserved extra space in case we need
         // to add these, so we don't need an overflow check.
-        for (int i = 0; i < NUM_SAFE_ARGVS; i++) {
+        for (i32 i = 0; i < NUM_SAFE_ARGVS; i++) {
             largv[com_argc] = safeargvs[i];
             com_argc++;
         }

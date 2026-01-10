@@ -58,4 +58,4 @@ net_driver_t net_drivers[MAX_NET_DRIVERS] = {
         Datagram_Shutdown
     },
 };
-int net_numdrivers = 2;
+i32 net_numdrivers = 2;

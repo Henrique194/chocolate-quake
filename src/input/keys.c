@@ -40,27 +40,27 @@ key up events are sent even if in console mode
 
 #define MAXCMDLINE 256
 char key_lines[32][MAXCMDLINE];
-int key_linepos;
-int shift_down = false;
-int key_lastpress;
+i32 key_linepos;
+i32 shift_down = false;
+i32 key_lastpress;
 
-int edit_line = 0;
-int history_line = 0;
+i32 edit_line = 0;
+i32 history_line = 0;
 
 keydest_t key_dest;
 
-int key_count; // incremented every key event
+i32 key_count; // incremented every key event
 
 char* keybindings[256];
 qboolean consolekeys[256]; // if true, can't be rebound while in console
 qboolean menubound[256];   // if true, can't be rebound while in menu
-int keyshift[256];         // key to map to if shift held down in console
-int key_repeats[256];      // if > 1, it is autorepeating
+i32 keyshift[256];         // key to map to if shift held down in console
+i32 key_repeats[256];      // if > 1, it is autorepeating
 qboolean keydown[256];
 
 typedef struct {
     char* name;
-    int keynum;
+    i32 keynum;
 } keyname_t;
 
 keyname_t keynames[] = {
@@ -168,7 +168,7 @@ Key_Console
 Interactive line editing and console scrollback
 ====================
 */
-void Key_Console(int key) {
+void Key_Console(i32 key) {
     char* cmd;
 
     if (key == K_ENTER) {
@@ -191,7 +191,7 @@ void Key_Console(int key) {
             cmd = Cvar_CompleteVariable(key_lines[edit_line] + 1);
         if (cmd) {
             Q_strcpy(key_lines[edit_line] + 1, cmd);
-            key_linepos = Q_strlen(cmd) + 1;
+            key_linepos = (i32) Q_strlen(cmd) + 1;
             key_lines[edit_line][key_linepos] = ' ';
             key_linepos++;
             key_lines[edit_line][key_linepos] = 0;
@@ -212,7 +212,7 @@ void Key_Console(int key) {
         if (history_line == edit_line)
             history_line = (edit_line + 1) & 31;
         Q_strcpy(key_lines[edit_line], key_lines[history_line]);
-        key_linepos = Q_strlen(key_lines[edit_line]);
+        key_linepos = (i32) Q_strlen(key_lines[edit_line]);
         return;
     }
 
@@ -227,7 +227,7 @@ void Key_Console(int key) {
             key_linepos = 1;
         } else {
             Q_strcpy(key_lines[edit_line], key_lines[history_line]);
-            key_linepos = Q_strlen(key_lines[edit_line]);
+            key_linepos = (i32) Q_strlen(key_lines[edit_line]);
         }
         return;
     }
@@ -271,8 +271,8 @@ void Key_Console(int key) {
 char chat_buffer[32];
 qboolean team_message = false;
 
-void Key_Message(int key) {
-    static int chat_bufferlen = 0;
+void Key_Message(i32 key) {
+    static i32 chat_bufferlen = 0;
 
     if (key == K_ENTER) {
         if (team_message)
@@ -325,7 +325,7 @@ the given string.  Single ascii characters return themselves, while
 the K_* names are matched up.
 ===================
 */
-int Key_StringToKeynum(char* str) {
+i32 Key_StringToKeynum(char* str) {
     keyname_t* kn;
 
     if (!str || !str[0])
@@ -349,7 +349,7 @@ given keynum.
 FIXME: handle quote special (general escape sequence?)
 ===================
 */
-char* Key_KeynumToString(int keynum) {
+char* Key_KeynumToString(i32 keynum) {
     keyname_t* kn;
     static char tinystr[2];
 
@@ -374,9 +374,9 @@ char* Key_KeynumToString(int keynum) {
 Key_SetBinding
 ===================
 */
-void Key_SetBinding(int keynum, char* binding) {
+void Key_SetBinding(i32 keynum, char* binding) {
     char* new;
-    int l;
+    i32 l;
 
     if (keynum == -1)
         return;
@@ -388,7 +388,7 @@ void Key_SetBinding(int keynum, char* binding) {
     }
 
     // allocate memory for new binding
-    l = Q_strlen(binding);
+    l = (i32) Q_strlen(binding);
     new = Z_Malloc(l + 1);
     Q_strcpy(new, binding);
     new[l] = 0;
@@ -401,7 +401,7 @@ Key_Unbind_f
 ===================
 */
 void Key_Unbind_f(void) {
-    int b;
+    i32 b;
 
     if (Cmd_Argc() != 2) {
         Con_Printf("unbind <key> : remove commands from a key\n");
@@ -418,7 +418,7 @@ void Key_Unbind_f(void) {
 }
 
 void Key_Unbindall_f(void) {
-    int i;
+    i32 i;
 
     for (i = 0; i < 256; i++)
         if (keybindings[i])
@@ -432,7 +432,7 @@ Key_Bind_f
 ===================
 */
 void Key_Bind_f(void) {
-    int i, c, b;
+    i32 i, c, b;
     char cmd[1024];
 
     c = Cmd_Argc();
@@ -459,8 +459,8 @@ void Key_Bind_f(void) {
     cmd[0] = 0; // start out with a null string
     for (i = 2; i < c; i++) {
         if (i > 2)
-            strcat(cmd, " ");
-        strcat(cmd, Cmd_Argv(i));
+            Q_strcat(cmd, " ");
+        Q_strcat(cmd, Cmd_Argv(i));
     }
 
     Key_SetBinding(b, cmd);
@@ -474,7 +474,7 @@ Writes lines containing "bind key value"
 ============
 */
 void Key_WriteBindings(FILE* f) {
-    int i;
+    i32 i;
 
     for (i = 0; i < 256; i++)
         if (keybindings[i])
@@ -490,7 +490,7 @@ Key_Init
 ===================
 */
 void Key_Init(void) {
-    int i;
+    i32 i;
 
     for (i = 0; i < 32; i++) {
         key_lines[i][0] = ']';
@@ -560,7 +560,7 @@ void Key_Init(void) {
 // Checks if the specified key is bound to any action.
 // Returns true if the key is bound, false otherwise.
 //
-static qboolean Key_IsBound(const int key) {
+static qboolean Key_IsBound(const i32 key) {
     if (keybindings[key]) {
         return true;
     }
@@ -582,7 +582,7 @@ Called by the system between frames for both key up and key down events
 Should NOT be called during an interrupt!
 ===================
 */
-void Key_Event(int key, qboolean down) {
+void Key_Event(i32 key, qboolean down) {
     char* kb;
     char cmd[1024];
 
@@ -716,7 +716,7 @@ Key_ClearStates
 ===================
 */
 void Key_ClearStates(void) {
-    for (int i = 0; i < 256; i++) {
+    for (i32 i = 0; i < 256; i++) {
         keydown[i] = false;
         key_repeats[i] = 0;
     }

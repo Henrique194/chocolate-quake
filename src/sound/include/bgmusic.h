@@ -24,7 +24,7 @@
 
 #include "quakedef.h"
 
-int BGMusic_Init(void);
+i32 BGMusic_Init(void);
 void BGMusic_Play(byte track, qboolean looping);
 void BGMusic_Stop(void);
 void BGMusic_Pause(void);

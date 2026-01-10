@@ -42,17 +42,18 @@ size_t Q_fread(void* ptr, size_t size, size_t nmemb, fshandle_t* fh) {
         errno = EFAULT;
         return 0;
     }
-    if (!size || !nmemb) { /* no error, just zero bytes wanted */
+    if (!size || !nmemb) {
+        // no error, just zero bytes wanted
         errno = 0;
         return 0;
     }
 
-    long byte_size = (long) (nmemb * size);
+    i64 byte_size = (i64) (nmemb * size);
     if (byte_size > fh->length - fh->pos) {
         // just read to end.
         byte_size = fh->length - fh->pos;
     }
-    long bytes_read = (long) fread(ptr, 1, byte_size, fh->file);
+    i64 bytes_read = (i64) fread(ptr, 1, byte_size, fh->file);
     fh->pos += bytes_read;
 
     // fread() must return the number of elements read,
@@ -66,7 +67,7 @@ size_t Q_fread(void* ptr, size_t size, size_t nmemb, fshandle_t* fh) {
     return nmemb_read;
 }
 
-int Q_fseek(fshandle_t* fh, long offset, int whence) {
+i32 Q_fseek(fshandle_t* fh, i64 offset, i32 whence) {
     // I don't care about 64 bit off_t or fseeko() here.
     // The quake file system is 32 bits, anyway.
     if (!fh) {
@@ -96,7 +97,7 @@ int Q_fseek(fshandle_t* fh, long offset, int whence) {
         // just seek to end
         offset = fh->length;
     }
-    int ret = fseek(fh->file, fh->start + offset, SEEK_SET);
+    i32 ret = fseek(fh->file, (long) (fh->start + offset), SEEK_SET);
     if (ret < 0) {
         return ret;
     }
@@ -104,7 +105,7 @@ int Q_fseek(fshandle_t* fh, long offset, int whence) {
     return 0;
 }
 
-long Q_ftell(const fshandle_t* fh) {
+i64 Q_ftell(const fshandle_t* fh) {
     if (!fh) {
         errno = EBADF;
         return -1;
@@ -117,11 +118,11 @@ void Q_rewind(fshandle_t* fh) {
         return;
     }
     clearerr(fh->file);
-    fseek(fh->file, fh->start, SEEK_SET);
+    fseek(fh->file, (long) fh->start, SEEK_SET);
     fh->pos = 0;
 }
 
-long Q_filelength(const fshandle_t* fh) {
+i64 Q_filelength(const fshandle_t* fh) {
     if (!fh) {
         errno = EBADF;
         return -1;
@@ -129,7 +130,7 @@ long Q_filelength(const fshandle_t* fh) {
     return fh->length;
 }
 
-int Q_feof(const fshandle_t* fh) {
+i32 Q_feof(const fshandle_t* fh) {
     if (!fh) {
         errno = EBADF;
         return -1;
@@ -140,7 +141,7 @@ int Q_feof(const fshandle_t* fh) {
     return 0;
 }
 
-int Q_ferror(fshandle_t* fh) {
+i32 Q_ferror(fshandle_t* fh) {
     if (!fh) {
         errno = EBADF;
         return -1;
