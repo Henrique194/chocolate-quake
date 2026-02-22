@@ -1,7 +1,7 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 cmake_minimum_required(VERSION 3.21.0)
-project("Chocolate Quake" VERSION 2.0.0 LANGUAGES C)
+project("Chocolate Quake" VERSION 2.1.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 99)
 
 string(TIMESTAMP CURRENT_YEAR "%Y")
