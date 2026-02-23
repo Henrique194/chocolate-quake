@@ -96,11 +96,17 @@ Once compilation is complete, the resulting executable can be found at:
 # Running The Game
 
 To run Chocolate Quake, you need a directory named `id1` containing your
-game data (PAK files) next to the executable. You can also customize the
-location and name of the game directory using the command-line parameters
-(`-basedir` and `-game`, respectively). Most IDEs also allow you to set a
-working directory so the game directory can be placed in a more convenient
-location, without the need for command-line parameters.
+game data (PAK files). You can also customize the location and name of the
+game directory using the command-line parameters (`-basedir` and `-game`,
+respectively). Most IDEs also allow you to set a working directory so the
+game directory can be placed in a more convenient location, without the
+need for command-line parameters.
+
+By default, Chocolate Quake searches for the `id1` directory in the following
+location:
+* Windows: The same directory as the executable.
+* macOS: `/Users/<your-user>/Library/Application Support/chocolate-quake`
+* Linux: `/home/<your-user>/.local/share/chocolate-quake`
 
 ## Music
 

@@ -1,3 +1,25 @@
+## v2.1.0
+
+### General Updates
+
+- **Common Library Refactor**: The common library has been refactored to improve
+  readability and portability.
+- **Fixed-Width Integers**: The engine now consistently uses fixed-width integer
+  types. This improves portability and avoids issues caused by Quake's
+  assumptions about built-in type sizes.
+- **Default Base Directory**: On Linux and macOS, the engine now uses more
+  appropriate default directories when searching for game data.
+- **macOS Builds**: macOS builds are now maintained
+  by [Mac Source Ports](https://www.macsourceports.com/sourceport/chocolatequake).
+  Distributions are signed and notarized for improved security.
+
+### Bug Fixes
+
+- **Client Quit Source**: Client-initiated quits are now correctly reported as
+  originating from the host rather than the server.
+
+---
+
 ## v2.0.0
 
 ### General Updates
