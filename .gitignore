@@ -18,5 +18,8 @@ CMakeUserPresets.json
 # External projects
 *-prefix/
 
+# macOS
+.DS_Store
+
 # Game Data
 id1/
