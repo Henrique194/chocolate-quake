@@ -1008,7 +1008,11 @@ again:
 //=============================================================================
 /* OPTIONS MENU */
 
+#ifdef __PS2__
+#define OPTIONS_ITEMS 12
+#else
 #define OPTIONS_ITEMS 14
+#endif
 
 #define SLIDER_RANGE 10
 
@@ -1166,7 +1170,9 @@ void M_Options_Draw(void) {
     M_Print(16, 120, "            Lookstrafe");
     M_DrawCheckbox(220, 120, lookstrafe.value);
 
+#ifndef __PS2__
     M_Print(16, 128, "         Video Options");
+#endif
 
     if (VID_IsWindowedMode()) {
         M_Print(16, 136, "             Use Mouse");

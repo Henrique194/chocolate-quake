@@ -42,7 +42,11 @@ static vga_char_t end_screen[TEXT_SCREEN_SIZE];
 static i32 buffer_width;
 static i32 buffer_height;
 
+#ifdef __PS2__
+static const SDL_PixelFormatEnum pixel_format = SDL_PIXELFORMAT_ABGR1555;
+#else
 static const SDL_PixelFormatEnum pixel_format = SDL_PIXELFORMAT_ARGB8888;
+#endif
 
 static qboolean has_blink_char = false;
 
