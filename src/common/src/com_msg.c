@@ -103,7 +103,7 @@ i32 MSG_ReadChar(void) {
         msg_badread = true;
         return -1;
     }
-    char c = (char) net_message.data[msg_readcount];
+    i8 c = (i8) net_message.data[msg_readcount];
     msg_readcount++;
     return c;
 }
