@@ -39,6 +39,9 @@ INITIALIZATION AND SHUTDOWN
 
 
 static qboolean ES_CreateRenderer(void) {
+#ifdef __PS2__
+    SDL_SetHint(SDL_HINT_PS2_DYNAMIC_VSYNC, "1");    
+#endif
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!renderer) {
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);

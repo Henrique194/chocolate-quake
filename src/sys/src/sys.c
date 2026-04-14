@@ -296,12 +296,17 @@ static void Sys_SigInit(void) {
 
 //=============================================================================
 
-
+#ifdef __PS2__
+#define DEFAULT_MEMORY (16 * 1024 * 1024)
+#else
 #define DEFAULT_MEMORY (256 * 1024 * 1024)
+#endif
 
 static char* Sys_GetDefaultBaseDir(void) {
 #ifdef _WIN32
     return ".";
+#elif defined(__PS2__)
+    return SDL_GetBasePath();
 #else
     static char base_dir[MAX_OSPATH] = {0};
     if (base_dir[0]) {
