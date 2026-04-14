@@ -84,11 +84,7 @@ cvar_t precache = {"precache", "1", false};
 cvar_t loadas8bit = {"loadas8bit", "0", false};
 
 cvar_t sndspeed = {"sndspeed", "11025", false};
-#ifdef __PS2__
-cvar_t snd_mixspeed = {"snd_mixspeed", "22050", true};
-#else
 cvar_t snd_mixspeed = {"snd_mixspeed", "44100", true};
-#endif
 
 #if defined(_WIN32)
 #define SND_FILTERQUALITY_DEFAULT "5"
@@ -752,6 +748,10 @@ void S_Update(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up) {
     i32 total;
     channel_t* ch;
     channel_t* combine;
+
+#ifdef __PS2__
+    SDL_Delay(1);
+#endif
 
     if (!sound_started || (snd_blocked > 0)) {
         return;

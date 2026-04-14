@@ -305,16 +305,14 @@ static void Sys_SigInit(void) {
 static char* Sys_GetDefaultBaseDir(void) {
 #ifdef _WIN32
     return ".";
+#elif defined(__PS2__)
+    return SDL_GetBasePath();
 #else
     static char base_dir[MAX_OSPATH] = {0};
     if (base_dir[0]) {
         return base_dir;
     }
-#ifdef __PS2__
-    char* path = SDL_GetBasePath();
-#else
     char* path = SDL_GetPrefPath("", PACKAGE_TARNAME);
-#endif
     Q_strncpy(base_dir, path, MAX_OSPATH);
     SDL_free(path);
     return base_dir;

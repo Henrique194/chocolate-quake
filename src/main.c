@@ -22,9 +22,6 @@
 #include "host.h"
 #include "sys.h"
 #include <SDL_main.h>
-#ifdef __PS2__
-#include <SDL_timer.h>
-#endif
 
 int main(int argc, char* argv[]) {
     printf("Host_Init\n");
@@ -36,9 +33,6 @@ int main(int argc, char* argv[]) {
         double new_time = Sys_FloatTime();
         double dt = new_time - old_time;
         Host_Frame((float) dt);
-#ifdef __PS2__
-        SDL_Delay(1);
-#endif
         old_time = new_time;
     }
 }
