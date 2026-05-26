@@ -34,6 +34,8 @@
 #include <SDL_stdinc.h>
 #include <string.h>
 
+extern cvar_t r_accel;   /* [cronopio] GPU-3D toggle (defined in r_main.c) */
+
 
 enum {
     m_none,
@@ -1008,7 +1010,7 @@ again:
 //=============================================================================
 /* OPTIONS MENU */
 
-#define OPTIONS_ITEMS 14
+#define OPTIONS_ITEMS 15   /* [cronopio] +1 for the GPU-3D toggle */
 
 #define SLIDER_RANGE 10
 
@@ -1090,6 +1092,10 @@ void M_AdjustSliders(i32 dir) {
 
         case 13: // mouse grab
             VID_ToggleMouseGrab();
+            break;
+
+        case 14: // [cronopio] GPU-accelerated 3D
+            Cvar_SetValue("r_accel", r_accel.value ? 0 : 1);
             break;
     }
 }
@@ -1173,6 +1179,9 @@ void M_Options_Draw(void) {
         M_DrawCheckbox(220, 136, VID_WindowedMouse());
     }
 
+    M_Print(16, 144, "                GPU 3D");   /* [cronopio] r_accel */
+    M_DrawCheckbox(220, 144, r_accel.value != 0);
+
     // cursor
     M_DrawCharacter(200, 32 + options_cursor * 8, 12 + ((i32) (realtime * 4) & 1));
 }
@@ -1232,10 +1241,12 @@ void M_Options_Key(i32 k) {
     }
 
     if (options_cursor == 13 && VID_IsFullscreenMode()) {
+        /* [cronopio] item 13 ("Use Mouse") is windowed-only; on the console
+         * step over it to the GPU-3D item (14) / Video Options (12). */
         if (k == K_UPARROW) {
             options_cursor = 12;
         } else {
-            options_cursor = 0;
+            options_cursor = 14;
         }
     }
 }

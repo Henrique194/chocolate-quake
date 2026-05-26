@@ -121,6 +121,11 @@ void R_Init(void);
 void R_InitTextures(void);
 void R_InitEfrags(void);
 void R_RenderView(void); // must set r_refdef first
+
+// [cronopio] Accelerated 3D path. The r_accel cvar selects it; R_AccelDrawing
+// draws the whole 3D scene via the host triangle rasteriser, defined by the
+// platform/cart in r_accel_cron.c.
+void R_AccelDrawing(void);
 void R_ViewChanged(vrect_t* pvrect, i32 lineadj, float aspect);
 // called whenever r_refdef or vid change
 void R_InitSky(struct texture_s* mt); // called at level load

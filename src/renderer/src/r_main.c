@@ -129,6 +129,7 @@ cvar_t r_graphheight = {"r_graphheight", "10"};
 cvar_t r_clearcolor = {"r_clearcolor", "2"};
 cvar_t r_waterwarp = {"r_waterwarp", "1"};
 cvar_t r_fullbright = {"r_fullbright", "0"};
+cvar_t r_accel = {"r_accel", "0", true};   /* [cronopio] 0=software, 1=GPU-accelerated 3D (cron_polys) */
 cvar_t r_drawentities = {"r_drawentities", "1"};
 cvar_t r_drawviewmodel = {"r_drawviewmodel", "1"};
 cvar_t r_aliasstats = {"r_polymodelstats", "0"};
@@ -205,6 +206,7 @@ void R_Init(void) {
     Cvar_RegisterVariable(&r_clearcolor);
     Cvar_RegisterVariable(&r_waterwarp);
     Cvar_RegisterVariable(&r_fullbright);
+    Cvar_RegisterVariable(&r_accel);   /* [cronopio] */
     Cvar_RegisterVariable(&r_drawentities);
     Cvar_RegisterVariable(&r_drawviewmodel);
     Cvar_RegisterVariable(&r_aliasstats);
@@ -899,6 +901,18 @@ void R_RenderView_(void) {
         VID_LockBuffer();
     }
 
+    if (r_accel.value) {
+        /* [cronopio] Accelerated path: the whole 3D scene is drawn by the host
+         * triangle rasteriser (cron_polys) — world, entities, viewmodel,
+         * particles — into the shared framebuffer. Replaces the software edge/
+         * span pipeline below. */
+        R_AccelDrawing();
+        if (!r_dspeeds.value) {
+            VID_UnlockBuffer();
+            S_ExtraUpdate();
+            VID_LockBuffer();
+        }
+    } else {
     R_EdgeDrawing();
 
     if (!r_dspeeds.value) {
@@ -933,6 +947,7 @@ void R_RenderView_(void) {
 
     if (r_dowarp)
         D_WarpScreen();
+    }
 
     V_SetContentsColor(r_viewleaf->contents);
 
