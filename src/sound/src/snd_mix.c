@@ -23,6 +23,7 @@
 #include "sound.h"
 #include <SDL_stdinc.h>
 #include <stdlib.h>
+#include <math.h>   /* [cronopio] sin/cos in the filtered resampler */
 
 
 #define PAINTBUFFER_SIZE 2048
