@@ -1096,6 +1096,7 @@ void M_AdjustSliders(i32 dir) {
 
         case 14: // [cronopio] GPU-accelerated 3D
             Cvar_SetValue("r_accel", r_accel.value ? 0 : 1);
+            Con_Printf("3D renderer: %s\n", r_accel.value ? "GPU-accelerated" : "software");
             break;
     }
 }
