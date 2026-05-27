@@ -402,7 +402,15 @@ void R_SetupFrame(void) {
     r_viewleaf = Mod_PointInLeaf(r_origin, cl.worldmodel);
 
     r_dowarpold = r_dowarp;
-    r_dowarp = r_waterwarp.value && (r_viewleaf->contents <= CONTENTS_WATER);
+    // [cronopio] The accelerated path renders straight to the framebuffer and
+    // never uses the reduced warp buffer / D_WarpScreen. Leaving r_dowarp set
+    // would shrink r_refdef.vrect to WARP_WIDTHxWARP_HEIGHT (e.g. 320x200),
+    // so accel would render a short view and leave an undrawn black band (with
+    // a stale viewmodel) below it. Force it off in accel; the underwater colour
+    // tint still comes from V_SetContentsColor, independent of r_dowarp.
+    extern cvar_t r_accel;
+    r_dowarp = !r_accel.value && r_waterwarp.value &&
+               (r_viewleaf->contents <= CONTENTS_WATER);
 
     if ((r_dowarp != r_dowarpold) || r_viewchanged || lcd_x.value) {
         if (r_dowarp) {
