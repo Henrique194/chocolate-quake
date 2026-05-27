@@ -560,6 +560,36 @@ R_DrawParticles
 extern cvar_t sv_gravity;
 
 void R_DrawParticles(void) {
+    particle_t* p;
+
+    D_StartParticles();
+
+    VectorScale(vright, xscaleshrink, r_pright);
+    VectorScale(vup, yscaleshrink, r_pup);
+    VectorCopy(vpn, r_ppn);
+
+    for (p = active_particles; p; p = p->next)
+        D_DrawParticle(p);
+
+    D_EndParticles();
+
+    // [cronopio] physics/aging moved out so the accelerated path (which draws
+    // particles itself, via cron_polys) can reuse it — see R_UpdateParticles.
+    R_UpdateParticles();
+}
+
+/*
+===============
+R_UpdateParticles
+
+[cronopio] Age, expire (return to the free list) and advance every active
+particle. This is exactly the per-particle bookkeeping the software
+R_DrawParticles used to do inline; the accelerated renderer draws particles on
+the GPU and then calls this for the same side effects, otherwise particles
+would never die.
+===============
+*/
+void R_UpdateParticles(void) {
     particle_t *p, *kill;
     float grav;
     i32 i;
@@ -567,12 +597,6 @@ void R_DrawParticles(void) {
     float time1;
     float dvel;
     float frametime;
-
-    D_StartParticles();
-
-    VectorScale(vright, xscaleshrink, r_pright);
-    VectorScale(vup, yscaleshrink, r_pup);
-    VectorCopy(vpn, r_ppn);
 
     frametime = cl.time - cl.oldtime;
     time3 = frametime * 15;
@@ -603,8 +627,6 @@ void R_DrawParticles(void) {
             }
             break;
         }
-
-        D_DrawParticle(p);
 
         p->org[0] += p->vel[0] * frametime;
         p->org[1] += p->vel[1] * frametime;
@@ -662,6 +684,4 @@ void R_DrawParticles(void) {
                 break;
         }
     }
-
-    D_EndParticles();
 }

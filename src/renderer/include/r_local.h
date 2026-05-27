@@ -244,6 +244,7 @@ qboolean R_AliasCheckBBox(void);
 // particle stuff
 
 void R_DrawParticles(void);
+void R_UpdateParticles(void); // [cronopio] age/expire/advance only (accel path)
 void R_InitParticles(void);
 void R_ClearParticles(void);
 void R_ReadPointFile_f(void);
