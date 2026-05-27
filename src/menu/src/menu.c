@@ -422,10 +422,11 @@ void M_SinglePlayer_Key(i32 key) {
 
             switch (m_singleplayer_cursor) {
                 case 0:
-                    if (sv.active)
-                        if (!SCR_ModalMessage("Are you sure you want to\nstart "
-                                              "a new game?\n"))
-                            break;
+                    /* [cronopio] No SCR_ModalMessage "are you sure?" prompt: it
+                     * runs a blocking key-wait loop, but the host only refreshes
+                     * the pad between cart frames, so cron_pad never changes
+                     * inside the loop and it hangs forever (all input dead).
+                     * Start the new game directly. */
                     key_dest = key_game;
                     if (sv.active)
                         Cbuf_AddText("disconnect\n");
