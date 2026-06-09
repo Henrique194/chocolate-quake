@@ -23,7 +23,6 @@
 #include "sys.h"
 #include <SDL_main.h>
 
-
 int main(int argc, char* argv[]) {
     printf("Host_Init\n");
     quakeparms_t* parms = Sys_Init(argc, argv);

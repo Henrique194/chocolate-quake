@@ -91,6 +91,7 @@ void UDP_Init(void) {
     // Determine my name and address.
     UDP_FindLocalAddr();
 
+#ifndef __PS2__
     // if the quake hostname isn't set, set it to the machine name
     if (Q_strcmp(hostname.string, "UNNAMED") == 0) {
         char buff[MAXHOSTNAMELEN];
@@ -98,6 +99,7 @@ void UDP_Init(void) {
         buff[15] = 0;
         Cvar_Set("hostname", buff);
     }
+#endif
 
     if ((control_sock = UDP_OpenSocket(0)) == NULL) {
         Sys_Error("UDP_Init: Unable to open control socket\n");

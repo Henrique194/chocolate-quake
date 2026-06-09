@@ -426,6 +426,9 @@ static void BGMusic_UpdateVolume() {
 }
 
 void BGMusic_Update() {
+#ifdef __PS2__
+    SDL_Delay(1);
+#endif
     if (!enabled) {
         return;
     }

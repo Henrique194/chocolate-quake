@@ -129,3 +129,38 @@ jobs:
         with:
           name: ${{ matrix.config.name }}-${{ matrix.buildtype.name }}
           path: ${{ env.BUILD_DIR }}
+  build_ps2:
+    name: PS2 build
+    runs-on: ubuntu-latest
+    container: ps2dev/ps2dev:latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          apk add cmake build-base git zip gawk python3 py3-pip bash
+
+      - name: Build and install SDL
+        run: |
+          git clone https://github.com/libsdl-org/SDL.git
+          cd SDL
+          git checkout SDL2
+          git checkout 99eca2c
+
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$PS2DEV/share/ps2dev.cmake -DCMAKE_INSTALL_PREFIX=$PS2SDK/ports
+          cmake --build build
+          cmake --install build
+
+      - name: Compile
+        run: |
+          cmake -S . -B build \
+          -DCMAKE_TOOLCHAIN_FILE=$PS2DEV/share/ps2dev.cmake \
+          -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          cmake --build build
+
+      - name: Upload PS2 ELF
+        uses: actions/upload-artifact@v5
+        with:
+          name: chocolate-quake-ps2
+          path: build/src/chocolate-quake.elf

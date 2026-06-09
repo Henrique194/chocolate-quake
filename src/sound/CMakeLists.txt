@@ -27,6 +27,14 @@ if(UNIX AND NOT APPLE)
         ${FLAC_LIBRARY}
         ${MAD_LIBRARY}
     )
+elseif(PS2)
+    list(APPEND LIBS
+        ${VORBIS_LIBRARY}
+        ${VORBISFILE_LIBRARY}
+        ${FLAC_LIBRARY}
+        ${MAD_LIBRARY}
+        ${OGG_LIBRARY}
+    )
 else()
     list(APPEND LIBS
         Vorbis::vorbisfile

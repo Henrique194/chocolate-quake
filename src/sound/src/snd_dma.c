@@ -749,6 +749,10 @@ void S_Update(vec3_t origin, vec3_t forward, vec3_t right, vec3_t up) {
     channel_t* ch;
     channel_t* combine;
 
+#ifdef __PS2__
+    SDL_Delay(1);
+#endif
+
     if (!sound_started || (snd_blocked > 0)) {
         return;
     }

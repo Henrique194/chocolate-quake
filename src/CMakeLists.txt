@@ -48,6 +48,9 @@ if(WIN32)
 
     configure_file(${RC_INPUT_FILE} ${RC_OUTPUT_FILE})
     add_executable(${PACKAGE_TARNAME} WIN32 main.c ${RC_OUTPUT_FILE})
+elseif(PS2)
+	set(CMAKE_EXECUTABLE_SUFFIX .elf)
+    add_executable(${PACKAGE_TARNAME} main.c)
 else()
     add_executable(${PACKAGE_TARNAME} main.c)
 endif()
@@ -58,6 +61,7 @@ target_include_directories(${PACKAGE_TARNAME} PRIVATE
 )
 
 target_link_libraries(${PACKAGE_TARNAME} ${LIBS})
+
 if(WIN32)
     target_link_libraries(${PACKAGE_TARNAME} ws2_32)
 endif()

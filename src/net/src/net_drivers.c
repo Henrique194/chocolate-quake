@@ -58,4 +58,8 @@ net_driver_t net_drivers[MAX_NET_DRIVERS] = {
         Datagram_Shutdown
     },
 };
+#ifdef __PS2__
+i32 net_numdrivers = 1;
+#else
 i32 net_numdrivers = 2;
+#endif
