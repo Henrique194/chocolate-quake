@@ -38,6 +38,32 @@ extern const u32 pixel_format;
 static cvar_t _windowed_mouse = {"_windowed_mouse", "0", true};
 static qboolean windowed_mouse;
 
+static cvar_t aspect_correction = {"aspect_correction", "1", true};
+static qboolean aspect_correct = true;
+
+
+/*
+================================================================================
+
+ASPECT RATIO CORRECTION
+
+================================================================================
+*/
+
+static void VID_EnableAspectCorrection(void) {
+    aspect_correct = true;
+    Cvar_SetValue("aspect_correction", aspect_correct);
+    SDL_RenderSetLogicalSize(renderer, 320, 240);
+}
+
+static void VID_DisableAspectCorrection(void) {
+    aspect_correct = false;
+    Cvar_SetValue("aspect_correction", aspect_correct);
+    SDL_RenderSetLogicalSize(renderer, 0, 0);
+}
+
+//==============================================================================
+
 
 /*
 ================================================================================
@@ -51,11 +77,6 @@ static void VID_CreateRenderer(void) {
     i32 index = -1;
     u32 flags = SDL_RENDERER_TARGETTEXTURE;
     renderer = SDL_CreateRenderer(window, index, flags);
-
-    // Important: Set the "logical size" of the rendering context. At the same
-    // time this also defines the aspect ratio that is preserved while scaling
-    // and stretching the texture into the window.
-    SDL_RenderSetLogicalSize(renderer, 320, 240);
 
     // Blank out the full screen area in case there is any junk in
     // the borders that won't otherwise be overwritten.
@@ -80,6 +101,7 @@ static void VID_CreateWindow(void) {
 
 static void VID_RegisterCvars(void) {
     Cvar_RegisterVariable(&_windowed_mouse);
+    Cvar_RegisterVariable(&aspect_correction);
     windowed_mouse = VID_WindowedMouse();
 }
 
@@ -87,6 +109,7 @@ void VID_InitWindow(void) {
     VID_RegisterCvars();
     VID_CreateWindow();
     VID_CreateRenderer();
+    VID_EnableAspectCorrection();
 }
 
 void VID_ShutdownWindow(void) {
@@ -204,6 +227,18 @@ void VID_ResizeScreen(void) {
 //==============================================================================
 
 
+static void VID_UpdateAspectRatio(void) {
+    i32 aspect = (i32) aspect_correction.value;
+    if (aspect == aspect_correct) {
+        return;
+    }
+    if (aspect) {
+        VID_EnableAspectCorrection();
+    } else {
+        VID_DisableAspectCorrection();
+    }
+}
+
 static void VID_UpdateMouse(void) {
     if (VID_IsFullscreenMode()) {
         return;
@@ -231,6 +266,7 @@ static void VID_UpdateScreen(vrect_t* rect) {
 void VID_UpdateWindow(vrect_t* rect) {
     VID_UpdateScreen(rect);
     VID_UpdateMouse();
+    VID_UpdateAspectRatio();
 }
 
 void VID_HandlePause(qboolean pause) {
