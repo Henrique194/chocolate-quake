@@ -51,7 +51,7 @@ void M_DrawCharacter(i32 cx, i32 line, i32 num);
 static i32 vid_line;
 
 
-static void M_DrawCursor() {
+static void M_DrawCursor(void) {
     i32 x = 8 + (vid_line % VID_ROW_SIZE) * 13 * 8;
     i32 y = 36 + 2 * 8 + (vid_line / VID_ROW_SIZE) * 8;
     if (vid_line >= 3) {

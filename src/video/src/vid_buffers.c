@@ -24,6 +24,8 @@
 #include "d_local.h"
 #include "sys.h"
 
+// Pixel format used to create argb_buffer and texture.
+#define PIXEL_FORMAT (SDL_PIXELFORMAT_ARGB8888)
 
 // The paletted buffer that we draw to (i.e. the one that holds vid_buffer).
 static SDL_Surface* screen_buffer = NULL;
@@ -31,7 +33,8 @@ static SDL_Surface* screen_buffer = NULL;
 // The RGBA intermediate buffer that we blit the screen_buffer to.
 static SDL_Surface* argb_buffer = NULL;
 
-extern const u32 pixel_format;
+// The intermediate texture that we load the RGBA buffer to.
+static SDL_Texture* texture = NULL;
 
 static i32 VID_highhunkmark;
 static i32 vid_surfcachesize;
@@ -87,14 +90,14 @@ INITIALIZATION AND SHUTDOWN
 ================================================================================
 */
 
-static void VID_AllocSurfaceCache() {
+static void VID_AllocSurfaceCache(void) {
     byte* buffer = (byte*) d_pzbuffer;
     size_t cache_offset = vid.width * vid.height * sizeof(*d_pzbuffer);
     byte* cache = &buffer[cache_offset];
     D_InitCaches(cache, vid_surfcachesize);
 }
 
-static void VID_AllocZBuffer() {
+static void VID_AllocZBuffer(void) {
     i32 chunk = vid.width * vid.height * sizeof(*d_pzbuffer);
     chunk += vid_surfcachesize;
     VID_highhunkmark = Hunk_HighMark();
@@ -102,6 +105,16 @@ static void VID_AllocZBuffer() {
     if (!d_pzbuffer) {
         Sys_Error("Not enough memory for video mode\n");
     }
+}
+
+//
+// Create the intermediate texture that the RGBA surface gets loaded into.
+//
+static void VID_AllocTexture(SDL_Renderer* renderer) {
+    int access = SDL_TEXTUREACCESS_STREAMING;
+    int w = (int) vid.width;
+    int h = (int) vid.height;
+    texture = SDL_CreateTexture(renderer, PIXEL_FORMAT, access, w, h);
 }
 
 //
@@ -115,7 +128,7 @@ static void VID_AllocRgbaBuffer(void) {
     int depth = 0;
     int pitch = 0;
     argb_buffer = SDL_CreateRGBSurfaceWithFormatFrom(
-        pixels, w, h, depth, pitch, pixel_format
+        pixels, w, h, depth, pitch, PIXEL_FORMAT
     );
 }
 
@@ -141,12 +154,13 @@ static void VID_AllocScreenBuffer(void) {
     vid.buffer = (byte*) screen_buffer->pixels;
 }
 
-void VID_ReallocBuffers(void) {
+void VID_ReallocBuffers(SDL_Renderer* renderer) {
     VID_FreeBuffers();
 
     vid_surfcachesize = D_SurfaceCacheForRes(vid.width, vid.height);
     VID_AllocScreenBuffer();
     VID_AllocRgbaBuffer();
+    VID_AllocTexture(renderer);
     VID_AllocZBuffer();
     VID_AllocSurfaceCache();
 
@@ -161,6 +175,10 @@ void VID_FreeBuffers(void) {
     if (argb_buffer) {
         SDL_FreeSurface(argb_buffer);
         argb_buffer = NULL;
+    }
+    if (texture) {
+        SDL_DestroyTexture(texture);
+        texture = NULL;
     }
     if (d_pzbuffer) {
         D_FlushCaches();
@@ -195,7 +213,7 @@ void VID_UnlockBuffer(void) {
 // 32-bit RGBA buffer and then update the intermediate texture with
 // the contents of the RGBA buffer.
 //
-void VID_UpdateTexture(SDL_Texture* texture, vrect_t* rect) {
+void VID_UpdateBuffers(SDL_Renderer* renderer, vrect_t* rect) {
     if (palette_changed) {
         VID_UpdatePalette();
         // Ensure we blit the whole screen after updating the palette.
@@ -204,6 +222,10 @@ void VID_UpdateTexture(SDL_Texture* texture, vrect_t* rect) {
         rect->width = (i32) vid.width;
         rect->height = (i32) vid.height;
     }
+
+    // Blit from the paletted 8-bit screen buffer to the intermediate
+    // 32-bit RGBA buffer and update the intermediate texture with the
+    // contents of the RGBA buffer.
     SDL_Rect src_rect = {
         .x = rect->x,
         .y = rect->y,
@@ -216,10 +238,15 @@ void VID_UpdateTexture(SDL_Texture* texture, vrect_t* rect) {
         .w = rect->width,
         .h = rect->height,
     };
-    SDL_LockTexture(texture, &src_rect, &argb_buffer->pixels,
-                    &argb_buffer->pitch);
+    SDL_LockTexture(texture, &src_rect, &argb_buffer->pixels, &argb_buffer->pitch);
     SDL_LowerBlit(screen_buffer, &src_rect, argb_buffer, &dst_rect);
     SDL_UnlockTexture(texture);
+
+    // Clear the renderer's backbuffer to remove any previous contents.
+    SDL_RenderClear(renderer);
+
+    // Copy the updated texture to the backbuffer for rendering.
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
 }
 
 //==============================================================================

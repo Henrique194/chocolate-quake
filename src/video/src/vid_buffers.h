@@ -25,10 +25,10 @@
 #include "vid.h"
 #include <SDL_render.h>
 
-void VID_ReallocBuffers(void);
+void VID_ReallocBuffers(SDL_Renderer* renderer);
 
 void VID_FreeBuffers(void);
 
-void VID_UpdateTexture(SDL_Texture* texture, vrect_t* rect);
+void VID_UpdateBuffers(SDL_Renderer* renderer, vrect_t* rect);
 
 #endif

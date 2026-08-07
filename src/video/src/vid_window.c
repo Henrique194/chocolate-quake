@@ -30,13 +30,8 @@
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
 
-// The intermediate texture that we load the RGBA buffer to.
-static SDL_Texture* texture = NULL;
-
-extern const u32 pixel_format;
-
 static cvar_t _windowed_mouse = {"_windowed_mouse", "0", true};
-static qboolean windowed_mouse;
+static qboolean windowed_mouse = false;
 
 static cvar_t aspect_correction = {"aspect_correction", "1", true};
 static qboolean aspect_correct = true;
@@ -102,7 +97,6 @@ static void VID_CreateWindow(void) {
 static void VID_RegisterCvars(void) {
     Cvar_RegisterVariable(&_windowed_mouse);
     Cvar_RegisterVariable(&aspect_correction);
-    windowed_mouse = VID_WindowedMouse();
 }
 
 void VID_InitWindow(void) {
@@ -113,10 +107,6 @@ void VID_InitWindow(void) {
 }
 
 void VID_ShutdownWindow(void) {
-    if (texture) {
-        SDL_DestroyTexture(texture);
-        texture = NULL;
-    }
     if (renderer) {
         SDL_DestroyRenderer(renderer);
         renderer = NULL;
@@ -140,7 +130,7 @@ MOUSE HANDLING
 
 static void VID_CenterMouse(void) {
     int x = (int) vid.width / 2;
-    int y = (i32) vid.height / 2;
+    int y = (int) vid.height / 2;
     SDL_WarpMouseInWindow(window, x, y);
 }
 
@@ -200,23 +190,8 @@ static void VID_SetFullscreen(void) {
     VID_GrabMouse();
 }
 
-//
-// Create the intermediate texture that the RGBA surface gets loaded into.
-//
-static void VID_AllocTexture(void) {
-    int access = SDL_TEXTUREACCESS_STREAMING;
-    int w = (int) vid.width;
-    int h = (int) vid.height;
-    texture = SDL_CreateTexture(renderer, pixel_format, access, w, h);
-}
-
 void VID_ResizeScreen(void) {
-    if (texture) {
-        SDL_DestroyTexture(texture);
-        texture = NULL;
-    }
-    VID_AllocTexture();
-    VID_ReallocBuffers();
+    VID_ReallocBuffers(renderer);
     if (VID_IsFullscreenMode()) {
         VID_SetFullscreen();
     } else {
@@ -253,12 +228,8 @@ static void VID_UpdateScreen(vrect_t* rect) {
     if (!rect) {
         return;
     }
-    // Update the texture with the contents of the screen buffer.
-    VID_UpdateTexture(texture, rect);
-    // Clear the renderer's backbuffer to remove any previous contents.
-    SDL_RenderClear(renderer);
-    // Copy the updated texture to the backbuffer for rendering.
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    // Update renderer backbuffer with the contents of the screen buffer.
+    VID_UpdateBuffers(renderer, rect);
     // Present the backbuffer content to the screen.
     SDL_RenderPresent(renderer);
 }
