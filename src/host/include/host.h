@@ -20,8 +20,8 @@
 // host.h
 
 
-#ifndef __HOST__
-#define __HOST__
+#ifndef HOST_H
+#define HOST_H
 
 #include "quakedef.h"
 #include "cvar.h"

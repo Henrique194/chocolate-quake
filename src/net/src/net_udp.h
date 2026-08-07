@@ -20,8 +20,8 @@
 // net_udp.h
 
 
-#ifndef __NET_UDP__
-#define __NET_UDP__
+#ifndef NET_UDP_H
+#define NET_UDP_H
 
 #include "quakedef.h"
 #include <SDL_net.h>

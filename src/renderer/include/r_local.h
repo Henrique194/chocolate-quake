@@ -20,8 +20,8 @@
 // r_local.h -- private refresh defs
 
 
-#ifndef __R_LOCAL__
-#define __R_LOCAL__
+#ifndef R_LOCAL_H
+#define R_LOCAL_H
 
 #include "quakedef.h"
 #include "r_shared.h"

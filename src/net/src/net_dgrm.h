@@ -20,8 +20,8 @@
 // net_dgrm.h
 
 
-#ifndef __NET_DGRM__
-#define __NET_DGRM__
+#ifndef NET_DGRM_H
+#define NET_DGRM_H
 
 #include "quakedef.h"
 #include "net.h"

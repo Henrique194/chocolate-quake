@@ -27,8 +27,8 @@
 // * pass data from one to the other via model files.      *
 // *********************************************************
 
-#ifndef __MODELGEN__
-#define __MODELGEN__
+#ifndef MODELGEN_H
+#define MODELGEN_H
 
 #ifdef INCLUDELIBS
 

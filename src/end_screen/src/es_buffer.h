@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __ES_BUFFER__
-#define __ES_BUFFER__
+#ifndef ES_BUFFER_H
+#define ES_BUFFER_H
 
 #include "quakedef.h"
 #include <SDL_render.h>

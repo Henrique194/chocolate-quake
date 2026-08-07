@@ -19,8 +19,8 @@
  */
 // sound.h -- client sound i/o functions
 
-#ifndef __SOUND__
-#define __SOUND__
+#ifndef SOUND_H
+#define SOUND_H
 
 #include "quakedef.h"
 #include "cvar.h"

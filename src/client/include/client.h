@@ -20,8 +20,8 @@
 // client.h
 
 
-#ifndef __CLIENT__
-#define __CLIENT__
+#ifndef CLIENT_H
+#define CLIENT_H
 
 #include "quakedef.h"
 #include "cvar.h"

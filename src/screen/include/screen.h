@@ -19,8 +19,8 @@
  */
 // screen.h
 
-#ifndef __SCREEN__
-#define __SCREEN__
+#ifndef SCREEN_H
+#define SCREEN_H
 
 #include "quakedef.h"
 #include "cvar.h"

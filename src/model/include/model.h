@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __MODEL__
-#define __MODEL__
+#ifndef MODEL_H
+#define MODEL_H
 
 #include "quakedef.h"
 #include "bspfile.h"
@@ -365,4 +365,4 @@ void Mod_TouchModel(char* name);
 mleaf_t* Mod_PointInLeaf(float* p, model_t* model);
 byte* Mod_LeafPVS(mleaf_t* leaf, model_t* model);
 
-#endif // __MODEL__
+#endif

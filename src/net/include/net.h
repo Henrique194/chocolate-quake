@@ -20,8 +20,8 @@
 // net.h -- quake's interface to the networking layer
 
 
-#ifndef __NET__
-#define __NET__
+#ifndef NET_H
+#define NET_H
 
 #include "quakedef.h"
 #include "protocol.h"

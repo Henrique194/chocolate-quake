@@ -20,8 +20,8 @@
 // protocol.h -- communications protocols
 
 
-#ifndef __PROTOCOL__
-#define __PROTOCOL__
+#ifndef PROTOCOL_H
+#define PROTOCOL_H
 
 #include "quakedef.h"
 

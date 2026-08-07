@@ -21,8 +21,8 @@
 // to touch the vid buffer
 
 
-#ifndef __DRAW__
-#define __DRAW__
+#ifndef DRAW_H
+#define DRAW_H
 
 #include "quakedef.h"
 #include "wad.h"

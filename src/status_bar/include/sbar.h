@@ -21,8 +21,8 @@
 // the status bar is only redrawn if something has changed, but if anything
 // does, the entire thing will be redrawn for the next vid.numpages frames.
 
-#ifndef __SBAR__
-#define __SBAR__
+#ifndef SBAR_H
+#define SBAR_H
 
 #include "quakedef.h"
 

@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __PROGS__
-#define __PROGS__
+#ifndef PROGS_H
+#define PROGS_H
 
 #include "quakedef.h"
 #include "mathlib.h"

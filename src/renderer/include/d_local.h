@@ -19,8 +19,8 @@
  */
 // d_local.h:  private rasterization driver defs
 
-#ifndef __D_LOCAL__
-#define __D_LOCAL__
+#ifndef D_LOCAL_H
+#define D_LOCAL_H
 
 #include "quakedef.h"
 #include "r_shared.h"

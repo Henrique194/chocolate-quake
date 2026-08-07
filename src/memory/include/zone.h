@@ -83,8 +83,8 @@ Zone block
 
 */
 
-#ifndef __ZONE__
-#define __ZONE__
+#ifndef ZONE_H
+#define ZONE_H
 
 #include "quakedef.h"
 

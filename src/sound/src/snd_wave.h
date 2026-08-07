@@ -20,8 +20,8 @@
 
 /* WAV streaming music support. */
 
-#ifndef _SND_WAVE_H_
-#define _SND_WAVE_H_
+#ifndef SND_WAVE_H
+#define SND_WAVE_H
 
 #include "quakedef.h"
 #include "snd_codec.h"

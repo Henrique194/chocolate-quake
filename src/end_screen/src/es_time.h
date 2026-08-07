@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __ES_TIME__
-#define __ES_TIME__
+#ifndef ES_TIME_H
+#define ES_TIME_H
 
 #include "quakedef.h"
 

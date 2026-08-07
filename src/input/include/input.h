@@ -20,8 +20,8 @@
 // input.h -- input devices
 
 
-#ifndef __INPUT__
-#define __INPUT__
+#ifndef INPUT_H
+#define INPUT_H
 
 #include "quakedef.h"
 #include "client.h"

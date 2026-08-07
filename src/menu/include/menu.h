@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __MENU__
-#define __MENU__
+#ifndef MENU_H
+#define MENU_H
 
 #include "quakedef.h"
 

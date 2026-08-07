@@ -20,8 +20,8 @@
 // net_poll.h
 
 
-#ifndef __NET_POLL__
-#define __NET_POLL__
+#ifndef NET_POLL_H
+#define NET_POLL_H
 
 #include "quakedef.h"
 #include "net.h"

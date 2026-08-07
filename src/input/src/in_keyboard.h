@@ -20,8 +20,8 @@
 // in_keyboard.h -- keyboard code
 
 
-#ifndef __IN_KEYBOARD__
-#define __IN_KEYBOARD__
+#ifndef IN_KEYBOARD_H
+#define IN_KEYBOARD_H
 
 #include "quakedef.h"
 #include <SDL_events.h>

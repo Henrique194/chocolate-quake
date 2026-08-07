@@ -20,8 +20,8 @@
 // net_socket.h
 
 
-#ifndef __NET_SOCKET__
-#define __NET_SOCKET__
+#ifndef NET_SOCKET_H
+#define NET_SOCKET_H
 
 #include "quakedef.h"
 #include "net.h"

@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __BSPFILE__
-#define __BSPFILE__
+#ifndef BSPFILE_H
+#define BSPFILE_H
 
 // upper design bounds
 

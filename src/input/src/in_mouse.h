@@ -20,8 +20,8 @@
 // in_mouse.h -- mouse code
 
 
-#ifndef __IN_MOUSE__
-#define __IN_MOUSE__
+#ifndef IN_MOUSE_H
+#define IN_MOUSE_H
 
 #include "quakedef.h"
 #include "client.h"

@@ -20,8 +20,8 @@
 // in_gamepad.h -- gamepad code
 
 
-#ifndef __IN_GAMEPAD__
-#define __IN_GAMEPAD__
+#ifndef IN_GAMEPAD_H
+#define IN_GAMEPAD_H
 
 #include "quakedef.h"
 #include "client.h"

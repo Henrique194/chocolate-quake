@@ -20,8 +20,8 @@
 
 /* MP3 decoding support using libmad or libmpg123. */
 
-#ifndef _SND_MP3_H_
-#define _SND_MP3_H_
+#ifndef SND_MP3_H
+#define SND_MP3_H
 
 #include "quakedef.h"
 #include "snd_codec.h"

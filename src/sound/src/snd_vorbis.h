@@ -20,8 +20,8 @@
 
 /* Ogg/Vorbis streaming music support. */
 
-#ifndef _SND_VORBIS_H_
-#define _SND_VORBIS_H_
+#ifndef SND_VORBIS_H
+#define SND_VORBIS_H
 
 #include "quakedef.h"
 #include "snd_codec.h"

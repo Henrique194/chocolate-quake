@@ -20,8 +20,8 @@
 // net_loop.h
 
 
-#ifndef __NET_LOOP__
-#define __NET_LOOP__
+#ifndef NET_LOOP_H
+#define NET_LOOP_H
 
 #include "quakedef.h"
 #include "net.h"

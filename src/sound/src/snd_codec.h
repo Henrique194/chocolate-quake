@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef _SND_CODEC_H_
-#define _SND_CODEC_H_
+#ifndef SND_CODEC_H
+#define SND_CODEC_H
 
 
 #include "quakedef.h"

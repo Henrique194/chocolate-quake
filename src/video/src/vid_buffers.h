@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef __VID_BUFFERS__
-#define __VID_BUFFERS__
+#ifndef VID_BUFFERS_H
+#define VID_BUFFERS_H
 
 #include "quakedef.h"
 #include "vid.h"

@@ -20,8 +20,8 @@
 /* crc.h */
 
 
-#ifndef __CRC__
-#define __CRC__
+#ifndef CRC_H
+#define CRC_H
 
 #include "quakedef.h"
 

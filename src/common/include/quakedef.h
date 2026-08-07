@@ -20,8 +20,8 @@
 // quakedef.h -- primary header for client
 
 
-#ifndef _QUAKEDEF_H_
-#define _QUAKEDEF_H_
+#ifndef QUAKEDEF_H
+#define QUAKEDEF_H
 
 #define QUAKE_GAME // as opposed to utilities
 

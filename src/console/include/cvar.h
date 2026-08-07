@@ -53,8 +53,8 @@ Cvars are restricted from having the same names as commands to keep this
 interface from being ambiguous.
 */
 
-#ifndef __CVAR__
-#define __CVAR__
+#ifndef CVAR_H
+#define CVAR_H
 
 #include "quakedef.h"
 #include <stdio.h>

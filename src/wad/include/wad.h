@@ -19,8 +19,8 @@
  */
 // wad.h
 
-#ifndef __WAD__
-#define __WAD__
+#ifndef WAD_H
+#define WAD_H
 
 #include "quakedef.h"
 

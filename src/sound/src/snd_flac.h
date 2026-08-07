@@ -20,8 +20,8 @@
 
 /* fLaC streaming music support. */
 
-#ifndef _SND_FLAC_H_
-#define _SND_FLAC_H_
+#ifndef SND_FLAC_H
+#define SND_FLAC_H
 
 #include "quakedef.h"
 #include "snd_codec.h"

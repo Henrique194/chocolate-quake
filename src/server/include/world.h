@@ -19,8 +19,8 @@
  */
 // world.h
 
-#ifndef __WORLD__
-#define __WORLD__
+#ifndef WORLD_H
+#define WORLD_H
 
 #include "quakedef.h"
 #include "mathlib.h"

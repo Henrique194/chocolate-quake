@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __KEYS__
-#define __KEYS__
+#ifndef KEYS_H
+#define KEYS_H
 
 #include "quakedef.h"
 #include <stdio.h>

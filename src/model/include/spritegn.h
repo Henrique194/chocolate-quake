@@ -42,8 +42,8 @@
 // <endrepeat>
 //-------------------------------------------------------
 
-#ifndef __SPRITEGN__
-#define __SPRITEGN__
+#ifndef SPRITEGN_H
+#define SPRITEGN_H
 
 #ifdef INCLUDELIBS
 

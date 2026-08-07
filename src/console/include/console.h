@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __CONSOLE__
-#define __CONSOLE__
+#ifndef CONSOLE_H
+#define CONSOLE_H
 
 #include "quakedef.h"
 

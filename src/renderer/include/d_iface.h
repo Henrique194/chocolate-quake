@@ -20,8 +20,8 @@
 // d_iface.h: interface header file for rasterization driver modules
 
 
-#ifndef __D_IFACE__
-#define __D_IFACE__
+#ifndef D_IFACE_H
+#define D_IFACE_H
 
 #include "quakedef.h"
 #include "cvar.h"

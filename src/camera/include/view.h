@@ -19,8 +19,8 @@
  */
 // view.h
 
-#ifndef __VIEW__
-#define __VIEW__
+#ifndef VIEW_H
+#define VIEW_H
 
 #include "quakedef.h"
 #include "cvar.h"

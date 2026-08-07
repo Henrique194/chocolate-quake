@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __ES_PALETTE__
-#define __ES_PALETTE__
+#ifndef ES_PALETTE_H
+#define ES_PALETTE_H
 
 #include "quakedef.h"
 #include <SDL_surface.h>

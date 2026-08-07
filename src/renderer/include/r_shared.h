@@ -22,8 +22,8 @@
 
 // FIXME: clean up and move into d_iface.h
 
-#ifndef _R_SHARED_H_
-#define _R_SHARED_H_
+#ifndef R_SHARED_H
+#define R_SHARED_H
 
 #include "quakedef.h"
 #include "cvar.h"

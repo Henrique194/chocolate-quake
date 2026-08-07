@@ -19,8 +19,8 @@
  */
 // server.h
 
-#ifndef __SERVER__
-#define __SERVER__
+#ifndef SERVER_H
+#define SERVER_H
 
 #include "quakedef.h"
 #include "client.h"

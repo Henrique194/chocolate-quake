@@ -20,8 +20,8 @@
 // common.h  -- general definitions
 
 
-#ifndef _COMMON_H_
-#define _COMMON_H_
+#ifndef COMMON_H
+#define COMMON_H
 
 #include <SDL_stdinc.h>
 

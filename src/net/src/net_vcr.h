@@ -20,8 +20,8 @@
 // net_vcr.h
 
 
-#ifndef __NET_VCR__
-#define __NET_VCR__
+#ifndef NET_VCR_H
+#define NET_VCR_H
 
 #include "quakedef.h"
 #include "net.h"

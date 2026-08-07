@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __ES_WINDOW__
-#define __ES_WINDOW__
+#ifndef ES_WINDOW_H
+#define ES_WINDOW_H
 
 #include "quakedef.h"
 

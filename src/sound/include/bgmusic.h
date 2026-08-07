@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __BGMUSIC__
-#define __BGMUSIC__
+#ifndef BGMUSIC_H
+#define BGMUSIC_H
 
 #include "quakedef.h"
 

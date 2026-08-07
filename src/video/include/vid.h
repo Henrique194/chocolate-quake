@@ -19,8 +19,8 @@
  */
 // vid.h -- video driver defs
 
-#ifndef __VID__
-#define __VID__
+#ifndef VID_H
+#define VID_H
 
 #include "quakedef.h"
 

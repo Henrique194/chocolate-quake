@@ -19,8 +19,8 @@
  */
 // refresh.h -- public interface to refresh functions
 
-#ifndef __RENDER__
-#define __RENDER__
+#ifndef RENDER_H
+#define RENDER_H
 
 #include "quakedef.h"
 #include "mathlib.h"

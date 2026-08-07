@@ -20,8 +20,8 @@
 // mathlib.h
 
 
-#ifndef __MATHLIB__
-#define __MATHLIB__
+#ifndef MATHLIB_H
+#define MATHLIB_H
 
 #include "quakedef.h"
 

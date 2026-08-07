@@ -34,8 +34,8 @@ The game starts with a Cbuf_AddText ("exec quake.rc\n"); Cbuf_Execute ();
 
 */
 
-#ifndef __CMD__
-#define __CMD__
+#ifndef CMD_H
+#define CMD_H
 
 #include "quakedef.h"
 

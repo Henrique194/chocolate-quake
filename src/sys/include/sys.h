@@ -19,8 +19,8 @@
  */
 // sys.h -- non-portable functions
 
-#ifndef __SYS__
-#define __SYS__
+#ifndef SYS_H
+#define SYS_H
 
 #include "quakedef.h"
 #include "host.h"

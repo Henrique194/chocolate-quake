@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __ES_FONT__
-#define __ES_FONT__
+#ifndef ES_FONT_H
+#define ES_FONT_H
 
 #include "quakedef.h"
 

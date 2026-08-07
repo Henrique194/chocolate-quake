@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __END_SCREEN__
-#define __END_SCREEN__
+#ifndef END_SCREEN_H
+#define END_SCREEN_H
 
 #include "quakedef.h"
 
