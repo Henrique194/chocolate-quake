@@ -13,6 +13,8 @@ Chocolate Quake's aims are:
   original experience.
 * No hardware acceleration or modern visual effects.
 
+<img width="1920" height="1080" alt="chocolate-quake" src="https://github.com/user-attachments/assets/d3a97598-2b15-4ed0-92f1-bf5d98015cb7" />
+
 # Philosophy
 
 This port is for purists: no fancy enhancements, no modern effects, just Quake
